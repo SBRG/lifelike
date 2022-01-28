@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "lifelike.fullname" . }}-api
+  labels: {{- include "lifelike.labels" . | nindent 4 }}
+    app.kubernetes.io/component: api
+spec:
+  type: {{ default "ClusterIP" .Values.api.service.type }}
+  ports:
+    - port: {{ .Values.api.service.port }}
+      targetPort: {{ .Values.api.service.port }}
+      protocol: TCP
+      name: http
+  selector: {{- include "lifelike.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: api

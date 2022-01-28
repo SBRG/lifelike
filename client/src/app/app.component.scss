@@ -1,0 +1,11 @@
+@import "src/scss/variables";
+
+// Make the content fill the whole screen
+// There's no better way to do this due to limitations in Angular
+router-outlet + ::ng-deep * {
+  height: 100%;
+}
+
+.button-divider {
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}

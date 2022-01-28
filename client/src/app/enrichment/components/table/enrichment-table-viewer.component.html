@@ -1,0 +1,142 @@
+<div class="module"
+     *ngIf="({object: object$ | addStatus | async, document: document$ | async, table: table$ | addStatus | async}) as result"
+>
+    <app-module-error *ngIf="result.object.error" [error]="result.object.error">
+    </app-module-error>
+    <app-module-progress *ngIf="result.object.loading">
+        Loading enrichment table...
+    </app-module-progress>
+
+    <ng-container *ngIf="result.object.value">
+        <app-module-header
+                [object]="result.object.value"
+                (dragStarted)="dragStarted($event, result.object.value)">
+                  <app-module-menu [object]="result.object.value" [forEditing]="true"
+                                   [showOpen]="false" [showDelete]="false"
+                                   [showRestore]="true" (objectRestore)="restore($event)"
+                                   (objectUpdate)="objectUpdate()">
+                  </app-module-menu>
+            <div *ngIf="queuedChanges$.value">
+                <span class="badge badge-danger badge-pill ml-1"
+                      ngbTooltip="Has unsaved changes" container="body">
+                  <i class="fa fa-pencil-alt"></i>
+                </span>
+            </div>
+
+            <!-- Decided to remove this for now, may bring back in the future. -->
+            <!-- <div class="btn-group ml-2">
+              <button type="button" class="btn btn-secondary"
+                      ngbTooltip="Save" placement="bottom" container="body" (click)="save()"
+                      [disabled]="!result.object.value.privileges.writable">
+                <i class="fa fa-fw fa-save"></i>
+              </button>
+            </div> -->
+
+            <div class="btn-group mx-1">
+                <button class="btn btn-secondary"
+                        (click)="openEnrichmentTableEditDialog(result.object.value, result.document)"
+                        [disabled]="!result.document || !result.object.value.privileges.writable">
+                    <i class="fas fa-fw fa-dna"></i> Parameters
+                </button>
+                <button class="btn btn-secondary" (click)="openOrderDialog()"
+                        [disabled]="!result.document || !result.object.value.privileges.writable">
+                    <i class="fas fa-fw fa-sort"></i> Columns
+                </button>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-secondary" (click)="refreshData()"
+                        [disabled]="!result.document">
+                    <i class="fas fa-fw fa-sync"></i> Refresh
+                </button>
+            </div>
+
+            <div class="btn-group ml-auto">
+                <button class="btn btn-secondary"
+                        [appLink]="[
+                            '/enrichment-visualisation',
+                            result.object.value.project.name,
+                            result.object.value.hashId
+                        ]"
+                      [parentAddress]="[
+                            '/projects',
+                            result.object.value.project.name,
+                            'enrichment-table',
+                            result.object.value.hashId
+                      ]"
+                      [newTab]="true" [sideBySide]="true" [forceWorkbench]="true" [openParentFirst]="true">
+                <i class="fas fa-fw fa-chart-bar"></i> Statistical Enrichment
+              </button>
+              <button class="btn btn-secondary"
+                      [appLink]="[
+                            '/file-navigator',
+                            result.object.value.project.name,
+                            result.object.value.hashId
+                        ]"
+                      [parentAddress]="[
+                            '/projects',
+                            result.object.value.project.name,
+                            'enrichment-table',
+                            result.object.value.hashId
+                      ]"
+                        [newTab]="true" [sideBySide]="true" [forceWorkbench]="true" [openParentFirst]="true"
+                        ngbTooltip="File Navigator" placement="bottom">
+                    <i class="fas fa-fw fa-compass"></i>
+                </button>
+            </div>
+
+            <div class="ml-auto">
+                <ng-container *ngIf="annotation.id; else textSearchControl">
+                    <app-result-control [value]="annotation.text"
+                                        [annotationColor]="annotation.color"
+                                        [resultIndex]="findController.getResultIndex()"
+                                        [resultCount]="findController.getResultCount()"
+                                        (previous)="findController.previous()" (next)="findController.next()"
+                                        (enterPress)="findController.next()"
+                                        (valueClear)="switchToTextFind()">
+                    </app-result-control>
+                </ng-container>
+                <ng-template #textSearchControl>
+                    <app-search-control [(ngModel)]="findController.query"
+                                        (ngModelChange)="findController.nextOrStart()"
+                                        [resultIndex]="findController.getResultIndex()"
+                                        [resultCount]="findController.getResultCount()"
+                                        (previous)="findController.previous()" (next)="findController.next()"
+                                        (valueClear)="findController.stop()">
+                    </app-search-control>
+                </ng-template>
+            </div>
+
+        </app-module-header>
+
+        <div
+                *ngIf="result.document?.duplicateGenes?.length"
+                class="text-warning mt-2"
+        >
+            Duplicate gene names removed from
+            table: {{ result.document?.duplicateGenes.join(', ') }}
+        </div>
+
+        <app-module-error *ngIf="result.table.error" [error]="result.object.error" class="module-body flex-fill">
+        </app-module-error>
+
+        <app-module-progress *ngIf="result.table.loading" class="module-body flex-fill">
+            Loading data...
+        </app-module-progress>
+
+        <div *ngIf="result.table.value" class="flex-fill overflow-auto position-relative"
+             (scroll)="onTableScroll($event)"
+             [scrollTop]="scrollTopAmount" #tableScroll>
+            <div class="table-container" #findTarget>
+                <app-generic-table [header]="result.table.value.tableHeader"
+                                   [entries]="result.table.value.tableCells"
+                                   [object]="result.object.value">
+                </app-generic-table>
+            </div>
+        </div>
+
+        <button class="btn btn-secondary top-button" (click)="scrollTop()">
+            <i class="fa fa-arrow-up"></i> Top
+        </button>
+    </ng-container>
+</div>

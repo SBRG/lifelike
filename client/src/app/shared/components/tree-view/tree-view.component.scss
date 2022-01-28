@@ -1,0 +1,25 @@
+
+.tree-view-node {
+  display: block;
+  counter-increment: listCounter;
+
+  & > div {
+    counter-reset: listCounter;
+  }
+
+  & > button {
+    // long button text in this view should align to left
+    text-align: left !important;
+
+    [data-counter] {
+      &::after {
+        content: ' [' counter(listCounter) '] ';
+      }
+    }
+  }
+
+  // incline nested nodes
+  .tree-view-node {
+    padding-left: 20px;
+  }
+}

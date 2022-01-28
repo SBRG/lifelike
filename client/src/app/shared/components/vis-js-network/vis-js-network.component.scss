@@ -1,0 +1,29 @@
+@import '~bootstrap/scss/functions';
+@import '~bootstrap/scss/variables';
+@import 'src/scss/variables';
+
+.network-container {
+  position: absolute;
+  z-index: 1;
+  margin: $spacer;
+
+  &.navigation {
+    min-width: 6rem;
+    pointer-events: none;
+  }
+
+  &.selection {
+    max-width: 50%;
+  }
+}
+
+.physics-shadow-on {
+    box-shadow: 0 0 0 0.2rem rgba(12, 140, 170, 0.25);
+}
+.physics-shadow-off {
+    box-shadow: none;
+}
+
+.pointer-events-on {
+    pointer-events: all;
+}

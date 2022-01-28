@@ -1,0 +1,116 @@
+<label class="w-100 text-left m-0 checkpoint" ngbButtonLabel>
+    <input [(ngModel)]="state.colorLinkByType" (ngModelChange)="update()"
+           ngbButton
+           type="checkbox">
+    Color link by type
+    <ul class="color-link-legend">
+        <li *ngFor="let typemap of options.colorLinkTypes | keyvalue"
+            [attr.data-type]="typemap.key.toLowerCase()">{{typemap.key}}</li>
+    </ul>
+</label>
+<label class="w-100 text-left m-0 checkpoint" ngbButtonLabel>
+    <input [(ngModel)]="state.highlightCircular" (ngModelChange)="update()"
+           ngbButton
+           type="checkbox">
+    Highlight circular
+</label>
+<div class="dropdown-divider"></div>
+<label class="w-100 text-left m-0 checkpoint" ngbButtonLabel>
+    <input [(ngModel)]="state.normalizeLinks" (ngModelChange)="update()"
+           ngbButton
+           type="checkbox">
+    Normalize links
+</label>
+<div class="dropdown-divider"></div>
+<label class="w-100 text-left m-0 scrollbar-with-value" ngbButtonLabel>
+    <div class="d-flex align-items-center mx-0">
+        <label for="font-size" class="my-0 mr-2" ngbTooltip="Font size" container="body">
+            Font Size
+        </label>
+        <app-percent-input [(value)]="state.fontSizeScale"
+                           default="100"
+                           min="20"
+                           max="1000"
+                           step="20"
+                           inputId="font-size"
+                           (change)="update()"
+        ></app-percent-input>
+        %
+    </div>
+</label>
+<label class="w-100 text-left m-0 scrollbar-with-value" ngbButtonLabel>
+    <input [(ngModel)]="state.nodeHeight.min.enabled" (ngModelChange)="update()"
+           ngbButton
+           type="checkbox">
+    Min node height
+    <input [(ngModel)]="state.nodeHeight.min.value" (ngModelChange)="update()"
+           [disabled]="!state.nodeHeight.min.enabled"
+           max="20" min="0"
+           ngbButton
+           type="range">
+    {{state.nodeHeight.min.value}}
+</label>
+<label class="w-100 text-left m-0 scrollbar-with-value" ngbButtonLabel>
+    <input [(ngModel)]="state.nodeHeight.max.enabled" (ngModelChange)="update()"
+           ngbButton
+           type="checkbox">
+    Max node ratio
+    <input [(ngModel)]="state.nodeHeight.max.ratio" (ngModelChange)="update()"
+           [disabled]="!state.nodeHeight.max.enabled"
+           max="60" min="1"
+           ngbButton
+           type="range">
+    {{state.nodeHeight.max.ratio}}
+</label>
+<label class="w-100 text-left m-0 scrollbar-with-value" ngbButtonLabel>
+    <input [(ngModel)]="state.labelEllipsis.enabled" (ngModelChange)="update()"
+           ngbButton
+           type="checkbox">
+    Max shown label characters
+    <input [(ngModel)]="state.labelEllipsis.value" (ngModelChange)="update()"
+           [disabled]="!state.labelEllipsis.enabled"
+           max="50" min="0"
+           ngbButton
+           type="range">
+    {{state.labelEllipsis.value}}
+</label>
+<div class="dropdown-divider"></div>
+<div class="w-100 text-left m-0" ngbButtonLabel ngbRadioGroup [name]="'link' + uuid"
+     [(ngModel)]="state.linkValueAccessorId" (ngModelChange)="customSizingUpdate()" title="Link size">
+    <div class="mb-1">Link Value Accessor:</div>
+    <label ngbButtonLabel class="mb-0"
+           *ngFor="let valueAccessor of options.linkValueGenerators | keyvalue">
+        <input ngbButton type="radio" [value]="valueAccessor.value"
+               [disabled]="valueAccessor.value.disabled && valueAccessor.value.disabled()"> {{valueAccessor.value.description}}
+    </label>
+    <label ngbButtonLabel class="mb-0"
+           *ngFor="let valueAccessor of options.linkValueAccessors | keyvalue">
+        <input ngbButton type="radio"
+               [value]="valueAccessor.key"> {{valueAccessor.value.description}}
+    </label>
+</div>
+<div class="dropdown-divider"></div>
+<div class="form-check" ngbRadioGroup [name]="'node' + uuid"
+     [(ngModel)]="state.nodeValueAccessorId" (ngModelChange)="customSizingUpdate()" title="Node fixed size">
+    <div class="mb-1">Node Value Accessor:</div>
+    <label ngbButtonLabel class="mb-0"
+           *ngFor="let valueAccessor of options.nodeValueGenerators | keyvalue">
+        <input ngbButton type="radio" [value]="valueAccessor.value"
+               [disabled]="valueAccessor.value.disabled && valueAccessor.value.disabled()"> {{valueAccessor.value.description}}
+    </label>
+    <label ngbButtonLabel class="mb-0"
+           *ngFor="let valueAccessor of options.nodeValueAccessors | keyvalue">
+        <input ngbButton type="radio"
+               [value]="valueAccessor.key"> {{valueAccessor.value.description}}
+    </label>
+</div>
+<div class="dropdown-divider"></div>
+<div class="form-check" ngbRadioGroup [name]="'prescaler' + uuid"
+     [(ngModel)]="state.prescalerId" (ngModelChange)="update()" title="Prescaler">
+    <div class="mb-1">Prescaler:</div>
+    <label ngbButtonLabel *ngFor="let prescaler of options.prescalers | keyvalue" [title]="prescaler.value.description"
+           class="mb-0">
+        <input ngbButton type="radio" [value]="prescaler.key"> {{prescaler.value.name}}
+    </label>
+</div>
+

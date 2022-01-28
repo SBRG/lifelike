@@ -1,0 +1,27 @@
+.trace {
+  &, & > * {
+    vertical-align: middle;
+  }
+
+  & > .property {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+
+    & > span {
+      margin-right: 1em;
+
+      &:first-child {
+        flex-grow: 0;
+        font-weight: bold;
+        margin-top: 0.5em;
+        margin-bottom: 0.25em;
+      }
+    }
+  }
+}
+
+.filled-card {
+  margin: 0;
+}
+

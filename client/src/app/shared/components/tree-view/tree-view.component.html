@@ -1,0 +1,20 @@
+<cdk-tree [dataSource]="dataSource" [treeControl]="treeControl">
+    <!-- This is the tree node template for leaf nodes -->
+    <cdk-nested-tree-node *cdkTreeNodeDef="let node" class="tree-view-node py-1">
+        <ng-container *ngTemplateOutlet="treeNode; context: { $implicit: node }"></ng-container>
+    </cdk-nested-tree-node>
+    <!-- This is the tree node template for expandable nodes -->
+    <cdk-nested-tree-node *cdkTreeNodeDef="let node; when: hasChild" class="tree-view-node py-1">
+        <button class="btn p-0" [attr.aria-label]="'Toggle ' + node.label" cdkTreeNodeToggle>
+            <i [ngClass]="['fas',
+                        treeControl.isExpanded(node) ? 'fa-angle-down' : 'fa-angle-right'
+                        ]"
+               [style.verticalAlign]="'middle'"></i>
+            <ng-container *ngTemplateOutlet="nestedTreeNode; context: { $implicit: node }"></ng-container>
+        </button>
+        <!-- Important to postpone render so we can have circular objects -->
+        <div *ngIf="treeControl.isExpanded(node)">
+            <ng-container cdkTreeNodeOutlet></ng-container>
+        </div>
+    </cdk-nested-tree-node>
+</cdk-tree>

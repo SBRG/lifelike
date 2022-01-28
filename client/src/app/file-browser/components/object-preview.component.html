@@ -1,0 +1,29 @@
+<div class="d-flex flex-column h-100">
+  <ng-container *ngIf="(previewComponent$ | addStatus | async) as result">
+    <ng-container *ngIf="result.error">
+      <app-module-error [error]="result.error" class="d-block p-4">
+      </app-module-error>
+    </ng-container>
+
+    <ng-container *ngIf="result.loading">
+      <div class="d-flex flex-fill align-items-center justify-content-center">
+        <div class="p-4">
+          <i class="fas fa-circle-notch fa-spin fa-2x text-muted"></i>
+        </div>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="result.value !== undefined">
+      <ng-container *ngIf="result.value; else noPreview">
+        <app-object-preview-outlet [componentRef]="result.value" class="h-100"></app-object-preview-outlet>
+      </ng-container>
+      <ng-template #noPreview>
+        <div class="d-flex flex-fill align-items-center justify-content-center">
+          <div class="p-4 text-muted">
+            No preview available.
+          </div>
+        </div>
+      </ng-template>
+    </ng-container>
+  </ng-container>
+</div>

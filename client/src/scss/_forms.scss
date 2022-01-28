@@ -1,0 +1,34 @@
+.input-group {
+  position: relative;
+
+  &:focus-within {
+    @include border-radius($input-border-radius);
+    box-shadow: 0 0 0 0.2rem rgba(12, 140, 170, 0.25);
+
+    *:focus {
+      outline: 0;
+      box-shadow: none;
+    }
+  }
+
+  .input-group-prepend, .input-group-append {
+    position: relative;
+    z-index: 5;
+  }
+}
+
+.form-padding {
+  padding: $input-padding-y $input-padding-x;
+}
+
+fieldset.fieldset-properties {
+  border-top: 1px solid $gray-400;
+
+  legend {
+    width: auto;
+    padding-right: 0.5rem;
+    font-size: $font-size-base;
+    font-weight: $font-weight-base;
+    color: $gray-500;
+  }
+}

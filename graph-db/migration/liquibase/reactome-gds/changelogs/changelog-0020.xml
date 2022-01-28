@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd">
+
+  <changeSet id="create synonym constraint" author="robin cai">
+    <comment>create synonym constraint</comment>
+    <sql>
+    create constraint constraint_synonym_name IF NOT EXISTS on (n:Synonym) assert (n.name) is Unique;
+    </sql>
+  </changeSet>
+
+  <changeSet id="add Synonym nodes" author="robin cai">
+    <comment>Extract synonyms from names</comment>
+    <sql>
+    call apoc.periodic.iterate(
+    "match(n:ReferenceGeneProduct) with n unwind n.geneName as syn return n, syn",
+    "merge (s:Synonym {name:syn}) merge (n)-[:HAS_SYNONYM]->(s)",
+    {batchSize: 5000}
+    );
+
+    call apoc.periodic.iterate(
+    "match(n:PhysicalEntity) unwind n.name as syn return n, syn",
+    "merge(s:Synonym {name:syn}) merge (n)-[:HAS_SYNONYM]->(s)",
+    {batchSize: 5000}
+    );
+    </sql>
+  </changeSet>
+
+  <changeSet id="set entityType property" author="robin cai">
+    <comment>set entityType, which will be used for display</comment>
+    <sql>
+    match(n:EntityWithAccessionedSequence) where (n)-[:referenceEntity]-(:ReferenceDNASequence) set n:Gene, n.entityType='Gene';
+    match(n:EntityWithAccessionedSequence) where (n)-[:referenceEntity]-(:ReferenceRNASequence) set n:RNA, n.entityType='RNA';
+    match(n:EntityWithAccessionedSequence) where (n)-[:referenceEntity]-(:ReferenceGeneProduct) set n:Protein, n.entityType='Protein';
+    match(n:SimpleEntity) set n:Chemical, n.entityType='Chemical';
+
+    match(n:ReferenceGeneProduct) set n.nodeLabel = 'Gene';
+    match(n:Complex) set n.entityType = 'Protein';
+    match(n:EntitySet) set n.entityType = 'EntitySet';
+    match(n:Polymer) set n.entityType = 'Polymer';
+    match(n:ProteinDrug) set n.entityType = 'Protein';
+    match(n:ChemicalDrug) set n.entityType = 'Chemical';
+    match(n:PhysicalEntity) where not exists (n.entityType) set n.entityType = 'Entity';
+
+    match(n:ReactionLikeEvent) set n.entityType = 'Reaction';
+    match(n:CatalystActivity) set n.entityType = 'CatalystActivity';
+    match(n:Regulation) set n.entityType = 'Regulation';
+    match(n:Pathway) set n.entityType = 'Pathway';
+    </sql>
+  </changeSet>
+
+</databaseChangeLog>

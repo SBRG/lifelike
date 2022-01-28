@@ -1,0 +1,52 @@
+@import '~bootstrap/scss/functions';
+@import '~bootstrap/scss/variables';
+@import '~bootstrap/scss/mixins';
+
+.textarea-grow-wrap {
+  /* easy way to plop the elements on top of each other and have them both sized based on the tallest one's height */
+  display: grid;
+  resize: vertical;
+  overflow-x: hidden;
+  overflow-y: auto;
+  height: fit-content;
+  // We set this to prevent large initial block. Unsetted at the bottom of the file
+  max-height: 300px;
+  grid-template-columns: 100%;
+
+  &:focus-within {
+    color: $input-focus-color;
+    background-color: $input-focus-bg;
+    border-color: $input-focus-border-color;
+    outline: 0;
+    @if $enable-shadows {
+      @include box-shadow($input-box-shadow, $input-focus-box-shadow);
+    } @else {
+      // Avoid using mixin so we can pass custom focus shadow properly
+      box-shadow: $input-focus-box-shadow;
+    }
+  }
+
+  & textarea:focus {
+    color: $input-color;
+    background-color: $input-bg;
+    border-color: $input-border-color;
+    outline: 0;
+    box-shadow: none;
+  }
+}
+
+.textarea-grow-wrap > textarea {
+  /* You could leave this, but after a user resizes, then it ruins the auto sizing */
+  box-sizing: border-box;
+  width: inherit;
+  resize: none;
+  border: none;
+
+  /* Firefox shows scrollbar on growth, you can hide like this. */
+  overflow: hidden;
+}
+
+// When we recalculate the height (resize) we unset max height
+.textarea-grow-wrap[style*="height"] {
+  max-height: unset;
+}

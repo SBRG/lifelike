@@ -1,0 +1,22 @@
+.modal-content {
+  border: 0;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.modal-header {
+  border: 0;
+  padding: 1.5rem 1.5rem 1rem;
+}
+
+.modal-body {
+  padding: 0.7rem 1.5rem 1.5rem;
+}
+
+.modal-footer {
+  border: 0;
+  padding: 0 1.5rem 1.5rem;
+
+  > * {
+    margin: 0; // Remove phantom spacing in Bootstrap
+  }
+}

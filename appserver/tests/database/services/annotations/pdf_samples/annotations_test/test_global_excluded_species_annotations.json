@@ -1,0 +1,143 @@
+{
+  "name": "test_global_excluded_species_annotations.pdf",
+  "pages": [
+    {
+      "cropBox": {
+        "height": 792,
+        "lowerLeftPt": {
+          "x": 0,
+          "y": 0
+        },
+        "pivotPt": {
+          "x": 0,
+          "y": 0
+        },
+        "rotation": 0,
+        "width": 612
+      },
+      "mediaBox": {
+        "height": 792,
+        "lowerLeftPt": {
+          "x": 0,
+          "y": 0
+        },
+        "pivotPt": {
+          "x": 0,
+          "y": 0
+        },
+        "rotation": 0,
+        "width": 612
+      },
+      "pageNo": 1,
+      "pageText": "  human rat dog fruit fly ",
+      "tokens": [
+        {
+          "pgIdx": 2,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 11,
+              "lowerLeftPt": {
+                "x": 76.89540100097656,
+                "y": 707.459228515625
+              },
+              "pivotPt": {
+                "x": 76.89540100097656,
+                "y": 710.209228515625
+              },
+              "rotation": 0,
+              "width": 32.421630859375
+            }
+          ],
+          "shapes": [],
+          "text": "human"
+        },
+        {
+          "pgIdx": 8,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 11,
+              "lowerLeftPt": {
+                "x": 115.80264282226562,
+                "y": 707.459228515625
+              },
+              "pivotPt": {
+                "x": 115.80264282226562,
+                "y": 710.209228515625
+              },
+              "rotation": 0,
+              "width": 19.452545166015625
+            }
+          ],
+          "shapes": [],
+          "text": "rat"
+        },
+        {
+          "pgIdx": 12,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 11,
+              "lowerLeftPt": {
+                "x": 141.74081420898438,
+                "y": 707.459228515625
+              },
+              "pivotPt": {
+                "x": 141.74081420898438,
+                "y": 710.209228515625
+              },
+              "rotation": 0,
+              "width": 19.452545166015625
+            }
+          ],
+          "shapes": [],
+          "text": "dog"
+        },
+        {
+          "pgIdx": 16,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 11,
+              "lowerLeftPt": {
+                "x": 167.67898559570312,
+                "y": 707.459228515625
+              },
+              "pivotPt": {
+                "x": 167.67898559570312,
+                "y": 710.209228515625
+              },
+              "rotation": 0,
+              "width": 32.42161560058594
+            }
+          ],
+          "shapes": [],
+          "text": "fruit"
+        },
+        {
+          "pgIdx": 22,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 11,
+              "lowerLeftPt": {
+                "x": 206.5862274169922,
+                "y": 707.459228515625
+              },
+              "pivotPt": {
+                "x": 206.5862274169922,
+                "y": 710.209228515625
+              },
+              "rotation": 0,
+              "width": 19.452560424804688
+            }
+          ],
+          "shapes": [],
+          "text": "fly"
+        }
+      ]
+    }
+  ],
+  "processedDate": "2021-01-14 14:04:03"
+}

@@ -1,0 +1,1 @@
+curl -O http://regulondb.ccg.unam.mx/menu/download/full_version/files/10.0/regulonDB10.0_Data_Dist.tar.gz

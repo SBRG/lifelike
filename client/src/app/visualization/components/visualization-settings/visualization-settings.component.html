@@ -1,0 +1,67 @@
+<div *ngIf="legendLabels" class="floating-toolbar settings-container" [ngClass]="navbarCollapsed ? 'unexpanded' : 'expanded'">
+  <div
+    class="pointer-on-hover canvas-settings-button"
+    (click)="navbarCollapsed = !navbarCollapsed"
+    [attr.aria-expanded]="!navbarCollapsed"
+    aria-controls="navbarContent"
+    aria-expanded="false"
+    aria-label="Toggle settings">
+    <i class="fa fa-fw fa-cog"></i>
+  </div>
+  <div [ngClass]="navbarCollapsed ? 'settings-content unexpanded' : 'settings-content expanded'">
+    <form [formGroup]="settingsForm" class="d-flex flex-column justify-content-between">
+      <fieldset class="fieldset-properties">
+        <legend>Canvas Settings</legend>
+        <!-- Animation toggle -->
+        <div class="custom-control custom-switch">
+          <input type="checkbox" formControlName="animation" class="custom-control-input pointer-on-hover" [id]="animationToggleInputId">
+          <label class="custom-control-label pointer-on-hover" [for]="animationToggleInputId">Animation</label>
+        </div>
+
+        <!-- Max cluster rows input -->
+        <label class="mt-2" [for]="maxClusterRowsInputId">Max rows shown in clusters:</label>
+        <input
+          [id]="maxClusterRowsInputId"
+          [ngClass]="maxClusterRowsInputClass"
+          type="number"
+          min="1"
+          step="1"
+          formControlName="maxClusterShownRows"
+        />
+        <div class="mt-1 text-warning small-font" *ngIf="settingsForm.get('maxClusterShownRows').value > 50">
+          Large clusters may render slowly.
+        </div>
+        <div class="mt-1 text-danger small-font" *ngIf="settingsForm.get('maxClusterShownRows').hasError('required')">
+          Max rows cannot be empty!
+        </div>
+        <div class="mt-1 text-danger small-font" *ngIf="settingsForm.get('maxClusterShownRows').hasError('min')">
+          Max rows cannot be less than 1!
+        </div>
+        <div class="mt-1 text-danger small-font" *ngIf="settingsForm.get('maxClusterShownRows').hasError('pattern')">
+          Max rows must be a whole number!
+        </div>
+
+        <!-- Labels to include in expand result checkboxes -->
+        <label class="mt-2 mb-0">When Node is Expanded Include:</label>
+        <div
+          class="custom-control custom-checkbox mt-1"
+          *ngFor="let label of legendLabels; index as i"
+        >
+          <input type="checkbox" [formControlName]="label" class="custom-control-input pointer-on-hover" [id]="expandEntityInputIdPrefix + i">
+          <label class="custom-control-label pointer-on-hover" [for]="expandEntityInputIdPrefix + i">{{ label }}</label>
+        </div>
+
+        <button
+        type="button"
+        class="btn btn-secondary settings-button"
+        container="body"
+        ngbTooltip="Fit all nodes on screen"
+        placement="top"
+        (click)="fitToScreen()"
+      >
+        Fit to Screen
+      </button>
+      </fieldset>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,27 @@
+<fieldset class="fieldset-properties mt-2" *ngFor="let m of (search.entitySearchList | async | slice : 0 : 100 ); let
+i = index"
+          [ngClass]="{focused: i===search.entitySearchListIdx.value}" (click)="search.entitySearchListIdx.next(i)"
+          #item>
+    <legend>
+        {{
+        m.hasOwnProperty('nodeId') && 'node' ||
+        m.hasOwnProperty('linkId') && 'link'
+        }} {{
+        m.hasOwnProperty('networkTrace') ? (' in ' + m.networkTrace.description) : ''
+        }}
+    </legend>
+    <dl>
+        <div *ngFor="let matchObj of m?.calculatedMatches" class="property">
+            <dt>{{matchObj.path.join('→')}}</dt>
+            <dd>
+                <app-term-highlight [text]="matchObj.term" [highlightTerms]="search.searchTerms">
+                </app-term-highlight>
+            </dd>
+        </div>
+    </dl>
+</fieldset>
+<ng-container *ngIf="(search.entitySearchList | async).length > 100" class="mt-2">
+    Showing only first 100 results.
+</ng-container>
+
+

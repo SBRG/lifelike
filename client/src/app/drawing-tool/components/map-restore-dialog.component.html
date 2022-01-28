@@ -1,0 +1,15 @@
+<form (ngSubmit)="submit()">
+  <app-modal-header (cancel)="cancel()">
+    Restore Map
+  </app-modal-header>
+
+  <app-modal-body>
+    There is a recovered version of this map from last time. Would you like to restore it? You can
+    choose to keep the recovered version or not.
+  </app-modal-body>
+
+  <app-modal-footer>
+    <button type="button" class="btn btn-secondary mr-2" (click)="cancel()">Discard</button>
+    <button type="submit" class="btn btn-primary">Recover</button>
+  </app-modal-footer>
+</form>

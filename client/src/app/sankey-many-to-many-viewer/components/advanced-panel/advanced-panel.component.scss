@@ -1,0 +1,75 @@
+@import '~bootstrap/scss/functions';
+@import '~bootstrap/scss/variables';
+@import 'src/scss/variables';
+@import 'src/app/shared/styles/EdgeColorCode';
+
+
+// The little dot next to each entity type indicating the color
+.entity-type-legend {
+  display: inline-block;
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 10rem;
+}
+
+.invalid-input {
+  border-color: $danger;
+}
+
+.invalid-input:focus {
+  box-shadow: 0 0 0 0.2rem rgba($danger, 0.25);
+}
+
+.small-font {
+  font-size: $font-size-sm;
+}
+
+.checkpoint {
+  vertical-align: middle;
+
+  :first-child {
+    margin-right: .5em;
+  }
+}
+
+.scrollbar-with-value {
+  display: flex;
+  flex-wrap: wrap;
+  vertical-align: middle;
+
+  :first-child {
+    margin-right: .5em;
+  }
+
+  :last-child {
+    margin-left: .5em;
+    margin-right: .5em;
+    flex-grow: 1;
+  }
+}
+
+ul.color-link-legend {
+  list-style: none;
+  padding-left: 1.5em;
+  margin-bottom: 0;
+
+  li:before {
+    content: '+';
+    color: transparent;
+    border-style: solid;
+    border-width: 2px;
+    border-radius: 2px;
+    margin-right: 0.5em;
+    height: 1em;
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  @each $type, $color in $edge-color-map {
+    li[data-type=#{$type}]:before {
+      background-color: $color;
+      border-color: darken($color, 25%);
+    }
+  }
+
+}

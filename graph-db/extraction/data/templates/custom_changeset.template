@@ -1,0 +1,14 @@
+  <changeSet id="${change_id}" author="${author}">
+    <comment>
+        ${change_comment}
+    </comment>
+    <customChange
+      class="${handler_class}"
+      query="
+      ${cypher_query}
+      "
+      fileName="${data_file}"
+      startAt="${start_at}"
+      fileType="${file_type}" ${params}
+    />
+  </changeSet>

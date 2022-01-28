@@ -1,0 +1,24 @@
+<form (ngSubmit)="submit()">
+  <app-modal-header (cancel)="cancel()">
+    Deletion Result
+  </app-modal-header>
+
+  <app-modal-body>
+    <ng-template #noneSuccessful>
+      {{ failed.length === 1 ? 'An error was' : 'Some errors were' }} encountered
+      during deletion:
+    </ng-template>
+
+    <ul class="mt-3">
+      <li *ngFor="let item of failed">
+        <div class="text-truncate">
+          '{{ item.object.name }}': {{ item.message }}
+        </div>
+      </li>
+    </ul>
+  </app-modal-body>
+
+  <app-modal-footer>
+    <button type="submit" class="btn btn-primary">OK</button>
+  </app-modal-footer>
+</form>

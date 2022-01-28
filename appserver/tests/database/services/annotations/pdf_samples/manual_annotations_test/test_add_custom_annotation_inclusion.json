@@ -1,0 +1,269 @@
+{
+  "name": "test_add_custom_annotation_inclusions.pdf",
+  "pages": [
+    {
+      "cropBox": {
+        "height": 792,
+        "lowerLeftPt": {
+          "x": 0,
+          "y": 0
+        },
+        "pivotPt": {
+          "x": 0,
+          "y": 0
+        },
+        "rotation": 0,
+        "width": 612
+      },
+      "mediaBox": {
+        "height": 792,
+        "lowerLeftPt": {
+          "x": 0,
+          "y": 0
+        },
+        "pivotPt": {
+          "x": 0,
+          "y": 0
+        },
+        "rotation": 0,
+        "width": 612
+      },
+      "pageNo": 1,
+      "pageText": "  I just caught a Pikachu! That\\'s right, I caught a Pikachu. ",
+      "tokens": [
+        {
+          "pgIdx": 2,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 11,
+              "lowerLeftPt": {
+                "x": 76.89540100097656,
+                "y": 707.459228515625
+              },
+              "pivotPt": {
+                "x": 76.89540100097656,
+                "y": 710.209228515625
+              },
+              "rotation": 0,
+              "width": 6.48345947265625
+            }
+          ],
+          "shapes": [],
+          "text": "I"
+        },
+        {
+          "pgIdx": 4,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 11,
+              "lowerLeftPt": {
+                "x": 89.8644790649414,
+                "y": 707.459228515625
+              },
+              "pivotPt": {
+                "x": 89.8644790649414,
+                "y": 710.209228515625
+              },
+              "rotation": 0,
+              "width": 25.937095642089844
+            }
+          ],
+          "shapes": [],
+          "text": "just"
+        },
+        {
+          "pgIdx": 9,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 11,
+              "lowerLeftPt": {
+                "x": 122.28718566894531,
+                "y": 707.459228515625
+              },
+              "pivotPt": {
+                "x": 122.28718566894531,
+                "y": 710.209228515625
+              },
+              "rotation": 0,
+              "width": 38.90617370605469
+            }
+          ],
+          "shapes": [],
+          "text": "caught"
+        },
+        {
+          "pgIdx": 16,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 11,
+              "lowerLeftPt": {
+                "x": 167.67898559570312,
+                "y": 707.459228515625
+              },
+              "pivotPt": {
+                "x": 167.67898559570312,
+                "y": 710.209228515625
+              },
+              "rotation": 0,
+              "width": 6.48345947265625
+            }
+          ],
+          "shapes": [],
+          "text": "a"
+        },
+        {
+          "pgIdx": 18,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 11,
+              "lowerLeftPt": {
+                "x": 180.6480712890625,
+                "y": 707.459228515625
+              },
+              "pivotPt": {
+                "x": 180.6480712890625,
+                "y": 710.209228515625
+              },
+              "rotation": 0,
+              "width": 45.390716552734375
+            }
+          ],
+          "shapes": [],
+          "text": "Pikachu"
+        },
+        {
+          "pgIdx": 27,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 11,
+              "lowerLeftPt": {
+                "x": 239.00897216796875,
+                "y": 707.459228515625
+              },
+              "pivotPt": {
+                "x": 239.00897216796875,
+                "y": 710.209228515625
+              },
+              "rotation": 0,
+              "width": 45.3907470703125
+            }
+          ],
+          "shapes": [],
+          "text": "That\\'s"
+        },
+        {
+          "pgIdx": 35,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 11,
+              "lowerLeftPt": {
+                "x": 290.8853759765625,
+                "y": 707.459228515625
+              },
+              "pivotPt": {
+                "x": 290.8853759765625,
+                "y": 710.209228515625
+              },
+              "rotation": 0,
+              "width": 32.421661376953125
+            }
+          ],
+          "shapes": [],
+          "text": "right"
+        },
+        {
+          "pgIdx": 42,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 11,
+              "lowerLeftPt": {
+                "x": 336.2772216796875,
+                "y": 707.459228515625
+              },
+              "pivotPt": {
+                "x": 336.2772216796875,
+                "y": 710.209228515625
+              },
+              "rotation": 0,
+              "width": 6.48345947265625
+            }
+          ],
+          "shapes": [],
+          "text": "I"
+        },
+        {
+          "pgIdx": 44,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 11,
+              "lowerLeftPt": {
+                "x": 349.2463073730469,
+                "y": 707.459228515625
+              },
+              "pivotPt": {
+                "x": 349.2463073730469,
+                "y": 710.209228515625
+              },
+              "rotation": 0,
+              "width": 38.906219482421875
+            }
+          ],
+          "shapes": [],
+          "text": "caught"
+        },
+        {
+          "pgIdx": 51,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 11,
+              "lowerLeftPt": {
+                "x": 394.6381530761719,
+                "y": 707.459228515625
+              },
+              "pivotPt": {
+                "x": 394.6381530761719,
+                "y": 710.209228515625
+              },
+              "rotation": 0,
+              "width": 6.48345947265625
+            }
+          ],
+          "shapes": [],
+          "text": "a"
+        },
+        {
+          "pgIdx": 53,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 11,
+              "lowerLeftPt": {
+                "x": 407.60723876953125,
+                "y": 707.459228515625
+              },
+              "pivotPt": {
+                "x": 407.60723876953125,
+                "y": 710.209228515625
+              },
+              "rotation": 0,
+              "width": 45.390777587890625
+            }
+          ],
+          "shapes": [],
+          "text": "Pikachu"
+        }
+      ]
+    }
+  ],
+  "processedDate": "2021-03-22 10:33:40"
+}

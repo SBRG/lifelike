@@ -1,0 +1,144 @@
+mat-sidenav {
+  min-width: 320px;
+
+  .sidenav-title {
+    margin-left: 32px;
+  }
+
+  .drawer-content {
+    padding: 8px;
+  }
+}
+
+.document {
+  display: flex;
+  flex-direction: column;
+  font-family: Georgia,Cambria,"Times New Roman",Times,serif;
+  font-size: 18px;
+
+  & > * {
+    margin-bottom: 10px;
+
+    &:empty {
+      margin: 0;
+    }
+  }
+
+  .ordertop {
+    order: -1;
+    color: black !important;
+  }
+
+  .title {
+    margin-bottom: 15px;
+    font-size: 25px;
+    line-height: 40px;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-weight: 600;
+    display: block;
+    color: #237aaa;
+  }
+
+  .title_1 {
+    font-size: 26px;
+    line-height: 1.12;
+    text-align: left;
+    font-weight: 600;
+    margin: 40px 10px 10px 0;
+    color: #237aaa;
+    letter-spacing: -.022em;
+    font-family: "Lucida Grande","Lucida Sans Unicode","Lucida Sans",Geneva,Arial,sans-serif;
+    text-transform: capitalize;
+  }
+
+  .abstract_title_1, .title_2, .title_caption {
+    font-size: 18px;
+    margin: 10px 0 10px 0;
+    color: #237aaa;
+  }
+
+  .paragraph { 
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    font-size: 18.5px;
+    color: #333;
+  }
+
+  .sub_header {
+    color: #237aaa;
+    font-size: 20px;
+    font-weight: bold;
+    font-family: Georgia,Cambria,"Times New Roman",Times,serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  .pmid {
+    color: #0071bc;
+  }
+
+  .authors {
+    text-align: left;
+  }
+
+  .meta {
+    order: -1;
+    margin-bottom: 10px;
+
+    & > * {
+      &:after {
+        content: " - ";
+      }
+
+      &:last-child:after {
+        content: "";
+      }
+    }
+
+    .authors {
+      font-family: Calibri,serif;
+      display: block;
+      font-variant: petite-caps;
+      color: #37474f;
+
+      & > * {
+        &:after {
+          content: ", ";
+        }
+
+        &:last-child:after {
+          content: "";
+        }
+      }
+    }
+  }
+}
+
+
+.title {
+    color: #333;
+    font-size: 25px;
+    line-height: 40px;
+    font-weight: 600;
+}
+
+.title2 {
+  margin-top: 20px;
+  font-size: 18px;
+  color: #237aaa;
+}
+
+.row.figure {
+  margin-top: 20px;
+  margin-left: 0;
+  margin-right: 0;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  background: #f4f4f4;
+  border-radius: 10px;
+  font-size: 16px;
+}
+
+.figure-text {
+  font-style: italic;
+}

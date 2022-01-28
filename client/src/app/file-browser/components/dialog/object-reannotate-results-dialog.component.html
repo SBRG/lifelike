@@ -1,0 +1,22 @@
+<form (ngSubmit)="submit()">
+  <app-modal-header (cancel)="cancel()">Results</app-modal-header>
+
+  <app-modal-body>
+    <ngb-accordion>
+      <ngb-panel title="Files that failed to annotate">
+        <ng-template ngbPanelContent>
+          <ul *ngFor="let file of failed">
+            <li>
+              Filename: {{file.filename}}<br>
+              Error: {{file.error}}
+            </li>
+          </ul>
+        </ng-template>
+      </ngb-panel>
+    </ngb-accordion>
+  </app-modal-body>
+
+  <app-modal-footer>
+    <button type="submit" class="btn btn-primary" (click)="cancel()">Close</button>
+  </app-modal-footer>
+</form>

@@ -1,0 +1,26 @@
+<div class="module" *ngIf="(loadTask?.status$ | async) as status">
+    <app-module-progress *ngIf="status.running">
+        Downloading file...
+    </app-module-progress>
+
+    <app-module-error *ngIf="status.failedErrorShown" [error]="status.error">
+        <a appLink="/projects">Go to Projects <i class="fa fa-fw fa-arrow-right"></i></a>
+    </app-module-error>
+
+    <app-module-error *ngIf="error" [error]="error">
+        <a [appLink]="sourceFileURL">Go to Source <i class="fa fa-fw fa-arrow-right"></i></a>
+    </app-module-error>
+
+    <ng-template #tabTitle>{{ title }}</ng-template>
+    <app-module-header *ngIf="object"
+                       [object]="object"
+                       [titleTemplate]="tabTitle"
+                       [showObjectMenu]="false"
+    >
+        <app-warning-pill></app-warning-pill>
+    </app-module-header>
+    <div class="position-relative overflow-hidden flex-fill">
+        <app-trace-details *ngIf="status.resultsShown" [data]="data"
+                           class="flex-fill h-100"></app-trace-details>
+    </div>
+</div>

@@ -1,0 +1,87 @@
+<form [formGroup]="form" (ngSubmit)="submit()">
+  <app-modal-header (cancel)="cancel()">Create Annotation</app-modal-header>
+
+  <app-modal-body>
+    <app-form-row for="text" label="Text" [control]="form.get('text')">
+      <div class="input-group">
+        <input formControlName="text" type="text" class="form-control" id="text">
+        <div class="input-group-append">
+          <button class="btn btn-secondary" type="button" ngbTooltip="Make a correction">
+            <i class="fas fa-edit" type="button" (click)="enableTextField()"></i>
+          </button>
+        </div>
+      </div>
+    </app-form-row>
+    <div class="row justify-content-end mb-3" *ngIf="isTextEnabled">
+      <div class="text-muted col-sm-9">
+        <i class="fas fa-exclamation-circle"></i>
+        Editing this field might affect the ability to find the term in the document and annotate it.
+      </div>
+    </div>
+
+    <app-form-row for="search-links" label="Search">
+      <ng-container *ngFor="let searchLink of getSearchLinks; let i = index" id="search-links">
+        <a href="{{searchLink.link}}" target="_blank">{{searchLink.domain}}</a><span *ngIf="i < getSearchLinks.length - 1">, </span>
+      </ng-container>
+    </app-form-row>
+
+    <fieldset class="fieldset-properties mt-4">
+      <legend>Annotation</legend>
+      <app-form-row for="entity-type" label="Type" [control]="form.get('entityType')">
+        <select
+          formControlName="entityType"
+          class="custom-select w-100"
+          id="entity-type"
+          (change)="disableGlobalOption()"
+        >
+          <option *ngFor="let choice of entityTypeChoices" [value]="choice.name">
+            {{choice.name | titlecase}}
+          </option>
+        </select>
+      </app-form-row>
+
+      <div class="form-group row row-cols-2">
+        <label for="id" class="col-form-label col-sm-3">
+          <i class="fas fa-exclamation-circle" ngbTooltip="Enter identifier number without source. E.g MESH:XXXXXX should just be XXXXXX"></i>
+          Identifier:</label>
+        <div class="col-sm-6">
+          <select formControlName="source" class="custom-select w-100" id="source">
+            <option value="" selected>No Source</option>
+            <option *ngFor="let choice of databaseTypeChoices" [value]="choice">
+              {{choice}}
+            </option>
+          </select>
+        </div>
+        <div class="col-sm-3">
+          <input type="text" formControlName="id" class="form-control" id="id">
+          <app-form-input-feedback [control]="form.get('id')" [errors]="errors"></app-form-input-feedback>
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset class="fieldset-properties mt-4">
+      <legend>Additional Links</legend>
+      <app-links-panel title="Links" singularTitle="Link"
+                       [(ngModel)]="sourceLinks"
+                       [ngModelOptions]="{standalone: true}"
+                       [draggable]="false"
+                       [limit]="3"></app-links-panel>
+    </fieldset>
+
+    <div class="custom-control custom-checkbox mt-4">
+      <input type="checkbox" class="custom-control-input" id="include-globally"
+             formControlName="includeGlobally">
+      <label class="custom-control-label" for="include-globally">Add this annotation to a global list</label>
+    </div>
+
+    <div *ngIf="form.get('includeGlobally').value" class="text-muted mt-3">
+      <i class="fas fa-info-circle"></i>
+        Re-annotate other documents to incorporate this inclusion.
+    </div>
+  </app-modal-body>
+
+  <app-modal-footer>
+    <button type="button" class="btn btn-secondary mr-2" (click)="cancel()">Cancel</button>
+    <button type="submit" class="btn btn-primary" [disabled]="form.invalid">Create</button>
+  </app-modal-footer>
+</form>

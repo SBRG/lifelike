@@ -1,0 +1,47 @@
+<div class="d-flex justify-content-start" draggable="true" (dragstart)="edgeDragStart($event)">
+  <div *ngIf="leftNodeName && leftNodeLabel">
+    <div
+      matTooltip="{{ leftNodeLabel }}"
+      [matTooltipPosition]="tooltipPosition"
+      class="text-center"
+      [style.border]="'thin solid ' + leftNodeColor"
+      [style.border-radius]="'0.5rem'"
+      draggable="true"
+      (dragstart)="nodeDragStart($event, leftNodeName, leftNodeLabel, leftNodeUrl)"
+    >
+      <ng-container *ngIf="leftNodeUrl; else leftNodeNoUrl">
+        <a class="px-1" target="_blank" [href]="leftNodeUrl">{{ leftNodeName }}</a>
+      </ng-container>
+      <ng-template #leftNodeNoUrl>
+        {{ leftNodeName }}
+      </ng-template>
+    </div>
+    <div *ngIf="!leftNodeUrl" class="invalid-msg">Could not retrieve url for this entity.</div>
+  </div>
+  <div *ngIf="edge" class="d-flex justify-content-center">
+    <div class="mx-1">
+      &mdash;
+    </div>
+    <div>{{ edge }}</div>
+    <div *ngIf="rightNodeName"><i class="fa fa-fw fa-caret-right"></i></div>
+  </div>
+  <div *ngIf="rightNodeName && rightNodeLabel">
+    <div
+      matTooltip="{{ rightNodeLabel }}"
+      [matTooltipPosition]="tooltipPosition"
+      class="text-center"
+      [style.border]="'thin solid ' + rightNodeColor"
+      [style.border-radius]="'0.5rem'"
+      draggable="true"
+      (dragstart)="nodeDragStart($event, rightNodeName, rightNodeLabel, rightNodeUrl)"
+    >
+      <ng-container *ngIf="rightNodeUrl; else rightNodeNoUrl">
+        <a class="px-1" target="_blank" [href]="rightNodeUrl">{{ rightNodeName }}</a>
+      </ng-container>
+      <ng-template #rightNodeNoUrl>
+        {{ rightNodeName }}
+      </ng-template>
+    </div>
+    <div *ngIf="!rightNodeUrl" class="invalid-msg">Could not retrieve url for this entity.</div>
+  </div>
+</div>

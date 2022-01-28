@@ -1,0 +1,7 @@
+<ul class="list-unstyled m-0">
+  <li *ngFor="let link of shownLinks" class="text-truncate">
+    <a [href]="link.url" target="_blank">
+      {{ link.domain }}
+    </a>
+  </li>
+</ul>

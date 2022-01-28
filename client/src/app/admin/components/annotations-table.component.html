@@ -1,0 +1,185 @@
+<div *ngIf="loadTask.status$ | async as status">
+  <!-- Toolbar -->
+  <div class="mb-4 d-flex">
+    <div>
+      <div ngbDropdown class="d-inline-block">
+        <button class="btn btn-primary" ngbDropdownToggle>
+          <i class="fa fa-fw fa-file-export"></i>
+          Export
+        </button>
+        <div ngbDropdownMenu>
+          <button ngbDropdownItem (click)="exportGlobalExclusions()">Export Exclusions...</button>
+          <button ngbDropdownItem (click)="exportGlobalInclusions()">Export Inclusions...</button>
+        </div>
+      </div>
+      <div ngbDropdown class="d-inline-block" style="margin-left: 5px">
+        <button class="btn btn-primary" ngbDropdownToggle ngbTooltip="Select what global annotations to display">
+          <i class="fa fa-fw fa-file-export"></i>
+          Global Annotations To Display
+        </button>
+        <div ngbDropdownMenu>
+          <button ngbDropdownItem *ngFor="let choice of globalAnnotationTypeChoices" (click)="selectGlobalType(choice)">{{ choice }}</button>
+        </div>
+      </div>
+      <button [disabled]="results.selection.length === 0"
+              class="btn btn-danger ml-2"
+              (click)="deleteAnnotation(results.selection)"
+              ngbTooltip="Delete annotation(s)">
+        Delete
+      </button>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <table class="table module-body-table">
+    <thead>
+      <tr>
+        <th>
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" id="select-all"
+                   [checked]="results.isAllSelected()"
+                   (change)="results.toggleAll()">
+            <label class="custom-control-label" for="select-all"></label>
+          </div>
+        </th>
+        <th *ngFor="let header of headers" scope="col">{{ header }}</th>
+      </tr>
+    </thead>
+
+    <tbody *ngIf="status.placeholdersShown">
+      <tr>
+        <td>
+          <span class="placeholder-box">Loading loading</span>
+        </td>
+        <td>
+          <span class="placeholder-box">Loading loading</span>
+        </td>
+        <td>
+          <span class="placeholder-box">Loading loading</span>
+        </td>
+        <td>
+          <span class="placeholder-box">Loading loading</span>
+        </td>
+        <td>
+          <span class="placeholder-box">Loading loading</span>
+        </td>
+        <td>
+          <span class="placeholder-box">Loading loading</span>
+        </td>
+        <td>
+          <span class="placeholder-box">Loading loading</span>
+        </td>
+        <td>
+          <span class="placeholder-box">Loading loading</span>
+        </td>
+        <td>
+          <span class="placeholder-box">Loading loading</span>
+        </td>
+        <td>
+          <span class="placeholder-box">Loading loading</span>
+        </td>
+        <td>
+          <span class="placeholder-box">Loading loading</span>
+        </td>
+        <td>
+          <span class="placeholder-box">Loading loading</span>
+        </td>
+        <td>
+          <span class="placeholder-box">Loading loading</span>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <span class="placeholder-box">Loading loading</span>
+        </td>
+        <td>
+          <span class="placeholder-box">Loading loading</span>
+        </td>
+        <td>
+          <span class="placeholder-box">Loading loading</span>
+        </td>
+        <td>
+          <span class="placeholder-box">Loading loading</span>
+        </td>
+        <td>
+          <span class="placeholder-box">Loading loading</span>
+        </td>
+        <td>
+          <span class="placeholder-box">Loading loading</span>
+        </td>
+        <td>
+          <span class="placeholder-box">Loading loading</span>
+        </td>
+        <td>
+          <span class="placeholder-box">Loading loading</span>
+        </td>
+        <td>
+          <span class="placeholder-box">Loading loading</span>
+        </td>
+        <td>
+          <span class="placeholder-box">Loading loading</span>
+        </td>
+        <td>
+          <span class="placeholder-box">Loading loading</span>
+        </td>
+        <td>
+          <span class="placeholder-box">Loading loading</span>
+        </td>
+      </tr>
+      </tbody>
+
+    <tbody status.resultsShown>
+      <tr *ngFor="let object of results.view; index as objectIndex"
+          [class.active]="this.results.isSelected(object)">
+        <td class="align-middle text-nowrap" (click)="results.toggle(object)">
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" id="object-{{ objectIndex }}"
+                   (change)="results.toggle(object)"
+                   [checked]="results.isSelected(object)">
+            <label class="custom-control-label d-block" for="object-{{ objectIndex }}"></label>
+          </div>
+        </td>
+
+        <td *ngIf="!object.fileDeleted && object.fileUuid; else noSuchFile">
+          <button class="btn btn-secondary" (click)="openNewWindow(object.fileUuid)">
+            <i class="fas fa-external-link-alt" ngbTooltip="Open in new window"></i>
+          </button>
+        </td>
+        <ng-template #noSuchFile>
+          <td class="align-middle text-nowrap">No longer available</td>
+        </ng-template>
+        <td class="align-middle text-nowrap">{{ object.text }}</td>
+        <td class="align-middle text-nowrap">{{ object.caseInsensitive }}</td>
+        <td class="align-middle text-nowrap">{{ object.type }}</td>
+        <td class="align-middle text-nowrap">{{ object.entityType }}</td>
+        <td class="align-middle text-nowrap">{{ object.entityId }}</td>
+        <td class="align-middle text-nowrap">{{ object.fileDeleted }}</td>
+        <td class="align-middle text-nowrap">{{ object.creator }}</td>
+        <td class="align-middle text-nowrap">{{ object.reason }}</td>
+        <td
+          *ngIf="object.comment; else noComment"
+          class="align-middle text-nowrap"
+        >
+          {{ object.comment | truncate:20 }}
+        </td>
+        <ng-template #noComment>
+          <td class="align-middle text-nowrap">{{ object.comment }}</td>
+        </ng-template>
+        <td class="align-middle text-nowrap">{{ object.creationDate }}</td>
+        <!-- <td class="align-middle text-nowrap">
+          <button class="btn"
+                  ngbTooltip="Download file" disabled>
+          </button>
+        </td> -->
+      </tr>
+    </tbody>
+  </table>
+  <ngb-pagination
+    style="text-align: center"
+    *ngIf="collectionSize"
+    [page]="currentPage"
+    [pageSize]="pageSize"
+    [collectionSize]="collectionSize"
+    (pageChange)="goToPage($event)"
+  ></ngb-pagination>
+</div>

@@ -1,0 +1,90 @@
+<form class="d-flex flex-column justify-content-between">
+    <fieldset class="fieldset-properties mt-2">
+        <legend container="body"
+                ngbTooltip="Click a checkbox to filter annotations of that type"
+                placement="top left right">Link
+            Details:
+        </legend>
+        <ngb-accordion ngbAccordion activeIds="l_desc">
+            <ngb-panel id="l_desc" title="Description">
+                <ng-template ngbPanelContent>
+                    <p [innerHTML]="entity.description" [style.whiteSpace]="'pre-wrap'"></p>
+                </ng-template>
+            </ngb-panel>
+            <ngb-panel *ngIf="!entity._multiple_values else multipleValues" [disabled]="true">
+                <ng-template disabled="true" ngbPanelHeader>
+                    <app-button-with-selectable-text ngbPanelToggle [disabled]="true">
+                        <b title>Value</b>
+                        {{ parseProperty(entity._value) }}
+                    </app-button-with-selectable-text>
+                </ng-template>
+            </ngb-panel>
+            <ng-template #multipleValues>
+                <ngb-panel title="Value" cardClass="filled-card">
+                    <ng-template ngbPanelContent>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item d-flex flex-wrap justify-content-between">
+                                <b>Source value</b>
+                                {{ parseProperty(entity._multiple_values[0]) }}
+                            </li>
+                            <li class="list-group-item d-flex flex-wrap justify-content-between">
+                                <b>Target value</b>
+                                {{ parseProperty(entity._multiple_values[1]) }}
+                            </li>
+                        </ul>
+                    </ng-template>
+                </ngb-panel>
+            </ng-template>
+            <ngb-panel *ngIf="entity._trace" cardClass="filled-card" title="Trace">
+                <ng-template ngbPanelContent>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex flex-wrap justify-content-between">
+                            <b>Source</b>
+                            {{ getNodeById(entity._trace.source).description }}
+                        </li>
+                        <li class="list-group-item d-flex flex-wrap justify-content-between">
+                            <b>Target</b>
+                            {{ getNodeById(entity._trace.target).description }}
+                        </li>
+                        <li class="list-group-item d-flex flex-wrap justify-content-between">
+                            <b>Group</b>
+                            {{ entity._trace._group }}
+                        </li>
+                        <li class="list-group-item" *ngIf="entity._trace.detail_edges">
+                            <button (click)="openTraceView(entity._trace)" class="btn btn-outline-primary">
+                                Show detailed network
+                            </button>
+                        </li>
+                    </ul>
+                </ng-template>
+            </ngb-panel>
+            <ngb-panel cardClass="filled-card" title="Properties">
+                <ng-template ngbPanelContent>
+                    <ul class="list-group list-group-flush">
+                        <li *ngFor="let property of options.linkValueAccessors | keyvalue"
+                            [ngClass]="{
+                                'list-group-item': true,
+                                 'd-flex': true,
+                                 'flex-wrap': true,
+                                 'justify-content-between': true,
+                                active: property.key === state.linkValueAccessorId
+                              }"
+                        ><b>{{ property.value.description }}</b>{{parseProperty(entity[property.value.description])}}
+                        </li>
+                        <li *ngIf="entity._folded"
+                            class="list-group-item d-flex justify-content-between"
+                        >
+                            <b>Folded</b>
+                            True
+                        </li>
+                    </ul>
+                </ng-template>
+            </ngb-panel>
+            <ngb-panel title="Details">
+                <ng-template ngbPanelContent>
+                    <app-object-explorer [dataSource]="entity"></app-object-explorer>
+                </ng-template>
+            </ngb-panel>
+        </ngb-accordion>
+    </fieldset>
+</form>

@@ -1,0 +1,80 @@
+{
+  "name": "test_prioritize_primary_name_that_equals_synonym.pdf",
+  "pages": [
+    {
+      "cropBox": {
+        "height": 792,
+        "lowerLeftPt": {
+          "x": 0,
+          "y": 0
+        },
+        "pivotPt": {
+          "x": 0,
+          "y": 0
+        },
+        "rotation": 0,
+        "width": 612
+      },
+      "mediaBox": {
+        "height": 792,
+        "lowerLeftPt": {
+          "x": 0,
+          "y": 0
+        },
+        "pivotPt": {
+          "x": 0,
+          "y": 0
+        },
+        "rotation": 0,
+        "width": 612
+      },
+      "pageNo": 1,
+      "pageText": "  halite atomoxetine ",
+      "tokens": [
+        {
+          "pgIdx": 2,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 12,
+              "lowerLeftPt": {
+                "x": 76.89540100097656,
+                "y": 706.2301025390625
+              },
+              "pivotPt": {
+                "x": 76.89540100097656,
+                "y": 709.2301025390625
+              },
+              "rotation": 0,
+              "width": 28.09174346923828
+            }
+          ],
+          "shapes": [],
+          "text": "halite"
+        },
+        {
+          "pgIdx": 9,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 12,
+              "lowerLeftPt": {
+                "x": 108.2469711303711,
+                "y": 706.2301025390625
+              },
+              "pivotPt": {
+                "x": 108.2469711303711,
+                "y": 709.2301025390625
+              },
+              "rotation": 0,
+              "width": 77.55486297607422
+            }
+          ],
+          "shapes": [],
+          "text": "atomoxetine"
+        }
+      ]
+    }
+  ],
+  "processedDate": "2021-09-07 15:45:49"
+}

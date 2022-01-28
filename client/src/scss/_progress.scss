@@ -1,0 +1,15 @@
+.background-progress-overlay {
+  position: relative;
+
+  &::after {
+    position: absolute;
+    display: block;
+    content: "\f1ce";
+    left: 5px;
+    top: 5px;
+    font-family: 'Font Awesome 5 Pro';
+    animation: fa-spin 2s linear infinite;
+    text-align: center;
+    font-size: 10px;
+  }
+}

@@ -1,0 +1,14 @@
+<form (ngSubmit)="submit()">
+  <app-modal-header (cancel)="cancel()">
+    Terms of Service
+  </app-modal-header>
+
+  <app-modal-body>
+    <app-terms-of-service-text></app-terms-of-service-text>
+  </app-modal-body>
+
+  <app-modal-footer>
+    <button type="button" class="btn btn-secondary mr-2" (click)="cancel()">Disagree</button>
+    <button type="submit" class="btn btn-primary">Agree</button>
+  </app-modal-footer>
+</form>

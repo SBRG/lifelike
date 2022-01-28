@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd">
+  <!--
+    Refactor 'translocate' and 'transport' reactions with EntitySet in both input and output
+  -->
+  <changeSet id="Removed referredTo relationships" author="robin cai">
+    <comment></comment>
+    <sql>
+    match (n)-[r:inferredTo]->(m) delete r;
+    </sql>
+  </changeSet>
+
+  <changeSet id="Mark reaction nodes to refactor" author="robin cai">
+    <comment></comment>
+    <sql>
+    match(n:ReactionLikeEvent {category: 'transition'}) where (n.displayName contains 'transport') or (n.displayName contains 'translocate')
+    with n match (s1:EntitySet)-[:input]-(n)-[:output]-(s2:EntitySet)
+    set n.refactorStatus = 'refactored';
+    </sql>
+  </changeSet>
+
+  <changeSet id="change Event dbId and stId as index" author="robin cai">
+    <comment>
+    Drop constraints and create indexes instead
+    With unique constraints for dbId and stId, cloning nodes would fail.
+    </comment>
+    <sql>
+    drop constraint on (n:Event) assert n.dbId is unique;
+    drop constraint on (n:Event) assert n.stId is unique;
+    drop constraint on (n:ReactionLikeEvent) assert n.dbId is unique;
+    drop constraint on (n:ReactionLikeEvent) assert n.stId is unique;
+    drop constraint on (n:Reaction) assert n.dbId is unique;
+    drop constraint on (n:Reaction) assert n.stId is unique;
+    create index for (n:ReactionLikeEvent) on (n.dbId);
+    create index for (n:ReactionLikeEvent) on (n.stId);
+    </sql>
+  </changeSet>
+
+  <changeSet id="Clone reactions and add input-output relationships" author="robin cai">
+    <comment></comment>
+    <sql>
+    match(n:ReactionLikeEvent {refactorStatus: 'refactored'})
+    with n match (s1:EntitySet)-[:input]-(n)-[:output]-(s2:EntitySet)
+    with n, s1, s2 match (m1)-[:memberOf]->(s1), (m2)-[:memberOf]->(s2)
+    where (m1)-[:referenceEntity]-()-[:referenceEntity]-(m2)
+    with n, m1, m2 call apoc.refactor.cloneNodes([n]) yield input, output as n2
+    set n2.refactorStatus = 'added'
+    merge (m1)-[:input]->(n2)-[:output]->(m2)
+    return count(*);
+    </sql>
+  </changeSet>
+
+  <changeSet id="add regulates relationships to newly created nodes" author="robin cai">
+    <comment></comment>
+    <sql>
+    match(n:ReactionLikeEvent {refactorStatus: 'refactored'})-[:regulates]-(r)
+    with n, r match (n2:ReactionLikeEvent) where n2.dbId = n.dbId and n2.refactorStatus = 'added'
+    merge (r)-[:regulates]->(n2);
+    </sql>
+  </changeSet>
+
+  <changeSet id="add catalyzes relationships to newly created nodes" author="robin cai">
+    <comment></comment>
+    <sql>
+    match(n:ReactionLikeEvent {refactorStatus: 'refactored'})-[:catalyzes]-(c)
+    with n, c match (n2:ReactionLikeEvent) where n2.dbId = n.dbId and n2.refactorStatus = 'added'
+    merge (c)-[:catalyzes]->(n2);
+    </sql>
+  </changeSet>
+
+</databaseChangeLog>

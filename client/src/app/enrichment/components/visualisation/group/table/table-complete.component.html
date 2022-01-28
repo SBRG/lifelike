@@ -1,0 +1,91 @@
+<form>
+    <div *ngIf="showMore" class="form-group form-inline d-flex justify-content-between align-items-stretch">
+        <span class="flex-grow-0">Search: <input class="form-control ml-2" type="text" name="searchTerm"
+                                                 [(ngModel)]="service.searchTerm"/>
+        </span>
+        <span class="ml-3" *ngIf="service.loading$ | async">Loading...</span>
+    </div>
+    <table class="table table-striped">
+        <ng-template #legend>
+            <dl class="legend">
+                <dt>' '</dt>
+                <dd><i>q-value</i> <= 1</dd>
+                <dt>.</dt>
+                <dd><i>q-value</i> <= 0.1</dd>
+                <dt>*</dt>
+                <dd><i>q-value</i> <= 0.05</dd>
+                <dt>**</dt>
+                <dd><i>q-value</i> <= 0.01</dd>
+                <dt>***</dt>
+                <dd><i>q-value</i> <= 0.001</dd>
+            </dl>
+        </ng-template>
+        <thead>
+        <tr>
+            <th scope="col" appSortable="goId" (sort)="onSort($event)">GOID</th>
+            <th scope="col" appSortable="goTerm" (sort)="onSort($event)">GO Term</th>
+            <th scope="col" appSortable="geneNames" (sort)="onSort($event)">Associated genes</th>
+<!--            <th scope="col" appSortable="p-value" (sort)="onSort($event)">p-value</th>-->
+            <th scope="col" appSortable="q-value" (sort)="onSort($event)"
+                [style.paddingRight]="0"
+            >q-value
+            </th>
+            <th scope="col"
+                [ngbTooltip]="legend"
+                placement="bottom-right top-right"
+                openDelay="500"
+            >
+                <span class="hidden-text">Significance marker</span>
+            </th>
+        </tr>
+        </thead>
+        <tbody [ngClass]="{'line-clamp':!service.searchTerm}">
+        <tr *ngFor="let row of data$ | async; let i = index" [tabindex]="i">
+            <td>{{ row.goId }}</td>
+            <th scope="row">
+                <ngb-highlight [result]="row.goTerm" [term]="service.searchTerm"></ngb-highlight>
+            </th>
+            <td>
+                <span [className]="'gene-list'">
+                    <ngb-highlight *ngFor="let gene of row['geneNames']"
+                                   [appSELink]="gene"
+                                   [result]="gene"
+                                   [term]="service.searchTerm"
+                    ></ngb-highlight>
+                </span>
+            </td>
+<!--            <td>-->
+<!--                <ngb-highlight [result]="row['p-value'].toExponential(2)"-->
+<!--                               [style.whiteSpace]="'pre'"-->
+<!--                               [term]="service.searchTerm"></ngb-highlight>-->
+<!--            </td>-->
+            <td [style.paddingRight]="0">
+                <ngb-highlight [result]="row['q-value'].toExponential(2)"
+                               [style.whiteSpace]="'pre'"
+                               [term]="service.searchTerm"></ngb-highlight>
+            </td>
+            <td [style.paddingLeft]="0"
+                [ngbTooltip]="legend"
+                placement="top-right bottom-right"
+                openDelay="1000"
+            >
+                <ngb-highlight [result]="significanceIndicator(row['q-value'])"
+                               [term]="service.searchTerm"></ngb-highlight>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div *ngIf="showMore" class="d-flex justify-content-between p-2" style="flex-wrap: wrap;">
+        <ngb-pagination
+                [collectionSize]="(total$ | async)!" [(page)]="service.page" [pageSize]="service.pageSize">
+        </ngb-pagination>
+
+        <select class="custom-select" style="width: auto" name="pageSize" [(ngModel)]="service.pageSize">
+            <option [ngValue]="15">15 items per page</option>
+            <option [ngValue]="30">30 items per page</option>
+            <option [ngValue]="100">100 items per page</option>
+        </select>
+    </div>
+
+</form>

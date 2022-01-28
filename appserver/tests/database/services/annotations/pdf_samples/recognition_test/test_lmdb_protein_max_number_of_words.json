@@ -1,0 +1,416 @@
+{
+  "name": "/////Users/bvu/Downloads/test_lmdb_protein_max_number_of_words.pdf",
+  "pages": [
+    {
+      "cropBox": {
+        "height": 792,
+        "lowerLeftPt": {
+          "x": 0,
+          "y": 0
+        },
+        "pivotPt": {
+          "x": 0,
+          "y": 0
+        },
+        "rotation": 0,
+        "width": 612
+      },
+      "mediaBox": {
+        "height": 792,
+        "lowerLeftPt": {
+          "x": 0,
+          "y": 0
+        },
+        "pivotPt": {
+          "x": 0,
+          "y": 0
+        },
+        "rotation": 0,
+        "width": 612
+      },
+      "pageNo": 1,
+      "pageText": "  Vascular cell adhesion protein 1 will be recognized. vascular cell adhesion protein 1 will not be recognized. VCAM1_HUMAN ",
+      "tokens": [
+        {
+          "pgIdx": 2,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 11,
+              "lowerLeftPt": {
+                "x": 72.02400207519531,
+                "y": 706.6699829101562
+              },
+              "pivotPt": {
+                "x": 72.02400207519531,
+                "y": 709.4199829101562
+              },
+              "rotation": 0,
+              "width": 44.79551696777344
+            }
+          ],
+          "shapes": [],
+          "text": "Vascular"
+        },
+        {
+          "pgIdx": 11,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 11,
+              "lowerLeftPt": {
+                "x": 120.47328186035156,
+                "y": 706.6699829101562
+              },
+              "pivotPt": {
+                "x": 120.47328186035156,
+                "y": 709.4199829101562
+              },
+              "rotation": 0,
+              "width": 17.508468627929688
+            }
+          ],
+          "shapes": [],
+          "text": "cell"
+        },
+        {
+          "pgIdx": 16,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 11,
+              "lowerLeftPt": {
+                "x": 141.69886779785156,
+                "y": 706.6699829101562
+              },
+              "pivotPt": {
+                "x": 141.69886779785156,
+                "y": 709.4199829101562
+              },
+              "rotation": 0,
+              "width": 47.16094970703125
+            }
+          ],
+          "shapes": [],
+          "text": "adhesion"
+        },
+        {
+          "pgIdx": 25,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 11,
+              "lowerLeftPt": {
+                "x": 192.47132873535156,
+                "y": 706.6699829101562
+              },
+              "pivotPt": {
+                "x": 192.47132873535156,
+                "y": 709.4199829101562
+              },
+              "rotation": 0,
+              "width": 37.38240051269531
+            }
+          ],
+          "shapes": [],
+          "text": "protein"
+        },
+        {
+          "pgIdx": 33,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 11,
+              "lowerLeftPt": {
+                "x": 233.57000732421875,
+                "y": 706.6699829101562
+              },
+              "pivotPt": {
+                "x": 233.57000732421875,
+                "y": 709.4199829101562
+              },
+              "rotation": 0,
+              "width": 6.716156005859375
+            }
+          ],
+          "shapes": [],
+          "text": "1"
+        },
+        {
+          "pgIdx": 35,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 11,
+              "lowerLeftPt": {
+                "x": 244.00999450683594,
+                "y": 706.6699829101562
+              },
+              "pivotPt": {
+                "x": 244.00999450683594,
+                "y": 709.4199829101562
+              },
+              "rotation": 0,
+              "width": 17.255020141601562
+            }
+          ],
+          "shapes": [],
+          "text": "will"
+        },
+        {
+          "pgIdx": 40,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 11,
+              "lowerLeftPt": {
+                "x": 264.8871154785156,
+                "y": 706.6699829101562
+              },
+              "pivotPt": {
+                "x": 264.8871154785156,
+                "y": 709.4199829101562
+              },
+              "rotation": 0,
+              "width": 12.872650146484375
+            }
+          ],
+          "shapes": [],
+          "text": "be"
+        },
+        {
+          "pgIdx": 43,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 11,
+              "lowerLeftPt": {
+                "x": 281.3290710449219,
+                "y": 706.6699829101562
+              },
+              "pivotPt": {
+                "x": 281.3290710449219,
+                "y": 709.4199829101562
+              },
+              "rotation": 0,
+              "width": 57.08544921875
+            }
+          ],
+          "shapes": [],
+          "text": "recognized"
+        },
+        {
+          "pgIdx": 55,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 11,
+              "lowerLeftPt": {
+                "x": 72.02400207519531,
+                "y": 641.3900146484375
+              },
+              "pivotPt": {
+                "x": 72.02400207519531,
+                "y": 644.1400146484375
+              },
+              "rotation": 0,
+              "width": 43.823036193847656
+            }
+          ],
+          "shapes": [],
+          "text": "vascular"
+        },
+        {
+          "pgIdx": 64,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 11,
+              "lowerLeftPt": {
+                "x": 119.50080108642578,
+                "y": 641.3900146484375
+              },
+              "pivotPt": {
+                "x": 119.50080108642578,
+                "y": 644.1400146484375
+              },
+              "rotation": 0,
+              "width": 17.50847625732422
+            }
+          ],
+          "shapes": [],
+          "text": "cell"
+        },
+        {
+          "pgIdx": 69,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 11,
+              "lowerLeftPt": {
+                "x": 140.7263946533203,
+                "y": 641.3900146484375
+              },
+              "pivotPt": {
+                "x": 140.7263946533203,
+                "y": 644.1400146484375
+              },
+              "rotation": 0,
+              "width": 47.16094970703125
+            }
+          ],
+          "shapes": [],
+          "text": "adhesion"
+        },
+        {
+          "pgIdx": 78,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 11,
+              "lowerLeftPt": {
+                "x": 191.4988555908203,
+                "y": 641.3900146484375
+              },
+              "pivotPt": {
+                "x": 191.4988555908203,
+                "y": 644.1400146484375
+              },
+              "rotation": 0,
+              "width": 37.38240051269531
+            }
+          ],
+          "shapes": [],
+          "text": "protein"
+        },
+        {
+          "pgIdx": 86,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 11,
+              "lowerLeftPt": {
+                "x": 232.61000061035156,
+                "y": 641.3900146484375
+              },
+              "pivotPt": {
+                "x": 232.61000061035156,
+                "y": 644.1400146484375
+              },
+              "rotation": 0,
+              "width": 6.716156005859375
+            }
+          ],
+          "shapes": [],
+          "text": "1"
+        },
+        {
+          "pgIdx": 88,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 11,
+              "lowerLeftPt": {
+                "x": 243.0500030517578,
+                "y": 641.3900146484375
+              },
+              "pivotPt": {
+                "x": 243.0500030517578,
+                "y": 644.1400146484375
+              },
+              "rotation": 0,
+              "width": 17.255020141601562
+            }
+          ],
+          "shapes": [],
+          "text": "will"
+        },
+        {
+          "pgIdx": 93,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 11,
+              "lowerLeftPt": {
+                "x": 263.9271240234375,
+                "y": 641.3900146484375
+              },
+              "pivotPt": {
+                "x": 263.9271240234375,
+                "y": 644.1400146484375
+              },
+              "rotation": 0,
+              "width": 17.223358154296875
+            }
+          ],
+          "shapes": [],
+          "text": "not"
+        },
+        {
+          "pgIdx": 97,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 11,
+              "lowerLeftPt": {
+                "x": 284.78314208984375,
+                "y": 641.3900146484375
+              },
+              "pivotPt": {
+                "x": 284.78314208984375,
+                "y": 644.1400146484375
+              },
+              "rotation": 0,
+              "width": 12.872650146484375
+            }
+          ],
+          "shapes": [],
+          "text": "be"
+        },
+        {
+          "pgIdx": 100,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 11,
+              "lowerLeftPt": {
+                "x": 301.22509765625,
+                "y": 641.3900146484375
+              },
+              "pivotPt": {
+                "x": 301.22509765625,
+                "y": 644.1400146484375
+              },
+              "rotation": 0,
+              "width": 56.99420166015625
+            }
+          ],
+          "shapes": [],
+          "text": "recognized"
+        },
+        {
+          "pgIdx": 112,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 11,
+              "lowerLeftPt": {
+                "x": 72.02400207519531,
+                "y": 597.8300170898438
+              },
+              "pivotPt": {
+                "x": 72.02400207519531,
+                "y": 600.5800170898438
+              },
+              "rotation": 0,
+              "width": 83.50654602050781
+            }
+          ],
+          "shapes": [],
+          "text": "VCAM1_HUMAN"
+        }
+      ]
+    }
+  ],
+  "processedDate": "2021-05-07 10:55:57"
+}

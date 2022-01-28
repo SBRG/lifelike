@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd">
+
+  <changeSet id="Enzyme data initial load 12292021" author="Binh Vu">
+    <comment>Create constraints and indexes for enzyme nodes</comment>
+    <sql>
+    CREATE CONSTRAINT constraint_enzyme_id IF NOT EXISTS ON (n:db_Enzyme) ASSERT n.eid IS UNIQUE;
+CREATE CONSTRAINT constraint_ecnumber_id IF NOT EXISTS ON (n:EC_Number) ASSERT n.eid IS UNIQUE;
+CREATE CONSTRAINT constraint_synonym_name IF NOT EXISTS ON (n:Synonym) ASSERT n.name IS UNIQUE;
+CREATE INDEX index_enzyme_name IF NOT EXISTS FOR (n:db_Enzyme) ON (n.name);
+CREATE INDEX index_ecnumber_name IF NOT EXISTS FOR (n:EC_Number) ON (n.name);
+    </sql>
+  </changeSet>
+
+  <changeSet id="LL-3217 Create Enzyme nodes on date 12292021" author="Binh Vu">
+    <comment>
+        
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.FileQueryHandler"
+      query="
+      UNWIND $rows as row
+MERGE (n:db_Enzyme {eid: row.eid})
+SET n:EC_Number,n.name=row.name,n.code=row.code,n.activities=row.activities,n.cofactors=row.cofactors,n.data_source='Enzyme'
+      "
+      fileName="jira-LL-3217-enzyme.zip"
+      startAt="1"
+      fileType="TSV" 
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="LL-3217 Create enzyme and synonym rels on date 12292021" author="Binh Vu">
+    <comment>
+        
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.FileQueryHandler"
+      query="
+      UNWIND $rows AS row
+MERGE (a:Synonym {name: row.name}) SET a.lowercase_name=toLower(row.name)
+WITH row, a MATCH (b:db_Enzyme {eid: row.eid})
+MERGE (b)-[r:HAS_SYNONYM]->(a)
+      "
+      fileName="jira-LL-3217-enzyme_synonym.zip"
+      startAt="1"
+      fileType="TSV" 
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="LL-3217 Create enzyme to enzyme parent rels on date 12292021" author="Binh Vu">
+    <comment>
+        
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.FileQueryHandler"
+      query="
+      UNWIND $rows AS row
+MATCH (a:db_Enzyme {eid: row.eid}), (b:db_Enzyme {eid: row.parent_id})
+MERGE (a)-[r:HAS_PARENT]->(b)
+      "
+      fileName="jira-LL-3217-enzyme_rels.zip"
+      startAt="1"
+      fileType="TSV" 
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+</databaseChangeLog>

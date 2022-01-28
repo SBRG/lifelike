@@ -1,0 +1,203 @@
+<div class="d-flex flex-column h-100">
+    <ul ngbNav #nav="ngbNav" [(activeId)]="infoPanel.activeTab" class="nav-tabs nav-sidebar-tabs">
+        <li ngbNavItem="properties">
+            <a ngbNavLink>Properties</a>
+            <ng-template ngbNavContent>
+                <div class="form-group">
+                    <label for="label">
+                        Node Label:
+                    </label>
+                    <input [(ngModel)]="node.display_name" class="form-control map-editor-initial-focus"
+                           (change)="doSave()" id="label" maxlength="2000"
+                           #displayName>
+                </div>
+
+                <div class="form-group">
+                    <label for="detail">Detail:</label>
+                    <div class="form-control textarea-grow-wrap" [attr.data-replicated-value]="node.data.detail">
+                        <textarea  [(ngModel)]="node.data.detail" cdkTextareaAutosize
+                                   cdkAutosizeMinRows="2"
+                                  (change)="doSave()"
+                                  id="detail"
+                                  maxlength="5000"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-group" *ngIf="mayShowDetailText()">
+                    <div class="custom-control custom-checkbox">
+                        <input class="custom-control-input" type="checkbox" id="show-detail" value="1"
+                               [(ngModel)]="node.style.showDetail" (change)="doSave()">
+                        <label class="custom-control-label" for="show-detail">
+                            Show detail text instead of the label
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group mb-4">
+                    <label for="type" ngbTooltip="Node type" container="body">
+                        Type:
+                    </label>
+                    <div class="d-flex flex-column flex-fill">
+                        <select [(ngModel)]="node.label" (change)="doSave()" class="custom-select w-100"
+                                id="type"
+                                (ngModelChange)="handleTypeChange()" [disabled]="fixedType">
+                            <option *ngFor="let choice of nodeTypeChoices" [value]="choice.label">
+                                {{choice.label | titlecase}}
+                            </option>
+                        </select>
+                        <div class="mt-2" *ngIf="nodeSubtypeChoices.length">
+                            <label for="subtype" ngbTooltip="Node subtype" container="body">
+                                Type:
+                            </label>
+                            <select [(ngModel)]="node.data.subtype" (change)="doSave()"
+                                    class="custom-select flex-fill"
+                                    id="subtype">
+                                <option *ngFor="let choice of nodeSubtypeChoices" [value]="choice">
+                                    {{choice | titlecase}}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <app-links-panel title="Sources" singularTitle="Source" fontAwesomeIcon="far fa-book"
+                                     [(ngModel)]="node.data.sources"
+                                     (ngModelChange)="doSave()"></app-links-panel>
+                </div>
+
+                <div class="mb-4">
+                    <app-links-panel title="Hyperlinks" singularTitle="Hyperlink"
+                                     [(ngModel)]="node.data.hyperlinks"
+                                     (ngModelChange)="doSave()"></app-links-panel>
+                </div>
+
+                <ng-container *ngIf="!overflow" [ngTemplateOutlet]="search"></ng-container>
+                <ng-container *ngIf="overflow" [ngTemplateOutlet]="delete"></ng-container>
+
+            </ng-template>
+        </li>
+        <li ngbNavItem="search" *ngIf="overflow">
+            <a ngbNavLink>Search</a>
+            <ng-template ngbNavContent>
+                <ng-container [ngTemplateOutlet]="search">
+                </ng-container>
+            </ng-template>
+        </li>
+        <li ngbNavItem="style">
+            <a ngbNavLink>Style</a>
+            <ng-template ngbNavContent>
+                <fieldset class="fieldset-properties">
+                    <legend>Label Style</legend>
+
+                    <div class="form-group d-flex align-items-center">
+                        <label for="font-size" class="my-0 mr-2" ngbTooltip="Font size" container="body">
+                            <i class="fa fa-fw fa-text-height"></i>
+                        </label>
+                        <app-percent-input min="20" max="1000" step="20" class="mr-1"
+                                           [(value)]="node.style.fontSizeScale" (change)="doSave()"
+                                           default="100"
+                                           inputId="font-size"
+                                           [style.width]="'6rem'"></app-percent-input>
+                        %
+                    </div>
+
+                    <div class="form-group d-flex align-items-center">
+                        <label class="my-0 mr-2" ngbTooltip="Text color" container="body">
+                            <i class="fa fa-fw fa-fill"></i>
+                        </label>
+                        <app-color-chooser-component
+                                id="fill-color" [palette]="paletteChoices"
+                                [(color)]="node.style.fillColor" emptyLabel="Default"
+                                (colorChange)="doSave()"></app-color-chooser-component>
+                    </div>
+                </fieldset>
+
+                <fieldset class="fieldset-properties mt-4">
+                    <legend>Border Style</legend>
+
+                    <div class="form-group d-flex align-items-center">
+                        <label for="stroke-color" class="my-0 mr-2" ngbTooltip="Border color" container="body">
+                            <i class="fa fa-fw fa-fill"></i>
+                        </label>
+                        <app-color-chooser-component
+                                id="stroke-color" [palette]="paletteChoices"
+                                [(color)]="node.style.strokeColor" emptyLabel="Default"
+                                (colorChange)="doSave()"></app-color-chooser-component>
+                    </div>
+
+                    <div class="form-group d-flex align-items-center">
+                        <label for="line-type" class="my-0 mr-2" ngbTooltip="Border line type" container="body">
+                            <i class="fa fa-fw fa-border-style"></i>
+                        </label>
+                        <select [(ngModel)]="node.style.lineType" (change)="doSave()" class="custom-select"
+                                id="line-type">
+                            <option *ngFor="let choice of lineTypeChoices" [value]="choice[0]">
+                                {{choice[1].name}}
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="form-group d-flex align-items-center">
+                        <label for="line-width-scale" class="my-0 mr-2" ngbTooltip="Border line thickness"
+                               container="body">
+                            <i class="fa fa-fw fa-window-minimize"></i>
+                        </label>
+                        <app-percent-input min="20" max="1000" step="20" class="mr-1"
+                                           [(value)]="node.style.lineWidthScale" (change)="doSave()"
+                                           default="100"
+                                           inputId="line-width-scale"
+                                           [style.width]="'6rem'"></app-percent-input>
+                        %
+                    </div>
+                </fieldset>
+                <ng-container [ngTemplateOutlet]="delete"></ng-container>
+            </ng-template>
+        </li>
+    </ul>
+    <div class="overflow-auto h-100" #scrollWrapper>
+        <div class="module-body">
+            <div [ngbNavOutlet]="nav"></div>
+        </div>
+    </div>
+</div>
+
+<ng-template #search>
+    <fieldset class="fieldset-properties mb-4"
+              *ngIf="(node.display_name != null && node.display_name.length) || node.data?.search">
+        <legend>Search Internal <i class="fas fa-external-link-alt ml-1"></i></legend>
+
+        <ul class="list-unstyled m-0">
+            <li class="text-truncate">
+                <div class="btn btn-link p-0" (click)="searchMapNodeInVisualizer(node)">
+                    Knowledge Graph
+                </div>
+            </li>
+            <li class="text-truncate">
+                <div class="btn btn-link p-0" (click)="searchMapNodeInContent(node, '')">
+                    File Content
+                </div>
+            </li>
+            <li class="text-truncate">
+                <div class="btn btn-link p-0" (click)="searchMapNodeInContent(node, 'map')">
+                    Map Content
+                </div>
+            </li>
+        </ul>
+    </fieldset>
+    <fieldset class="fieldset-properties mb-4"
+              *ngIf="(node.display_name != null && node.display_name.length) || node.data?.search">
+        <legend>Search External <i class="fas fa-external-link-alt ml-1"></i></legend>
+        <app-quick-search [query]="node.display_name"
+                          [links]="node.data?.search"></app-quick-search>
+    </fieldset>
+    <ng-container [ngTemplateOutlet]="delete"></ng-container>
+</ng-template>
+
+<ng-template #delete>
+    <div class="mb-4">
+        <button (click)="doDelete()" type="button" class="btn btn-danger btn-block">
+            Delete
+        </button>
+    </div>
+</ng-template>

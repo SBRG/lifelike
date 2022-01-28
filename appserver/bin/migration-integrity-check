@@ -1,0 +1,31 @@
+#!/bin/bash
+
+echo "Checking migration integrity..."
+
+# Start in appserver directory
+__dir__="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+cd ${__dir__}/../migrations
+
+head_count=$(alembic heads | wc -l)
+
+if [ "$head_count" -gt "1" ];
+then
+    echo "########################################"
+    echo "# Two or more migrations are conflicting"
+    echo "# There are ${head_count} heads detected"
+    echo "########################################"
+    echo ""
+    echo "----- Solution -----"
+    echo "This can be caused when merging two branches, each with their own migrations."
+    echo "As a result, Alembic doesn't know which head is the correct head, and it's "
+    echo "not going to choose favorites. To solve this problem, you can merge the two "
+    echo "(or more) migration heads creating a 'merge migration.'"
+    echo ""
+    echo "To create a merge migration automatically:"
+    echo "$ docker-compose exec appserver flask db merge heads"
+    echo ""
+    echo "To see a list of heads (there should be only one):"
+    echo "$ docker-compose exec appserver flask db heads"
+    exit 1
+fi

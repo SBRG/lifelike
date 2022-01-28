@@ -1,0 +1,27 @@
+@import '~bootstrap/scss/functions';
+@import '~bootstrap/scss/variables';
+
+.btn-presets {
+  width: 100% !important;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  column-gap: $spacer * .5;
+  overflow-wrap: break-word;
+
+  &:disabled:hover {
+    text-decoration: none;
+  }
+
+  .selectable-text {
+    pointer-events: all;
+    user-select: text;
+    cursor: text;
+  }
+
+  & > *:last-child {
+    text-align: end;
+    overflow-wrap: anywhere;
+  }
+}
+

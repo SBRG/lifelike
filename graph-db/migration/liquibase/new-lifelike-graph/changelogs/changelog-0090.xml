@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd">
+
+  <!-- The first two changeset are used to create a temp db
+    Because parsing the RDF is complicated and difficult to understand
+    the schema, so we let Neo4j do it.
+
+    The data files used by the other changesets came from this temp db.
+  -->
+  <!-- <changeSet id="Create empty MeSH db to load RDF data on date 01032022" author="Binh Vu">
+    <comment>Let Neo4j handle the parsing of RDF using neosemantic</comment>
+    <sql>
+CREATE CONSTRAINT constraint_uri IF NOT EXISTS ON (n:Resource) ASSERT n.uri IS UNIQUE;
+    </sql>
+  </changeSet>
+
+  <changeSet id="Load RDF data into the empty MeSH db on date 01032022" author="Binh Vu">
+    <comment>Let Neo4j handle the parsing of RDF using neosemantic</comment>
+    <sql>
+CALL n10s.graphconfig.init();
+        CALL n10s.graphconfig.set({
+            handleVocabUris: 'IGNORE',
+            handleMultival: 'ARRAY',
+            multivalPropList : ['http://id.nlm.nih.gov/mesh/vocab#altLabel']
+        });
+CALL n10s.rdf.import.fetch('https://nlmpubs.nlm.nih.gov/projects/mesh/rdf/mesh.nt', 'N-Triples');
+    </sql>
+  </changeSet> -->
+
+  <changeSet id="MeSH data initial load 01052022" author="Binh Vu">
+    <comment>Create constraints and indexes for MeSH nodes</comment>
+    <sql>
+    CREATE CONSTRAINT constraint_mesh_id IF NOT EXISTS ON (n:db_MESH) ASSERT n.eid IS UNIQUE;
+CREATE CONSTRAINT constraint_ecnumber_id IF NOT EXISTS ON (n:Synonym) ASSERT n.name IS UNIQUE;
+CREATE INDEX index_mesh_name IF NOT EXISTS FOR (n:db_MESH) ON (n.name);
+    </sql>
+  </changeSet>
+
+  <changeSet id="LL-3214 Create MeSH treenumbers nodes on date 01052022" author="Binh Vu">
+    <comment>
+        
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.FileQueryHandler"
+      query="
+      UNWIND $rows as row
+MERGE (n:db_MESH {eid: row.eid})
+SET n:TreeNumber,n.obsolete=row.obsolete,n.data_source='MeSH'
+      "
+      fileName="jira-LL-3214-mesh_treenumber.zip"
+      startAt="1"
+      fileType="TSV" 
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="LL-3214 Create MeSH treenumber-treenumber parent rels on date 01052022" author="Binh Vu">
+    <comment>
+        
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.FileQueryHandler"
+      query="
+      UNWIND $rows AS row
+MATCH (a:db_MESH {eid: row.eid}), (b:db_MESH {eid: row.parent_id})
+MERGE (a)-[r:HAS_PARENT]->(b)
+RETURN COUNT(*)
+      "
+      fileName="jira-LL-3214-mesh_treenumber_parent_rels.zip"
+      startAt="1"
+      fileType="TSV" 
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="LL-3214 Create MeSH topical descriptor nodes on date 01052022" author="Binh Vu">
+    <comment>
+        
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.FileQueryHandler"
+      query="
+      UNWIND $rows as row
+MERGE (n:db_MESH {eid: row.eid})
+SET n:TopicalDescriptor,n.name=row.name,n.obsolete=row.obsolete,n.data_source='MeSH'
+      "
+      fileName="jira-LL-3214-mesh_topicaldescriptors.zip"
+      startAt="1"
+      fileType="TSV" 
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="LL-3214 Create MeSH treenumber-topicaldescriptor rels on date 01052022" author="Binh Vu">
+    <comment>
+        
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.FileQueryHandler"
+      query="
+      UNWIND $rows AS row
+MATCH (a:db_MESH {eid: row.eid}), (b:db_MESH {eid: row.treenumber})
+MERGE (a)-[r:HAS_TREENUMBER]->(b)
+RETURN COUNT(*)
+      "
+      fileName="jira-LL-3214-mesh_treenumber_topicaldesc_rels.zip"
+      startAt="1"
+      fileType="TSV" 
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="LL-3214 Create MeSH chemical nodes on date 01052022" author="Binh Vu">
+    <comment>
+        
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.FileQueryHandler"
+      query="
+      UNWIND $rows as row
+MERGE (n:db_MESH {eid: row.eid})
+SET n:Chemical,n.name=row.name,n.obsolete=row.obsolete,n.data_source='MeSH'
+      "
+      fileName="jira-LL-3214-mesh_chemicals.zip"
+      startAt="1"
+      fileType="TSV" 
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="LL-3214 Create MeSH chemical-topicaldescriptor rels on date 01052022" author="Binh Vu">
+    <comment>
+        
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.FileQueryHandler"
+      query="
+      UNWIND $rows AS row
+MATCH (a:db_MESH {eid: row.eid}), (b:db_MESH {eid: row.descriptor_id})
+MERGE (a)-[r:MAPPED_TO_DESCRIPTOR]->(b)
+SET r.type=row.type
+RETURN COUNT(*)
+      "
+      fileName="jira-LL-3214-mesh_chemical_topicaldesc_rels.zip"
+      startAt="1"
+      fileType="TSV" 
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="LL-3214 Create MeSH disease nodes on date 01052022" author="Binh Vu">
+    <comment>
+        
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.FileQueryHandler"
+      query="
+      UNWIND $rows as row
+MERGE (n:db_MESH {eid: row.eid})
+SET n:Disease,n.name=row.name,n.obsolete=row.obsolete,n.data_source='MeSH'
+      "
+      fileName="jira-LL-3214-mesh_diseases.zip"
+      startAt="1"
+      fileType="TSV" 
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="LL-3214 Create MeSH disease-topicaldescriptor rels on date 01052022" author="Binh Vu">
+    <comment>
+        
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.FileQueryHandler"
+      query="
+      UNWIND $rows AS row
+MATCH (a:db_MESH {eid: row.eid}), (b:db_MESH {eid: row.descriptor_id})
+MERGE (a)-[r:MAPPED_TO_DESCRIPTOR]->(b)
+SET r.type=row.type
+RETURN COUNT(*)
+      "
+      fileName="jira-LL-3214-mesh_disease_topicaldesc_rels.zip"
+      startAt="1"
+      fileType="TSV" 
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+</databaseChangeLog>

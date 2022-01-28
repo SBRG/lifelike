@@ -1,0 +1,60 @@
+// WARNING: Encapsulation disabled
+
+@import "src/scss/variables";
+
+.workspace-tab-content-container {
+  position: relative;
+}
+
+.workspace-tab-content-inner-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.workspace-hidden-tab-content {
+  position: absolute;
+  left: -10000px;
+  top: -10000px;
+
+  .modal, .modal-backdrop {
+    visibility: hidden;
+    pointer-events: none;
+  }
+}
+
+.workspace-split-pane-placeholder {
+  display: flex;
+  position: relative;
+  background: $gray-200;
+  color: $text-muted;
+  border-left: 4px solid $gray-300;
+  vertical-align: top;
+  width: 20px;
+  padding: 1rem;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    background: $link-color;
+    color: $white;
+    border-color: $link-color;
+  }
+}
+
+.side-pane-close-text {
+  writing-mode: vertical-lr;
+  text-orientation: mixed;
+  max-width: 50px;
+  overflow: hidden;
+}
+
+.side-pane-open-text {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  max-width: 50px;
+  overflow: hidden;
+}

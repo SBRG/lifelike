@@ -1,0 +1,24 @@
+<div #dropdown ngbDropdown class="d-inline-block" [placement]="placement">
+  <button type="button" class="d-flex align-items-center color-button form-control"
+          tabindex="0" ngbDropdownToggle>
+    <span class="current-color mr-2"
+         [style.background]="effectiveColor != null ? color : 'transparent'"
+         [style.border]="'1px dotted ' + (effectiveColor != null ? 'transparent' : '#ccc')">
+    </span>
+  </button>
+  <div ngbDropdownMenu class="dropdown-body dropdown-menu">
+    <div class="palette">
+      <div class="palette-item" tabindex="0"
+           *ngFor="let c of palette"
+           [class.active]="c === effectiveColor"
+           [style.background]="c"
+           (click)="chooseColor(c)">
+      </div>
+    </div>
+
+    <button type="button" class="btn bg-light btn-block mt-2"
+            (click)="chooseColor(null)">
+      {{ emptyLabel }}
+    </button>
+  </div>
+</div>

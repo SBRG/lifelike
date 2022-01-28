@@ -1,0 +1,185 @@
+{
+  "name": "test_local_inclusion_affect_gene_organism_matching.pdf",
+  "pages": [
+    {
+      "cropBox": {
+        "height": 792,
+        "lowerLeftPt": {
+          "x": 0,
+          "y": 0
+        },
+        "pivotPt": {
+          "x": 0,
+          "y": 0
+        },
+        "rotation": 0,
+        "width": 612
+      },
+      "mediaBox": {
+        "height": 792,
+        "lowerLeftPt": {
+          "x": 0,
+          "y": 0
+        },
+        "pivotPt": {
+          "x": 0,
+          "y": 0
+        },
+        "rotation": 0,
+        "width": 612
+      },
+      "pageNo": 1,
+      "pageText": "  hooman has BOLA3 pokemon another hooman term ",
+      "tokens": [
+        {
+          "pgIdx": 2,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 12,
+              "lowerLeftPt": {
+                "x": 76.89540100097656,
+                "y": 706.2301025390625
+              },
+              "pivotPt": {
+                "x": 76.89540100097656,
+                "y": 709.2301025390625
+              },
+              "rotation": 0,
+              "width": 42.4583740234375
+            }
+          ],
+          "shapes": [],
+          "text": "hooman"
+        },
+        {
+          "pgIdx": 9,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 12,
+              "lowerLeftPt": {
+                "x": 122.61997985839844,
+                "y": 706.2301025390625
+              },
+              "pivotPt": {
+                "x": 122.61997985839844,
+                "y": 709.2301025390625
+              },
+              "rotation": 0,
+              "width": 18.944015502929688
+            }
+          ],
+          "shapes": [],
+          "text": "has"
+        },
+        {
+          "pgIdx": 13,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 12,
+              "lowerLeftPt": {
+                "x": 144.82785034179688,
+                "y": 706.2301025390625
+              },
+              "pivotPt": {
+                "x": 144.82785034179688,
+                "y": 709.2301025390625
+              },
+              "rotation": 0,
+              "width": 37.87861633300781
+            }
+          ],
+          "shapes": [],
+          "text": "BOLA3"
+        },
+        {
+          "pgIdx": 19,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 12,
+              "lowerLeftPt": {
+                "x": 76.89540100097656,
+                "y": 692.5230102539062
+              },
+              "pivotPt": {
+                "x": 76.89540100097656,
+                "y": 695.5230102539062
+              },
+              "rotation": 0,
+              "width": 48.332847595214844
+            }
+          ],
+          "shapes": [],
+          "text": "pokemon"
+        },
+        {
+          "pgIdx": 27,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 12,
+              "lowerLeftPt": {
+                "x": 128.4944610595703,
+                "y": 692.5230102539062
+              },
+              "pivotPt": {
+                "x": 128.4944610595703,
+                "y": 695.5230102539062
+              },
+              "rotation": 0,
+              "width": 39.85009765625
+            }
+          ],
+          "shapes": [],
+          "text": "another"
+        },
+        {
+          "pgIdx": 35,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 12,
+              "lowerLeftPt": {
+                "x": 171.60841369628906,
+                "y": 692.5230102539062
+              },
+              "pivotPt": {
+                "x": 171.60841369628906,
+                "y": 695.5230102539062
+              },
+              "rotation": 0,
+              "width": 42.45835876464844
+            }
+          ],
+          "shapes": [],
+          "text": "hooman"
+        },
+        {
+          "pgIdx": 42,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 12,
+              "lowerLeftPt": {
+                "x": 217.33297729492188,
+                "y": 692.5230102539062
+              },
+              "pivotPt": {
+                "x": 217.33297729492188,
+                "y": 695.5230102539062
+              },
+              "rotation": 0,
+              "width": 23.497909545898438
+            }
+          ],
+          "shapes": [],
+          "text": "term"
+        }
+      ]
+    }
+  ],
+  "processedDate": "2021-01-14 14:42:47"
+}

@@ -1,0 +1,43 @@
+@import 'src/scss/variables';
+
+.pdf-viewer-container {
+  position: relative;
+  counter-reset: annotation-highlight-index;
+
+  height: 100%;
+
+  .pdf-viewer-document {
+    height: 100%;
+  }
+}
+
+// The box that says the PDF is loading
+.pdf-loading-box {
+  position: absolute;
+  top: 0;
+  left: $spacer;
+  z-index: 100;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  border-top: 0;
+}
+
+.search-status-box {
+  position: absolute;
+  top: 0;
+  right: #{$spacer + 1rem};
+  z-index: 100;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  border-top: 0;
+}
+
+.system-annotation {
+  scroll-margin: 10rem;
+  mix-blend-mode: multiply;
+}
+
+.annotation-highlight {
+  outline: 4px solid red;
+  position: relative;
+}

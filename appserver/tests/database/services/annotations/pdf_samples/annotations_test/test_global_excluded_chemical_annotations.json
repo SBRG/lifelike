@@ -1,0 +1,101 @@
+{
+  "name": "test_global_excluded_chemical_annotations.pdf",
+  "pages": [
+    {
+      "cropBox": {
+        "height": 792,
+        "lowerLeftPt": {
+          "x": 0,
+          "y": 0
+        },
+        "pivotPt": {
+          "x": 0,
+          "y": 0
+        },
+        "rotation": 0,
+        "width": 612
+      },
+      "mediaBox": {
+        "height": 792,
+        "lowerLeftPt": {
+          "x": 0,
+          "y": 0
+        },
+        "pivotPt": {
+          "x": 0,
+          "y": 0
+        },
+        "rotation": 0,
+        "width": 612
+      },
+      "pageNo": 1,
+      "pageText": "  hypofluorite rat dog ",
+      "tokens": [
+        {
+          "pgIdx": 2,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 11,
+              "lowerLeftPt": {
+                "x": 76.89540100097656,
+                "y": 707.459228515625
+              },
+              "pivotPt": {
+                "x": 76.89540100097656,
+                "y": 710.209228515625
+              },
+              "rotation": 0,
+              "width": 77.81343078613281
+            }
+          ],
+          "shapes": [],
+          "text": "hypofluorite"
+        },
+        {
+          "pgIdx": 15,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 11,
+              "lowerLeftPt": {
+                "x": 161.19442749023438,
+                "y": 707.459228515625
+              },
+              "pivotPt": {
+                "x": 161.19442749023438,
+                "y": 710.209228515625
+              },
+              "rotation": 0,
+              "width": 19.452560424804688
+            }
+          ],
+          "shapes": [],
+          "text": "rat"
+        },
+        {
+          "pgIdx": 19,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 11,
+              "lowerLeftPt": {
+                "x": 187.13259887695312,
+                "y": 707.459228515625
+              },
+              "pivotPt": {
+                "x": 187.13259887695312,
+                "y": 710.209228515625
+              },
+              "rotation": 0,
+              "width": 19.452545166015625
+            }
+          ],
+          "shapes": [],
+          "text": "dog"
+        }
+      ]
+    }
+  ],
+  "processedDate": "2021-01-14 14:22:48"
+}

@@ -1,0 +1,144 @@
+<div class="h-100 w-100 d-flex overflow-hidden" #container>
+  <ng-container *ngIf="(panes$ | async) as panes">
+    <div class="flex-fill w-100">
+      <as-split unit="percent" direction="horizontal" [gutterSize]="5" cdkDropListGroup #splitComponent
+                (dragEnd)="splitterDragEnded($event)">
+        <as-split-area *ngFor="let pane of panes" [size]="pane.size">
+          <div class="h-100 d-flex flex-column">
+            <div class="nav-workspace-tabs flex-shrink-0 align-items-start">
+              <div class="nav flex-fill" cdkDropList cdkDropListOrientation="horizontal"
+                   (cdkDropListDropped)="tabDropped($event)"
+                   [cdkDropListData]="pane">
+                <div class="nav-item d-flex text-truncate" [class.active]="pane.activeTab === tab"
+                     *ngFor="let tab of pane.tabs; index as i"
+                     cdkDrag style="max-width: 250px; width: 30%; min-width: 15%"
+                     appContextMenu>
+                  <div class="nav-link d-flex text-truncate" [class.active]="pane.activeTab === tab"
+                       (click)="handleTabClick($event, pane, tab); $event.preventDefault()">
+                    <div class="d-block d-flex align-items-center text-truncate mr-2">
+                      <span class="d-block text-truncate">
+                        <i class="fas fa-spinner fa-pulse fa-fw" *ngIf="tab.loading; else notLoading"></i>
+                        <ng-template #notLoading>
+                          <i
+                            [class]="'fa-fw ' + (calculateFontAwesomeIcon(tab.fontAwesomeIcon) || 'fa window-maximize')"></i>
+                        </ng-template>
+                        {{tab.title}}
+                      </span>
+                      <span class="badge badge-danger badge-pill ml-1" *ngIf="tab.badge != null && tab.badge !== '*'">
+                        {{tab.badge}}
+                      </span>
+                      <span class="badge badge-danger badge-pill ml-1" *ngIf="tab.badge === '*'"
+                            ngbTooltip="Has unsaved changes" container="body">
+                        <i class="fa fa-pencil-alt"></i>
+                      </span>
+                    </div>
+                    <a href="#" (click)="closeTab(pane, tab); $event.preventDefault()" class="ml-auto text-muted">
+                      <i class="fa fa-fw fa-times"></i>
+                    </a>
+                  </div>
+                  <div appContextMenuBody>
+                    <a class="dropdown-item" href="#" (click)="duplicateTab(pane, tab); $event.preventDefault()">Duplicate</a>
+                    <a class="dropdown-item" href="#" (click)="copyLinkToTab(pane, tab); $event.preventDefault()">Copy link...</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#" (click)="closeTab(pane, tab); $event.preventDefault()">Close</a>
+                    <a class="dropdown-item" [class.disabled]="pane.tabs.length <= 1" href="#"
+                       (click)="closeOtherTabs(pane, tab); $event.preventDefault()">Close other tabs</a>
+                    <a class="dropdown-item" href="#"
+                       (click)="closeAllTabs(pane); $event.preventDefault()">Close all tabs</a>
+                    <a class="dropdown-item" href="#"
+                       (click)="clearWorkbench(); $event.preventDefault()">Clear workbench</a>
+                  </div>
+                </div>
+                <div class="ml-2 mt-1 d-flex align-items-start">
+                  <div ngbDropdown container="body">
+                    <button type="button" class="btn btn-secondary btn-sm dropdown-no-arrow"
+                            ngbDropdownToggle ngbTooltip="New Tab"
+                            container="body">
+                      <i class="fa fa-fw fa-plus"></i>
+                    </button>
+                    <div ngbDropdownMenu class="dropdown-menu dropdown-menu-right">
+                      <button class="dropdown-item" (click)="addTab(pane, '/projects')">
+                        File Browser
+                      </button>
+                      <button class="dropdown-item" (click)="addTab(pane, '/search/graph')">
+                        Knowledge Graph
+                      </button>
+                      <button class="dropdown-item" (click)="addTab(pane, '/search/content')">
+                        Search
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="d-flex flex-fill overflow-hidden w-100 h-100 workspace-tab-content-container">
+              <div *ngFor="let tab of pane.tabs; index as i"
+                   class="flex-fill overflow-hidden position-absolute workspace-tab-content-inner-container"
+                   [class.workspace-hidden-tab-content]="pane.activeTab !== tab"
+                   appDataTransferData [uriData]="[{title: tab.title, uri: tab.absoluteUrl}]">
+                <app-workspace-outlet [name]="pane.id" [container]="tab.container"
+                                      (outletFocus)="setFocus(pane)"
+                                      [active]="pane.activeTab === tab"></app-workspace-outlet>
+              </div>
+              <ng-container *ngIf="!pane.tabs.length">
+                <div class="w-100 h-100 d-flex align-items-center">
+                  <div class="d-flex align-items-center justify-content-center m-auto">
+                    <div class="m-4 text-center text-muted" [style.max-width]="'400px'">
+                      <ng-container *ngIf="panes.length === 1">
+                        <div>
+                          Use the vertical toolbar or the <i class="fa fa-plus"></i>
+                          button at the top to open a new tab in this area.
+                        </div>
+                      </ng-container>
+                      <ng-container *ngIf="panes.length > 1 && pane.id === 'left'">
+                        <div>
+                          Use the <i class="fa fa-plus"></i>
+                          button at the top to open a new tab in this area.
+                        </div>
+                      </ng-container>
+                      <ng-container *ngIf="panes.length > 1 && pane.id === 'right'">
+                        <div>
+                          Use the <i class="fa fa-plus"></i>
+                          button at the top to open a new tab in this area.
+                        </div>
+                      </ng-container>
+                    </div>
+                  </div>
+                  <div class="mx-2" *ngIf="pane.id === 'right'">
+                    <button type="button" class="btn btn-secondary" (click)="closeRightPane()">
+                      <div class="d-flex flex-column align-items-center">
+                        <div>
+                          <i class="fa fa-caret-right"></i>
+                        </div>
+                        <div class="side-pane-close-text">
+                          Hide Side Pane
+                        </div>
+                        <div>
+                          <i class="fa fa-caret-right"></i>
+                        </div>
+                      </div>
+                    </button>
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+        </as-split-area>
+      </as-split>
+    </div>
+    <div *ngIf="canAddPane()" class="workspace-split-pane-placeholder" (click)="addPane()">
+      <div class="d-flex flex-column align-items-center">
+        <div>
+          <i class="fa fa-caret-left"></i>
+        </div>
+        <div class="side-pane-open-text">
+          Open Side Pane
+        </div>
+        <div>
+          <i class="fa fa-caret-left"></i>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>

@@ -1,0 +1,34 @@
+<app-modal-header (cancel)="close()">
+  Lifelike
+</app-modal-header>
+
+<app-modal-body>
+  <ng-container *ngIf="(buildInfo$ | async) as buildInfo; else buildInfoLoading">
+    <div>
+      <span>Lifelike version:</span> {{ buildInfo.appVersion }}
+    </div>
+    <div>
+      <span>Last updated:</span> {{ buildInfo.buildTimestamp  }}
+    </div>
+    <div>
+      <span>Build number:</span> {{ buildInfo.appBuildNumber }}
+    </div>
+    <div>
+      <span>Build identifier:</span> {{ buildInfo.gitHash }}
+    </div>
+  </ng-container>
+  <ng-template #buildInfoLoading>
+    <div>
+      <span>Lifelike version:</span> Unknown
+    </div>
+    <div>
+      <span>Last updated:</span> Unknown
+    </div>
+    <div>
+      <span>Build number:</span> Unknown
+    </div>
+    <div>
+      <span>Build identifier:</span> Unknown
+    </div>
+  </ng-template>
+</app-modal-body>

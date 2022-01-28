@@ -1,0 +1,143 @@
+{
+  "name": "test_delta_gene_deletion_detected.pdf",
+  "pages": [
+    {
+      "cropBox": {
+        "height": 792,
+        "lowerLeftPt": {
+          "x": 0,
+          "y": 0
+        },
+        "pivotPt": {
+          "x": 0,
+          "y": 0
+        },
+        "rotation": 0,
+        "width": 612
+      },
+      "mediaBox": {
+        "height": 792,
+        "lowerLeftPt": {
+          "x": 0,
+          "y": 0
+        },
+        "pivotPt": {
+          "x": 0,
+          "y": 0
+        },
+        "rotation": 0,
+        "width": 612
+      },
+      "pageNo": 1,
+      "pageText": "  ΔpurB, ΔpurC, ΔpurF Escherichia coli ",
+      "tokens": [
+        {
+          "pgIdx": 3,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 11,
+              "lowerLeftPt": {
+                "x": 84.67340087890625,
+                "y": 707.459228515625
+              },
+              "pivotPt": {
+                "x": 84.67340087890625,
+                "y": 710.209228515625
+              },
+              "rotation": 0,
+              "width": 22.750274658203125
+            }
+          ],
+          "shapes": [],
+          "text": "purB"
+        },
+        {
+          "pgIdx": 10,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 11,
+              "lowerLeftPt": {
+                "x": 121.1854248046875,
+                "y": 707.459228515625
+              },
+              "pivotPt": {
+                "x": 121.1854248046875,
+                "y": 710.209228515625
+              },
+              "rotation": 0,
+              "width": 23.342620849609375
+            }
+          ],
+          "shapes": [],
+          "text": "purC"
+        },
+        {
+          "pgIdx": 17,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 11,
+              "lowerLeftPt": {
+                "x": 158.2919464111328,
+                "y": 707.459228515625
+              },
+              "pivotPt": {
+                "x": 158.2919464111328,
+                "y": 710.209228515625
+              },
+              "rotation": 0,
+              "width": 22.147171020507812
+            }
+          ],
+          "shapes": [],
+          "text": "purF"
+        },
+        {
+          "pgIdx": 22,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 11,
+              "lowerLeftPt": {
+                "x": 76.89540100097656,
+                "y": 694.731201171875
+              },
+              "pivotPt": {
+                "x": 76.89540100097656,
+                "y": 697.481201171875
+              },
+              "rotation": 0,
+              "width": 55.66947937011719
+            }
+          ],
+          "shapes": [],
+          "text": "Escherichia"
+        },
+        {
+          "pgIdx": 34,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 11,
+              "lowerLeftPt": {
+                "x": 135.5589141845703,
+                "y": 694.731201171875
+              },
+              "pivotPt": {
+                "x": 135.5589141845703,
+                "y": 697.481201171875
+              },
+              "rotation": 0,
+              "width": 16.159103393554688
+            }
+          ],
+          "shapes": [],
+          "text": "coli"
+        }
+      ]
+    }
+  ],
+  "processedDate": "2021-01-14 13:23:59"
+}

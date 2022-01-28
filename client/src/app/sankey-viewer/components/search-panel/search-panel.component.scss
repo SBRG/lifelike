@@ -1,0 +1,53 @@
+app-sankey-search-panel {
+  @mixin clamp($max-lines) {
+    overflow: hidden;
+    // oddly those prefixes are supported among all modern browsers
+    display: -webkit-box;
+    -webkit-line-clamp: $max-lines;
+    -webkit-box-orient: vertical;
+  }
+
+  dt:after {
+    content: ':';
+    margin-right: 0.5em;
+  }
+
+  dl {
+    margin-bottom: 0;
+  }
+
+  .property {
+    display: flex;
+    flex-wrap: wrap;
+
+    dd {
+      flex-grow: 1;
+      margin-bottom: 0;
+
+      & app-highlight-text > span {
+        @include clamp(3);
+      }
+    }
+  }
+
+  .fieldset-properties {
+    border: 1px solid #ced4da;
+    padding: 0 0.75rem 0.75rem;
+    cursor: pointer;
+
+    &:hover {
+      border-color: darken(#ced4da, 20%);
+    }
+
+    &.focused {
+      border: 2px solid red;
+    }
+
+    legend {
+      padding: 0 0.5rem;
+      margin-left: -0.5rem;
+      margin-bottom: 0;
+    }
+  }
+
+}

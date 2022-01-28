@@ -1,0 +1,293 @@
+<ng-container *ngIf="(object$ | addStatus | async) as result">
+  <ng-template [ngIf]="result.error">
+    <app-module-error [error]="result.error" class="d-block p-4">
+        <a appLink="/projects">Go to Projects <i class="fa fa-fw fa-arrow-right"></i></a>
+    </app-module-error>
+        </ng-template>
+
+  <ng-template [ngIf]="result.loading">
+    <div class="module" appContainerBreakpoints>
+            <!-- Header -->
+            <div class="module-header">
+                <!-- Breadcrumbs -->
+                <div class="module-breadcrumb-bar mb-1">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <span class="placeholder-box">Loading loading</span>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <span class="placeholder-box">Loading</span>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <span class="placeholder-box">Loading load</span>
+                        </li>
+                    </ol>
+                </div>
+
+                <!-- Title bar -->
+                <div class="module-title-bar">
+                    <h1 class="module-title">
+                        <span class="placeholder-box">Loading</span>
+                    </h1>
+                </div>
+
+                <!-- Toolbar -->
+                <div class="module-toolbar mt-2">
+                    <div class="d-flex align-items-center flex-spaced-wrap">
+                        <div class="flex-grow-1 text-nowrap overflow-x-hidden">
+                            <div ngbDropdown class="d-inline-block" container="body">
+                                <button class="btn btn-primary" ngbDropdownToggle [disabled]="true">
+                                    <i class="fa fa-fw fa-plus-circle"></i>
+                                    New
+                                </button>
+                                <div ngbDropdownMenu>
+                                </div>
+                            </div>
+
+                            <button class="btn btn-primary ml-2" disabled>
+                                <i class="fa fa-fw fa-upload"></i> Upload
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Body -->
+            <div class="flex-fill overflow-auto">
+                <div class="module-body-split module-body-browser-split">
+                    <div class="module-body-split-main">
+                        <table class="table module-body-table"
+                               style="table-layout: fixed">
+                            <colgroup>
+                                <col>
+                                <col style="width: 15%; max-width: 140px" class="d-none d-cbp-sm-table-column">
+                                <!-- Annotated -->
+                                <col style="width: 90px" class="d-none d-cbp-md-table-column"> <!-- Created -->
+                                <col style="width: 120px"> <!-- Author -->
+                                <col style="width: 80px"> <!-- Dropdown -->
+                            </colgroup>
+                            <thead>
+                            <tr>
+                                <th class="text-truncate">
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input"
+                                               id="select-all-placeholder">
+                                        <label class="custom-control-label"
+                                               for="select-all-placeholder">Name</label>
+                                    </div>
+                                </th>
+                                <th class="text-truncate d-none d-cbp-sm-table-cell">Annotated</th>
+                                <th class="text-truncate d-none d-cbp-md-table-cell">Modified</th>
+                                <th class="text-truncate">User</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+
+                            <!-- Placeholders -->
+                            <tbody>
+                            <tr>
+                                <td class="align-middle text-nowrap text-truncate">
+                                    <span class="placeholder-box">Loading loading</span>
+                                </td>
+                                <td class="align-middle text-nowrap text-truncate d-none d-cbp-sm-table-cell">
+                                    <span class="placeholder-box">Loading</span>
+                                </td>
+                                <td class="align-middle text-nowrap text-truncate d-none d-cbp-md-table-cell">
+                                    <span class="placeholder-box">Loading</span>
+                                </td>
+                                <td class="align-middle text-nowrap text-truncate">
+                                    <span class="placeholder-box">Loading loading</span>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-end">
+                                        <div ngbDropdown class="d-inline-block ml-auto">
+                                            <button class="btn btn-sm" ngbDropdownToggle>
+                                                    <span class="placeholder-box"><i
+                                                            class="fas fa-cog fa-fw"></i></span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="align-middle text-nowrap text-truncate">
+                                    <span class="placeholder-box">Loading loading loading</span>
+                                </td>
+                                <td class="align-middle text-nowrap text-truncate d-none d-cbp-sm-table-cell">
+                                    <span class="placeholder-box">Loading</span>
+                                </td>
+                                <td class="align-middle text-nowrap text-truncate d-none d-cbp-md-table-cell">
+                                    <span class="placeholder-box">Loading</span>
+                                </td>
+                                <td class="align-middle text-nowrap text-truncate">
+                                    <span class="placeholder-box">Loading loading</span>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-end">
+                                        <div ngbDropdown class="d-inline-block ml-auto">
+                                            <button class="btn btn-sm" ngbDropdownToggle>
+                                                    <span class="placeholder-box"><i
+                                                            class="fas fa-cog fa-fw"></i></span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+          </div>
+                    </div>
+                </div>
+            </div>
+        </ng-template>
+
+  <ng-template [ngIf]="result.value">
+    <div class="module" appContainerBreakpoints>
+            <!-- Header -->
+            <div class="module-header">
+                <!-- Breadcrumbs -->
+                <div class="module-breadcrumb-bar mb-1">
+                    <app-object-path [object]="result.value.parent" (refreshRequest)="refresh()"></app-object-path>
+                </div>
+
+                <!-- Title bar -->
+                <div class="module-title-bar">
+                    <button type="button" class="module-title-bar-back mr-2" (click)="goUp(result.value)"
+                            *ngIf="result.value.parent">
+                        <i class="fa fa-fw fa-arrow-left"></i>
+                    </button>
+                    <h1 class="module-title">
+                        <app-project-icon [project]="result.value.project" size="24px" class="mr-1"
+                                          *ngIf="result.value.parent == null"></app-project-icon>
+                        {{ result.value.effectiveName }}
+                    </h1>
+
+                    <div ngbDropdown class="d-inline-block ml-1" container="body">
+                        <a href="#" class="dropdown-no-arrow" ngbDropdownToggle
+                           (click)="$event.preventDefault()">
+                            <i class="fas fa-chevron-down fa-fw text-icon"></i>
+                        </a>
+                        <div ngbDropdownMenu>
+                            <ng-container *ngIf="result.value.parent; else noParentMenu">
+                                <app-object-menu [object]="result.value" [forEditing]="true"
+                                                 (objectOpen)="openObject($event)"
+                                                 (refreshRequest)="refresh()" [nameEntity]="true"
+                                                 [showOpen]="false">
+                                </app-object-menu>
+                            </ng-container>
+                            <ng-template #noParentMenu>
+                                <app-project-menu [project]="result.value.project"
+                                                  [nameEntity]="true"></app-project-menu>
+                            </ng-template>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Toolbar -->
+                <div class="module-toolbar mt-2">
+                    <div class="d-flex align-items-center flex-spaced-wrap">
+                        <div class="flex-fill text-nowrap overflow-x-hidden">
+                            <div ngbDropdown class="d-inline-block" container="body">
+                                <button class="btn btn-primary" ngbDropdownToggle
+                                        [disabled]="!result.value.privileges.writable">
+                                    <i class="fa fa-fw fa-plus-circle"></i>
+                                    New
+                                </button>
+                                <div ngbDropdownMenu>
+                                    <ng-container *ngIf="createActions$ | async as createActions">
+                                        <button ngbDropdownItem *ngFor="let action of createActions"
+                                                (click)="runCreateAction(action, {parent: result.value})">
+                                            New {{ action.label }}...
+                                        </button>
+                                        <div class="dropdown-divider"></div>
+                                    </ng-container>
+                                    <button ngbDropdownItem (click)="openUploadDialog(result.value)">Upload File...
+                                    </button>
+                                </div>
+                            </div>
+
+                            <button class="btn btn-primary ml-2"
+                                    (click)="openUploadDialog(result.value)"
+                                    [disabled]="!result.value.privileges.writable">
+                                <i class="fa fa-fw fa-upload"></i> Upload
+                            </button>
+
+                            <div ngbDropdown class="d-inline-block ml-2" container="body"
+                                 *ngIf="result.value.children.selection.length && result.value.privileges.writable">
+                                <button class="btn btn-secondary" ngbDropdownToggle>
+                                    Actions
+                                </button>
+                                <div ngbDropdownMenu>
+                                    <button ngbDropdownItem (click)="reannotate(result.value.children.selection)"
+                                            [disabled]="!isSelectionAnnotatable(result.value.children.selection)">
+                                        Re-annotate
+                                    </button>
+                                    <div class="dropdown-divider"></div>
+                                    <button ngbDropdownItem
+                                            (click)="openMoveDialog(result.value.children.selection)"
+                                            [disabled]="!isSelectionMovable(result.value.children.selection)">
+                                        Move to...
+                                    </button>
+                                    <button ngbDropdownItem
+                                            (click)="openDeleteDialog(result.value.children.selection)"
+                                            [disabled]="!isSelectionDeletable(result.value.children.selection)">
+                                        Delete...
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div ngbDropdown class="d-inline-block ml-2" container="body"
+                                 ngbTooltip="Entity Cloud">
+                                <button class="btn btn-secondary" ngbDropdownToggle>
+                                    <i class="fa fa-fw fa-cloud"></i>
+                                </button>
+                                <div ngbDropdownMenu>
+                                    <button ngbDropdownItem
+                                            [appLink]="['/file-navigator', result.value.project.name, result.value.root.hashId]"
+                                            [parentAddress]="['/projects', result.value.project.name]"
+                                            [newTab]="true" [sideBySide]="true" [forceWorkbench]="true" [openParentFirst]="true" >For entire project...
+                                    </button>
+                                    <button ngbDropdownItem
+                                            [appLink]="['/file-navigator', result.value.project.name, result.value.hashId]"
+                                            [parentAddress]="['/folders', result.value.hashId]"
+                                            [newTab]="true" [sideBySide]="true" [forceWorkbench]="true" [openParentFirst]="true"
+                                            *ngIf="result.value !== result.value.root">For this folder
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="ml-auto d-flex">
+                            <div class="input-group" [class.bg-highlight]="result.value.children.filter != null">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text bg-transparent border-right-0">
+                                        <i class="fa fa-search"></i>
+                                    </div>
+                                </div>
+                                <input class="form-control py-2 pl-0 border-left-0 border bg-transparent"
+                                       (keyup)="applyFilter(result.value, $event.target.value)"
+                                       placeholder="Find" maxlength="40">
+                            </div>
+
+                            <button class="btn btn-secondary ml-2"
+                                    ngbTooltip="Reload List"
+                                    container="body"
+                                    placement="bottom top left right"
+                                    (click)="refresh()">
+                                <i class="fa fa-fw fa-sync"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Body -->
+            <div class="flex-fill overflow-auto">
+                <app-object-list [objects]="result.value.children" [appLinks]="true"
+                                 [parent]="result.value" [showDescription]="false"
+                                 (refreshRequest)="load(result.value.hashId)"></app-object-list>
+            </div>
+
+        </div>
+  </ng-template>
+</ng-container>

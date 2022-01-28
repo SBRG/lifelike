@@ -1,0 +1,30 @@
+<ng-container *ngIf="objects != null">
+  <div class="tile-deck tile-deck-{{ tileDeckSize }}">
+    <div *ngFor="let o of objects.view" class="tile d-flex flex-column"
+         draggable="true" (dragstart)="objectDragStart($event, o)">
+      <div class="flex-fill d-flex justify-content-center align-items-center my-2">
+        <a [appLink]="o.getCommands(forEditing)" [newTab]="newTabObject"
+           class="text-muted">
+          <i class="fa-2x {{ o.fontAwesomeIcon }}"></i>
+        </a>
+      </div>
+      <div class="text-truncate text-center">
+        <a [appLink]="o.getCommands(forEditing)" [newTab]="newTabObject"
+           class="d-block text-truncate">
+          <strong>{{ o.filename }}</strong>
+        </a>
+        <div class="text-truncate text-muted">
+          By <app-user [user]="o.user"></app-user>
+        </div>
+      </div>
+    </div>
+
+    <div class="tile d-flex flex-column align-items-center justify-content-center" *ngIf="showMoreButton">
+      <div class="text-truncate text-center">
+        <a [appLink]="moreLink" [newTab]="newTabMore" class="d-block text-truncate">
+          {{ moreButtonText }}
+        </a>
+      </div>
+    </div>
+  </div>
+</ng-container>

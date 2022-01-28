@@ -1,0 +1,206 @@
+{
+  "name": "test_2.pdf",
+  "pages": [
+    {
+      "cropBox": {
+        "height": 792,
+        "lowerLeftPt": {
+          "x": 0,
+          "y": 0
+        },
+        "pivotPt": {
+          "x": 0,
+          "y": 0
+        },
+        "rotation": 0,
+        "width": 612
+      },
+      "mediaBox": {
+        "height": 792,
+        "lowerLeftPt": {
+          "x": 0,
+          "y": 0
+        },
+        "pivotPt": {
+          "x": 0,
+          "y": 0
+        },
+        "rotation": 0,
+        "width": 612
+      },
+      "pageNo": 1,
+      "pageText": "  Serpin A1 human, SERPIN SERPINA1 serpina1 SerpinA1 human ",
+      "tokens": [
+        {
+          "pgIdx": 2,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 12,
+              "lowerLeftPt": {
+                "x": 76.89540100097656,
+                "y": 706.2301025390625
+              },
+              "pivotPt": {
+                "x": 76.89540100097656,
+                "y": 709.2301025390625
+              },
+              "rotation": 0,
+              "width": 33.961517333984375
+            }
+          ],
+          "shapes": [],
+          "text": "Serpin"
+        },
+        {
+          "pgIdx": 9,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 12,
+              "lowerLeftPt": {
+                "x": 113.48046875,
+                "y": 706.2301025390625
+              },
+              "pivotPt": {
+                "x": 113.48046875,
+                "y": 709.2301025390625
+              },
+              "rotation": 0,
+              "width": 14.368965148925781
+            }
+          ],
+          "shapes": [],
+          "text": "A1"
+        },
+        {
+          "pgIdx": 12,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 12,
+              "lowerLeftPt": {
+                "x": 131.11563110351562,
+                "y": 706.2301025390625
+              },
+              "pivotPt": {
+                "x": 131.11563110351562,
+                "y": 709.2301025390625
+              },
+              "rotation": 0,
+              "width": 35.923614501953125
+            }
+          ],
+          "shapes": [],
+          "text": "human"
+        },
+        {
+          "pgIdx": 19,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 12,
+              "lowerLeftPt": {
+                "x": 173.56930541992188,
+                "y": 706.2301025390625
+              },
+              "pivotPt": {
+                "x": 173.56930541992188,
+                "y": 709.2301025390625
+              },
+              "rotation": 0,
+              "width": 43.74134826660156
+            }
+          ],
+          "shapes": [],
+          "text": "SERPIN"
+        },
+        {
+          "pgIdx": 26,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 12,
+              "lowerLeftPt": {
+                "x": 220.5768585205078,
+                "y": 706.2301025390625
+              },
+              "pivotPt": {
+                "x": 220.5768585205078,
+                "y": 709.2301025390625
+              },
+              "rotation": 0,
+              "width": 58.11265563964844
+            }
+          ],
+          "shapes": [],
+          "text": "SERPINA1"
+        },
+        {
+          "pgIdx": 35,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 12,
+              "lowerLeftPt": {
+                "x": 76.89540100097656,
+                "y": 692.5230102539062
+              },
+              "pivotPt": {
+                "x": 76.89540100097656,
+                "y": 695.5230102539062
+              },
+              "rotation": 0,
+              "width": 45.06898498535156
+            }
+          ],
+          "shapes": [],
+          "text": "serpina1"
+        },
+        {
+          "pgIdx": 44,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 12,
+              "lowerLeftPt": {
+                "x": 125.2305908203125,
+                "y": 692.5230102539062
+              },
+              "pivotPt": {
+                "x": 125.2305908203125,
+                "y": 695.5230102539062
+              },
+              "rotation": 0,
+              "width": 48.332855224609375
+            }
+          ],
+          "shapes": [],
+          "text": "SerpinA1"
+        },
+        {
+          "pgIdx": 53,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 12,
+              "lowerLeftPt": {
+                "x": 176.82965087890625,
+                "y": 692.5230102539062
+              },
+              "pivotPt": {
+                "x": 176.82965087890625,
+                "y": 695.5230102539062
+              },
+              "rotation": 0,
+              "width": 35.923583984375
+            }
+          ],
+          "shapes": [],
+          "text": "human"
+        }
+      ]
+    }
+  ],
+  "processedDate": "2021-01-14 14:30:24"
+}

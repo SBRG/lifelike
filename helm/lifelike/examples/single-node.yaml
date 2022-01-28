@@ -1,0 +1,13 @@
+## This is an example values files for a simple Lifelike deployment
+## consisting of a single replica of each component.
+## Typically used for testing on a single node cluster.
+
+elasticsearch:
+  # Deploy a single replica
+  replicas: 1
+  # Needed to allow a single replica cluster be consiedered healthy
+  clusterHealthCheckParams: wait_for_status=yellow&timeout=10s
+
+redis:
+  # Deploy a single node
+  architecture: standalone

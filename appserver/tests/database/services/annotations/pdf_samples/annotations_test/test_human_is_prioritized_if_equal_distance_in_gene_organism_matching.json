@@ -1,0 +1,101 @@
+{
+  "name": "test_human_is_prioritized_if_equal_distance_in_gene_organism_matching.pdf",
+  "pages": [
+    {
+      "cropBox": {
+        "height": 792,
+        "lowerLeftPt": {
+          "x": 0,
+          "y": 0
+        },
+        "pivotPt": {
+          "x": 0,
+          "y": 0
+        },
+        "rotation": 0,
+        "width": 612
+      },
+      "mediaBox": {
+        "height": 792,
+        "lowerLeftPt": {
+          "x": 0,
+          "y": 0
+        },
+        "pivotPt": {
+          "x": 0,
+          "y": 0
+        },
+        "rotation": 0,
+        "width": 612
+      },
+      "pageNo": 1,
+      "pageText": "  rat EDEM3 Human ",
+      "tokens": [
+        {
+          "pgIdx": 2,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 12,
+              "lowerLeftPt": {
+                "x": 76.89540100097656,
+                "y": 706.2301025390625
+              },
+              "pivotPt": {
+                "x": 76.89540100097656,
+                "y": 709.2301025390625
+              },
+              "rotation": 0,
+              "width": 13.71337890625
+            }
+          ],
+          "shapes": [],
+          "text": "rat"
+        },
+        {
+          "pgIdx": 6,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 12,
+              "lowerLeftPt": {
+                "x": 93.87028503417969,
+                "y": 706.2301025390625
+              },
+              "pivotPt": {
+                "x": 93.87028503417969,
+                "y": 709.2301025390625
+              },
+              "rotation": 0,
+              "width": 40.47749328613281
+            }
+          ],
+          "shapes": [],
+          "text": "EDEM3"
+        },
+        {
+          "pgIdx": 12,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 12,
+              "lowerLeftPt": {
+                "x": 137.61398315429688,
+                "y": 706.2301025390625
+              },
+              "pivotPt": {
+                "x": 137.61398315429688,
+                "y": 709.2301025390625
+              },
+              "rotation": 0,
+              "width": 37.873931884765625
+            }
+          ],
+          "shapes": [],
+          "text": "Human"
+        }
+      ]
+    }
+  ],
+  "processedDate": "2021-01-14 14:24:58"
+}

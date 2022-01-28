@@ -1,0 +1,18 @@
+.card-body {
+  display: block;
+  overflow: auto;
+  padding: 0;
+  margin: 1.25rem;
+}
+
+.fill-width {
+  margin: 15px 0;
+}
+
+.card-header-with-buttons {
+  padding: 0.5em 1.25rem 0 1.25rem;
+
+  .title {
+    padding: 0.5rem 0;
+  }
+}

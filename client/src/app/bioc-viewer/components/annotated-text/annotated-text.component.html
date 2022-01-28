@@ -1,0 +1,29 @@
+<ng-template ngFor let-part [ngForOf]="parts" let-index="index">
+    <span *ngIf="part.text; else text"
+          [ngClass]="'x-y-z-annotation ' + part.infons.type"
+          [ngbTooltip]="tooltip"
+          [closeDelay]="1000"
+          [autoClose]="'outside'"
+          placement="top bottom"
+          [innerHTML]="part.text"
+          [draggable]="'true'"
+          [attr.offset]="part.location.offset"
+          [attr.identifier]="part.infons.identifier || part.infons.Identifier"
+          [attr.annType]="part.infons.type"
+          (dragstart)="dragStarted($event)"
+          [attr.position]="position + '-' + index"
+    ></span>
+    <ng-template #tooltip>
+        <dl>
+            <dt>Identifier</dt>
+            <dd>{{part.infons.identifier || part.infons.Identifier}}</dd>
+            <dt>Type</dt>
+            <dd>{{part.infons.type}}</dd>
+            <a href="{{getSource(part.infons)}}" target="_blank">Source</a>
+            
+        </dl>
+    </ng-template>
+    <ng-template #text>
+        <span [attr.position]="position + '-' + index" [innerHTML]="part"></span>
+    </ng-template>
+</ng-template>

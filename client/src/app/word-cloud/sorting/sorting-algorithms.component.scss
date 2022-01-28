@@ -1,0 +1,26 @@
+.sorting-algorithm-container {
+  button {
+    position: relative;
+    align-items: center;
+  }
+
+  .popover {
+    left: auto !important;
+    right: 0;
+    transform: translateY(-100%) !important;
+    width: max-content;
+
+    .arrow {
+      left: auto !important;
+      right: calc(1.5rem - 0.5em);
+    }
+
+    .popover-header {
+      color: black;
+    }
+
+    .popover-body {
+      text-align: justify;
+    }
+  }
+}

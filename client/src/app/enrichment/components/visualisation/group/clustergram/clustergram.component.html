@@ -1,0 +1,42 @@
+<div class="clustergram-wrapper" [style.height.em]="genes.size*2.5 + 8.5">
+  <table class="table table-striped column-hover">
+      <thead>
+      <tr>
+          <th></th>
+          <th scope="col" *ngFor="let goTerm of goTerms">
+              <div>
+                  <ng-template #tooltip>
+                      {{goTerm.goTerm}} ({{goTerm.goId}})
+                  </ng-template>
+                  <span [ngbTooltip]="tooltip"
+                        container="body"
+                        tooltipClass="rotatedTooltip"
+                        placement="bottom-left bottom-right">
+                      {{goTerm.goTerm}}</span>
+              </div>
+          </th>
+          <th scope="col" *ngIf="others" class="others">
+              <div>
+                  <span>others</span>
+              </div>
+          </th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let entry of genes | keyvalue: rowOrder">
+          <th scope="row" [appSELink]="entry.key">{{ entry.key }}</th>
+          <td *ngFor="let value of entry.value.values"
+              [ngClass]="{match:value}"
+              [style.backgroundColor]="value && geneColor"
+          ></td>
+          <td *ngIf="others"
+              class="match others">{{entry.value.others || ''}}</td>
+      </tr>
+      <tr *ngIf="others">
+          <th scope="row">others</th>
+          <td *ngFor="let value of others.values"></td>
+          <td class="match others">{{others.others}}</td>
+      </tr>
+      </tbody>
+  </table>
+</div>

@@ -1,0 +1,142 @@
+.module {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  height: 100%;
+}
+
+.module-header {
+  padding: $module-header-padding-y $module-header-padding-x;
+  border-bottom: $module-header-border-width solid $module-header-border-color;
+  box-shadow: $module-header-box-shadow;
+  z-index: 2;
+  background-color: white;
+}
+
+.module-title-bar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  row-gap: $spacer * .25;
+  column-gap: $spacer * .25;
+}
+
+.module-title-bar-back {
+  padding: $module-back-button-padding;
+  border: 0;
+  background: transparent;
+  color: $link-color;
+
+  &:hover {
+    color: $link-hover-color;
+  }
+}
+
+.module-title {
+  margin: 0;
+  padding: 0;
+  font-size: $module-title-font-size;
+  font-weight: $module-title-font-weight;
+  line-height: $module-title-line-height;
+  @include text-truncate();
+}
+
+.module-toolbar {
+  flex-wrap: wrap;
+  margin-top: $spacer * -0.25;
+
+  & > * {
+    margin-top: $spacer * 0.25;
+  }
+}
+
+.module-body {
+  padding: $module-body-padding-x;
+}
+
+.module-body-table {
+  th, td {
+    &:first-child {
+      padding-left: $module-body-padding-x;
+    }
+
+    &:last-child {
+      padding-right: $module-body-padding-x;
+    }
+  }
+}
+
+.module-section {
+  margin-bottom: $module-section-margin-bottom;
+}
+
+.module-section-header {
+  margin-bottom: $module-section-header-margin-bottom;
+}
+
+.module-section-header-title {
+  font-size: $module-section-title-font-size;
+  font-weight: $module-section-title-font-weight;
+  color: $module-section-title-color;
+}
+
+// Used to constrain the width of the body to a standard size
+.module-body-container {
+  max-width: 800px;
+}
+
+// ========================================
+// Split within the body
+// ========================================
+
+.module-body-split {
+  display: flex;
+  height: 100%;
+}
+
+.module-body-split-main {
+  overflow: auto;
+}
+
+.module-body-split-sidebar {
+  flex-grow: 1;
+  overflow: auto;
+}
+
+.module-body-browser-split {
+  .module-body-split-main {
+    max-width: 1000px;
+  }
+
+  .module-body-split-sidebar {
+    border-left: 1px solid $border-color;
+    background: $light;
+    min-width: 400px;
+  }
+}
+
+.module-body-preview-split {
+  .module-body-split-main {
+    flex-grow: 1;
+
+    @include module-breakpoint-up(md) {
+      flex-basis: 500px;
+      min-width: 500px;
+      flex-grow: 0;
+    }
+  }
+
+  .module-body-split-sidebar {
+    border-left: 1px solid $border-color;
+    display: none;
+
+    @include module-breakpoint-up(md) {
+      display: block;
+      flex-grow: 1;
+    }
+  }
+}
+
+.module-body-split-sidebar-body {
+  max-width: 300px;
+}

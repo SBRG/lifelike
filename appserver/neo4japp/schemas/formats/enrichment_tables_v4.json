@@ -1,0 +1,128 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "data"
+  ],
+  "definitions": {
+    "safeUrl": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 5000,
+      "pattern": "(?i)^(https?://.+|mailto:.+)$",
+      "$comment": "changing this may have defense-in-depth security implications"
+    }
+  },
+  "properties": {
+    "data": {
+      "type": "string",
+      "minLength": 0,
+      "maxLength": 100000
+    },
+    "result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "version",
+        "domainInfo",
+        "genes"
+      ],
+      "properties": {
+        "version": {
+          "const": "4"
+        },
+        "domainInfo": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "labels"
+            ],
+            "properties": {
+              "labels": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 200
+                }
+              }
+            }
+          }
+        },
+        "genes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "imported"
+            ],
+            "properties": {
+              "imported": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 5000
+              },
+              "annotatedImported": {
+                "type": "string",
+                "minLength": 1
+              },
+              "matched": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 5000
+              },
+              "annotatedMatched": {
+                "type": "string",
+                "minLength": 1
+              },
+              "fullName": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 5000
+              },
+              "annotatedFullName": {
+                "type": "string",
+                "minLength": 1
+              },
+              "link": {
+                "$ref": "#/definitions/safeUrl"
+              },
+              "domains": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "text",
+                      "link"
+                    ],
+                    "properties": {
+                      "text": {
+                        "type": "string",
+                        "minLength": 0,
+                        "maxLength": 512000
+                      },
+                      "annotatedText": {
+                        "type": "string",
+                        "minLength": 0
+                      },
+                      "link": {
+                        "$ref": "#/definitions/safeUrl"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

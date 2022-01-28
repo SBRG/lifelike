@@ -1,0 +1,16 @@
+Dockerfile
+**/__pycache__
+**/*.pyc
+**/.cache
+**/.mypy_cache
+neo4japp/services/annotations/lmdb/**/*.mdb
+neo4japp/services/annotations/datasets/*.csv
+neo4japp/services/annotations/datasets/*.tsv
+**/*.tar.gz
+**/.env
+.coverage
+.htmlcov/
+.venv/
+.pytest_cache
+*.git*
+.githooks/

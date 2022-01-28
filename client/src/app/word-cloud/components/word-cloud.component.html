@@ -1,0 +1,111 @@
+<div class="module" appContainerBreakpoints *ngIf="(loadTask?.status$ | async) as status">
+    <app-module-progress *ngIf="status.running">
+        Downloading annotations...
+    </app-module-progress>
+
+    <app-module-error *ngIf="status.failedErrorShown" [error]="status.error">
+        <a appLink="/projects">Go to Projects <i class="fa fa-fw fa-arrow-right"></i></a>
+    </app-module-error>
+
+    <ng-template #tabTitle>{{ title }}</ng-template>
+    <app-module-header
+            [object]="object"
+            [titleTemplate]="tabTitle"
+            [showObjectMenu]="false"
+            [showBreadCrumbs]="false"
+            [showNewWindowButton]="false"
+    >
+        <div class="d-flex align-items-center px-2 mx-auto">
+            <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" [id]="id + '-toggle-shown-text-checkbox'"
+                       [checked]="false"
+                       (change)="toggleShownText()">
+                <label class="custom-control-label" [for]="id + '-toggle-shown-text-checkbox'">Show Primary
+                    Names</label>
+            </div>
+        </div>
+        <div class="btn-group d-flex align-items-stretch ml-auto" role="group">
+            <button class="btn btn-secondary text-nowrap"
+                    ngbTooltip="Copy Cloud to Clipboard"
+                    placement="bottom top left right"
+                    (click)="copyWordCloudToClipboard()">
+                <i class="fas fa-fw fa-copy"></i>
+            </button>
+            <button class="btn btn-secondary text-nowrap"
+                    ngbTooltip="Fit Cloud to Window"
+                    placement="bottom top bottom-left top-left"
+                    (click)="fitCloudToWindow()">
+                <i class="fas fa-fw fa-expand-arrows-alt"></i>
+            </button>
+            <button class="btn btn-secondary"
+                    ngbTooltip="Reload Annotations"
+                    container="body"
+                    placement="bottom top bottom-right bottom-left top-right top-left"
+                    (click)="getAnnotations()">
+                <i class="fa fa-fw fa-sync"></i>
+            </button>
+            <button class="btn btn-secondary"
+                    (click)="toggleFiltersPanel()"
+                    ngbTooltip="Show Annotation Filters"
+                    container="body"
+                    placement="bottom top bottom-right top-right">
+                <i class="fa fa-fw fa-filter"></i>
+            </button>
+            <div *ngIf="sortingAlgorithms.length>1"
+                 ngbDropdown container="body" class="btn-group" role="group"
+                 ngbTooltip="Method for word size calculation"
+                 placement="bottom-right top-right">
+                <button class="btn btn-secondary" ngbDropdownToggle>
+                    <i class="fas fa-sort-size-down"></i>
+                    <span class="mx-2">{{sorting.name}}</span>
+                </button>
+                <app-sorting-algorithms [algorithms]="sortingAlgorithms"
+                                        (changeSorting)="sort($event)"
+                                        [selected]="sorting"
+                                        ngbDropdownMenu>
+                </app-sorting-algorithms>
+            </div>
+        </div>
+        <ng-content select="[header]"></ng-content>
+    </app-module-header>
+    <as-split unit="pixel"
+              direction="horizontal"
+              [gutterSize]="5">
+        <as-split-area [order]="0">
+            <ng-container *ngIf="annotationData.length === 0">
+                <ngb-alert [dismissible]="false">
+                    No entities (annotations) found.
+                </ngb-alert>
+            </ng-container>
+            <div #wordCloudWrapper class="h-100 w-100 overflow-hidden">
+                <svg #wordCloudSvg>
+                    <g #wordCloudGroup></g>
+                </svg>
+                <div #wordCloudTooltip class="tooltip bg-white rounded p-2"
+                     style="border: 2px solid; opacity: 1;"></div>
+            </div>
+        </as-split-area>
+        <as-split-area [visible]="filtersPanelOpened"
+                       size="340"
+                       [order]="1"
+                       [class]="filtersPanelOpened ? 'as-split-area border' : 'as-split-area as-hidden'">
+            <div class="w-100 h-100 p-3">
+                <div class="annotation-filter-btns-container">
+                    <button class="btn btn-danger annotation-filter-close-btn d-flex justify-content-center align-items-center"
+                            type="button"
+                            (click)="toggleFiltersPanel()">
+                        <i class="fa fa-close"></i>
+                    </button>
+                </div>
+                <app-word-cloud-annotation-filter
+                        [clickableWords]="true"
+                        (wordOpen)="this.wordOpen.emit({entity: $event, keywordsShown: keywordsShown})"
+                        [sortingAlgorithm]="sorting"
+                        [annotationData]="annotationData"
+                        (wordVisibilityOutput)="updateWordVisibilityMap($event)"
+                ></app-word-cloud-annotation-filter>
+            </div>
+        </as-split-area>
+    </as-split>
+    <div #hiddenTextAreaWrapper style="display: none;"></div>
+</div>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd">
+  <!--
+    Neo4j does not allow the same transaction for changing the scheme and writes.
+    So group changeSets together by id="some text-#"
+    And separate changeSets grouping by empty new line space
+  -->
+
+  <changeSet id="Init migrations for small graph used for local dev/testing" author="Binh Vu">
+    <comment>Init migration changeset</comment>
+    <sql>CALL db.info()</sql>
+  </changeSet>
+
+  <!-- TODO: finish up the other queries -->
+</databaseChangeLog>

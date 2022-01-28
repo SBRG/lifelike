@@ -1,0 +1,23 @@
+$placeholder-bg: $gray-200;
+$placeholder-border-radius: $border-radius;
+
+.placeholder-box {
+  position: relative;
+  display: inline-block;
+  background: $placeholder-bg;
+  color: transparent;
+  min-height: 1rem;
+  border-radius: $placeholder-border-radius;
+  user-select: none;
+  animation: 1s linear infinite alternate placeholder-pulse;
+}
+
+@keyframes placeholder-pulse {
+  0% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0.2;
+  }
+}

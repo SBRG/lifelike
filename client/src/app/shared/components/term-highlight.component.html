@@ -1,0 +1,4 @@
+<ng-container *ngIf="highlight; else regularText">
+  <app-highlight-text [highlight]="highlight"></app-highlight-text>
+</ng-container>
+<ng-template #regularText>{{text}}</ng-template>

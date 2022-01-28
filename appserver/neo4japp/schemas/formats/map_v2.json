@@ -1,0 +1,441 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "nodes",
+    "edges"
+  ],
+  "definitions": {
+    "position": {
+      "type": "number",
+      "minimum": -50000,
+      "maximum": 50000,
+      "$comment": "not yet enforced in UI"
+    },
+    "length": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 10000,
+      "$comment": "not yet enforced in UI"
+    },
+    "unsafeUrl": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4000,
+      "$comment": "this must exist due to legacy reasons"
+    },
+    "unsafeUrlOrBlank": {
+      "type": "string",
+      "minLength": 0,
+      "maxLength": 4000,
+      "$comment": "this must exist due to legacy reasons"
+    },
+    "safeUrl": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4000,
+      "pattern": "(?i)^(https?://.+|mailto:.+)$",
+      "$comment": "changing this may have defense-in-depth security implications"
+    },
+    "safeUrlOrBlank": {
+      "type": "string",
+      "minLength": 0,
+      "maxLength": 4000,
+      "pattern": "(?i)^(https?://.+|mailto:.+)?$",
+      "$comment": "changing this may have defense-in-depth security implications"
+    },
+    "sourceId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4000,
+      "$comment": "could be a URI or could be a string"
+    },
+    "sourceIdOrBlank": {
+      "type": "string",
+      "minLength": 0,
+      "maxLength": 4000,
+      "$comment": "could be a URI or could be a string, or blank"
+    },
+    "sourceUrl": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4000,
+      "pattern": "(?i)^(https?://.+|/.*)$"
+    },
+    "sourceUrlOrBlank": {
+      "type": "string",
+      "minLength": 0,
+      "maxLength": 4000,
+      "pattern": "(?i)^(https?://.+|/.*)?$"
+    },
+    "color": {
+      "type": "string",
+      "pattern": "^#(?:[0-9A-Fa-f]{6}|[0-9A-Fa-f]{3})$",
+      "$comment": "accepts #XXX and #XXXXXX as colors and nothing else"
+    },
+    "paletteColor": {
+      "type": ["string", "null"],
+      "pattern": "(?i)^#(d62728|ff9800|edc949|bcbd22|4caf50|17becf|0277bd|673ab7|e377c2|CCCCCC|7f7f7f|000000)$",
+      "$comment": "only one of the provided colors is acceptable in case we switch to an actual palette system later; note that casing does not matter."
+    },
+    "scalingFactor": {
+      "type": "number",
+      "minimum": 0.2,
+      "maximum": 10,
+      "$comment": "the UI only allows numbers within this range"
+    },
+    "lineType": {
+      "type": "string",
+      "pattern": "^(none|null|solid|dashed|long-dashed|dotted|two-dashed)$",
+      "$comment": "casing DOES matter and is validated; null shouldn't be in this list but there are broken maps"
+    },
+    "lineHeadType": {
+      "type": "string",
+      "pattern": "^(none|null|arrow|circle-arrow|square-arrow|cross-axis-arrow|cross-axis|diamond|square|circle|double-cross-axis)$",
+      "$comment": "casing DOES matter and is validated; null shouldn't be in this list but there are broken maps"
+    },
+    "referenceType": {
+      "type": "string",
+      "pattern": "^(DATABASE|PROJECT_OBJECT)$"
+    },
+    "hyperlinks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "url",
+          "domain"
+        ],
+        "properties": {
+          "url": {
+            "$ref": "#/definitions/unsafeUrlOrBlank",
+            "$comment": "unfortunately this can be blank"
+          },
+          "domain": {
+            "type": "string",
+            "minLength": 0,
+            "$comment": "this field can actually be anything and not a domain, like 'File Source' due to legacy reasons, and it can even be blank"
+          }
+        }
+      }
+    },
+    "hash": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100,
+      "pattern": "^[0-9a-zA-Z-_]+$",
+      "$comment": "hashes must be unique within a node or edge hash space, but this schema does NOT validate it due to limitations in JSON Schema"
+    },
+    "icon": {
+      "$comment": "icons have a lot of attributes, but most are legacy from when object styles and semantics were not separate; note that icons themselves have no semantic meaning and are codepoints in Font Awesome, which is pretty bad but this is due to legacy as well",
+      "additionalProperties": false,
+      "required": [
+        "code",
+        "face"
+      ],
+      "properties": {
+        "code": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1
+        },
+        "color": {
+          "$ref": "#/definitions/color",
+          "$comment": "deprecated and unused"
+        },
+        "face": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100,
+          "pattern": "(?i)^FontAwesome$"
+        },
+        "size": {
+          "type": "number",
+          "minimum": 1,
+          "maximum": 500,
+          "$comment": "deprecated and unused"
+        },
+        "weight": {
+          "type": "string",
+          "pattern": "(?i)^bold|([0-9]{1,3})$",
+          "$comment": "deprecated and unused"
+        }
+      }
+    },
+    "commonData": {
+      "type": "object",
+      "properties": {
+        "hyperlinks": {
+          "$ref": "#/definitions/hyperlinks"
+        },
+        "search": {
+          "$ref": "#/definitions/hyperlinks"
+        },
+        "references": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "type"
+            ],
+            "$comment": "unfortunately, due to the lack of schema, some maps use ID whereas others use URL",
+            "properties": {
+              "type": {
+                "$ref": "#/definitions/referenceType"
+              },
+              "id": {
+                "$ref": "#/definitions/sourceIdOrBlank"
+              },
+              "url": {
+                "$ref": "#/definitions/sourceIdOrBlank",
+                "$comment": "unfortunately this can be blank"
+              }
+            },
+            "oneOf": [
+              {
+                "required": [
+                  "url"
+                ]
+              },
+              {
+                "required": [
+                  "id"
+                ]
+              }
+            ]
+          }
+        },
+        "sources": {
+          "additionalProperties": false,
+          "required": [
+            "url"
+          ],
+          "properties": {
+            "type": {
+              "$ref": "#/definitions/referenceType"
+            },
+            "url": {
+              "$ref": "#/definitions/sourceUrl"
+            },
+            "domain": {
+              "type": "string",
+              "minLength": 0,
+              "$comment": "this field can actually be anything and not a domain, like 'File Source' due to legacy reasons"
+            }
+          }
+        },
+        "detail": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 5000
+        },
+        "subtype": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 50,
+          "pattern": "^[A-Za-z]*$",
+          "$comment": "value of subtype is not validated, and it may be a blank string"
+        },
+        "source": {
+          "$ref": "#/definitions/sourceUrlOrBlank",
+          "$comment": "deprecated and unused"
+        },
+        "hyperlink": {
+          "$ref": "#/definitions/unsafeUrlOrBlank",
+          "$comment": "deprecated and unused"
+        }
+      }
+    }
+  },
+  "properties": {
+    "nodes": {
+      "type": "array",
+      "minItems": 0,
+      "maxItems": 1000,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "hash",
+          "display_name",
+          "label"
+        ],
+        "properties": {
+          "hash": {
+            "$ref": "#/definitions/hash"
+          },
+          "image_id": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 50,
+            "pattern": "^[A-Za-z- ]+$",
+            "$comment": "node type is not validated"
+          },
+          "display_name": {
+            "type": ["string", "null"],
+            "minLength": 0,
+            "maxLength": 2000,
+            "$comment": "unfortunately can be null"
+          },
+          "icon": {
+            "$ref": "#/definitions/icon"
+          },
+          "shape": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100,
+            "pattern": "^[A-Za-z_-]+$",
+            "$comment": "deprecated and unused"
+          },
+          "sub_labels": {
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 100,
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100,
+              "pattern": "^[A-Za-z_-]+$"
+            },
+            "$comment": "deprecated and unused"
+          },
+          "style": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "fontSizeScale": {
+                "$ref": "#/definitions/scalingFactor"
+              },
+              "fillColor": {
+                "$ref": "#/definitions/paletteColor"
+              },
+              "strokeColor": {
+                "$ref": "#/definitions/paletteColor"
+              },
+              "lineType": {
+                "$ref": "#/definitions/lineType"
+              },
+              "lineWidthScale": {
+                "$ref": "#/definitions/scalingFactor"
+              },
+              "showDetail": {
+                "type": "boolean"
+              }
+            }
+          },
+          "data": {
+            "additionalProperties": false,
+            "required": [
+              "x",
+              "y"
+            ],
+            "properties": {
+              "references": {},
+              "hyperlinks": {},
+              "detail": {},
+              "search": {},
+              "subtype": {},
+              "sources": {},
+              "source": {},
+              "hyperlink": {},
+              "x": {
+                "$ref": "#/definitions/position"
+              },
+              "y": {
+                "$ref": "#/definitions/position"
+              },
+              "width": {
+                "$ref": "#/definitions/length"
+              },
+              "height": {
+                "$ref": "#/definitions/length"
+              }
+            },
+            "allOf": [
+              {
+                "$ref": "#/definitions/commonData"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "edges": {
+      "type": "array",
+      "minItems": 0,
+      "maxItems": 10000,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "from",
+          "to"
+        ],
+        "properties": {
+          "label": {
+            "type": ["string", "null"],
+            "minLength": 0,
+            "maxLength": 2000,
+            "$comment": "unfortunately the label can be null"
+          },
+          "from": {
+            "$ref": "#/definitions/hash",
+            "$comment": "existence of the target reference is not validated"
+          },
+          "to": {
+            "$ref": "#/definitions/hash",
+            "$comment": "existence of the target reference is not validated"
+          },
+          "style": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "fontSizeScale": {
+                "$ref": "#/definitions/scalingFactor"
+              },
+              "strokeColor": {
+                "$ref": "#/definitions/paletteColor"
+              },
+              "lineType": {
+                "$ref": "#/definitions/lineType"
+              },
+              "lineWidthScale": {
+                "$ref": "#/definitions/scalingFactor"
+              },
+              "sourceHeadType": {
+                "$ref": "#/definitions/lineHeadType"
+              },
+              "targetHeadType": {
+                "$ref": "#/definitions/lineHeadType"
+              }
+            }
+          },
+          "data": {
+            "additionalProperties": false,
+            "properties": {
+              "references": {},
+              "hyperlinks": {},
+              "detail": {},
+              "search": {},
+              "subtype": {},
+              "sources": {},
+              "source": {},
+              "hyperlink": {}
+            },
+            "allOf": [
+              {
+                "$ref": "#/definitions/commonData"
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}

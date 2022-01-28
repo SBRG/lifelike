@@ -1,0 +1,15 @@
+<app-modal-header (cancel)="close()">
+  Copy Link
+</app-modal-header>
+
+<app-modal-body>
+  <div class="d-flex">
+    <input type="text" class="form-control flex-fill" [value]="url" readonly appAutoFocus [autoSelect]="true" #input>
+    <button type="button" class="btn btn-secondary ml-1" (click)="copyToClipboard()">
+      <i class="fa fa-copy fa-fw"></i>
+    </button>
+  </div>
+  <div class="mt-4">
+    Permission may be required to view this link.
+  </div>
+</app-modal-body>

@@ -1,0 +1,95 @@
+/**
+ * Annotation types
+ */
+$gene: #673ab7;
+$disease: #ff9800;
+$chemical: #4caf50;
+$compound: #4caf50;
+$mutation: #5d4037;
+$species: #0277bd;
+$company: #d62728;
+$study: #17becf;
+$protein: #bcbd22;
+$pathway: #e377c2;
+$phenotype: #edc949;
+
+$note: #edc949;
+$map: #0277bd;
+
+$entity: #7f7f7f;
+$link: #7f7f7f;
+
+// Non-Entity Types
+$correlation: #d7d9f8;
+$cause: #d7d9f8;
+$effect: #d7d9f8;
+$observation: #d7d9f8;
+$association: #d7d9f8;
+
+
+// Color property definitions
+.gene {
+  color: $gene;
+}
+.disease {
+  color: $disease;
+}
+.chemical {
+  color: $chemical;
+}
+.compound {
+  color: #4caf50;
+}
+.mutation {
+  color: $mutation;
+}
+.species {
+  color: $species;
+}
+.company {
+  color: $company;
+}
+.study {
+  color: $study;
+}
+.protein {
+  color: $protein;
+}
+.pathway {
+  color: $pathway;
+}
+.phenotype {
+  color: $phenotype;
+}
+
+
+.correlation {
+  color: $correlation;
+}
+.cause {
+  color: $cause;
+}
+.effect {
+  color: $effect;
+}
+.observation {
+  color: $observation;
+}
+.association {
+  color: $association;
+}
+
+.note {
+  color: $note;
+}
+.map {
+  color: $map;
+}
+
+
+.entity {
+  color: $entity;
+};
+.link {
+  color: $link;
+};

@@ -1,0 +1,138 @@
+<app-modal-header (cancel)="cancel()">
+  Edit Collaborators of '{{ project?.name }}'
+</app-modal-header>
+
+<app-modal-body>
+  <ng-container *ngIf="(collaborators$ | addStatus | async) as result">
+    <ng-template [ngIf]="result.error">
+      <app-module-error [error]="result.error">
+      </app-module-error>
+    </ng-template>
+
+    <form (ngSubmit)="addCollaborator()" [formGroup]="addForm">
+      <app-form-input-feedback [control]="addForm" [formLevel]="true"></app-form-input-feedback>
+
+      <div class="d-flex align-items-start">
+        <div class="d-flex flex-column flex-fill">
+          <app-user-select [multiple]="true" placeholder="Enter name or email address..."
+                           formControlName="users" [excludeSelf]="true">
+          </app-user-select>
+          <app-form-input-feedback [control]="addForm.get('users')"></app-form-input-feedback>
+        </div>
+        <div class="d-flex flex-column">
+          <select class="custom-select ml-2" formControlName="roleName" id="role-name"
+                  style="width: auto"
+                  [appFormInput]="addForm.get('roleName')">
+            <option value="project-read">Can view</option>
+            <option value="project-write">Can edit</option>
+            <option value="project-admin">Can edit and invite</option>
+          </select>
+          <app-form-input-feedback [control]="addForm.get('roleName')"></app-form-input-feedback>
+        </div>
+        <button type="submit" class="btn btn-secondary ml-2" [disabled]="addForm.invalid" >Add</button>
+      </div>
+    </form>
+
+    <div class="mt-4">
+      <ng-template [ngIf]="result.loading">
+        <table class="table m-0">
+          <colgroup>
+            <col>
+            <col style="width: 1%">
+          </colgroup>
+          <thead>
+          <tr>
+            <th>Name</th>
+            <th class="text-right">Permissions</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td class="align-middle">
+              <span class="placeholder-box">Loading loading loading</span>
+            </td>
+            <td class="align-middle text-nowrap">
+              <div class="d-flex align-items-center justify-content-end">
+                <div class="d-inline-block ml-1">
+                  <span class="placeholder-box">Loading loading</span>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="align-middle">
+              <span class="placeholder-box">Loading loading</span>
+            </td>
+            <td class="align-middle text-nowrap">
+              <div class="d-flex align-items-center justify-content-end">
+                <div class="d-inline-block ml-1">
+                  <span class="placeholder-box">Loading loading</span>
+                </div>
+              </div>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </ng-template>
+
+      <ng-template [ngIf]="result.value">
+        <table class="table m-0">
+          <colgroup>
+            <col>
+            <col style="width: 1%">
+          </colgroup>
+          <thead>
+          <tr>
+            <th>Name</th>
+            <th class="text-right">Permissions</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let collaborator of result.value.results.view">
+            <td class="align-middle">
+              <app-user [user]="collaborator.user"></app-user>
+            </td>
+            <td class="align-middle text-nowrap">
+              <div class="d-flex align-items-center justify-content-end">
+                <div ngbDropdown class="d-inline-block ml-1" container="body"
+                     placement="bottom-right top-right">
+                  <a href="#" (click)="$event.preventDefault()" ngbDropdownToggle
+                     class="d-inline-block my-2">
+                    {{ collaborator.roleDescription }}
+                  </a>
+                  <div ngbDropdownMenu>
+                    <button *ngIf="collaborator.roleName != 'project-read'"
+                            ngbDropdownItem
+                            (click)="changeCollaboratorRole(collaborator, 'project-read')">
+                      Can view
+                    </button>
+                    <button *ngIf="collaborator.roleName != 'project-write'"
+                            ngbDropdownItem
+                            (click)="changeCollaboratorRole(collaborator, 'project-write')">
+                      Can edit
+                    </button>
+                    <button *ngIf="collaborator.roleName != 'project-admin'"
+                            ngbDropdownItem
+                            (click)="changeCollaboratorRole(collaborator, 'project-admin')">
+                      Can edit and invite
+                    </button>
+                    <div class="dropdown-divider"></div>
+                    <button ngbDropdownItem (click)="removeCollaborator(collaborator)">
+                      Remove
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </ng-template>
+    </div>
+
+  </ng-container>
+</app-modal-body>
+
+<app-modal-footer>
+  <button type="button" class="btn btn-primary" (click)="cancel()">Close</button>
+</app-modal-footer>

@@ -1,0 +1,52 @@
+apiVersion: v2
+name: lifelike
+description: A Helm chart to deploy Lifelike in Kubernetes. Turning big data into contextualized knowledge
+home: https://www.lifelike.bio
+icon: https://lifelike.bio/favicon.ico
+type: application
+
+version: 0.1.0
+appVersion: latest
+
+kubeVersion: ">=1.20.0-0"
+
+keywords:
+  - lifelike
+  - bioinformatics
+  - bigdata
+  - biofoundry
+  - knowledgegraph
+
+sources:
+  - https://github.com/SBRG/lifelike
+  - https://artifacthub.io/packages/helm/lifelike/lifelike
+
+dependencies:
+  - name: postgresql
+    repository: https://charts.bitnami.com/bitnami
+    version: 10.14.0
+    condition: postgresql.enabled
+  - name: neo4j
+    version: 4.4.1
+    repository: https://neo4j-contrib.github.io/neo4j-helm
+    condition: neo4j.enabled
+  - name: elasticsearch
+    version: 7.16.2
+    repository: https://helm.elastic.co
+    condition: elasticsearch.enabled
+  - name: redis
+    version: 15.6.9
+    repository: https://charts.bitnami.com/bitnami
+    condition: redis.enabled
+
+annotations:
+  artifacthub.io/license: MIT
+  artifacthub.io/links: |
+    - name: Lifelike website
+      url: https://lifelike.bio
+    - name: Lifelike Git repository
+      url: https://github.com/SBRG/lifelike
+  artifacthub.io/maintainers: |
+    - name: David Regla
+      email: darede@biosustain.dtu.dk
+  artifacthub.io/prerelease: "false"

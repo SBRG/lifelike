@@ -1,0 +1,80 @@
+{
+  "name": "test_user_source_database_input_priority.pdf",
+  "pages": [
+    {
+      "cropBox": {
+        "height": 792,
+        "lowerLeftPt": {
+          "x": 0,
+          "y": 0
+        },
+        "pivotPt": {
+          "x": 0,
+          "y": 0
+        },
+        "rotation": 0,
+        "width": 612
+      },
+      "mediaBox": {
+        "height": 792,
+        "lowerLeftPt": {
+          "x": 0,
+          "y": 0
+        },
+        "pivotPt": {
+          "x": 0,
+          "y": 0
+        },
+        "rotation": 0,
+        "width": 612
+      },
+      "pageNo": 1,
+      "pageText": "  Carbon carbon ",
+      "tokens": [
+        {
+          "pgIdx": 2,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 12,
+              "lowerLeftPt": {
+                "x": 76.89540100097656,
+                "y": 706.2301025390625
+              },
+              "pivotPt": {
+                "x": 76.89540100097656,
+                "y": 709.2301025390625
+              },
+              "rotation": 0,
+              "width": 38.534217834472656
+            }
+          ],
+          "shapes": [],
+          "text": "Carbon"
+        },
+        {
+          "pgIdx": 9,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 12,
+              "lowerLeftPt": {
+                "x": 118.6958236694336,
+                "y": 706.2301025390625
+              },
+              "pivotPt": {
+                "x": 118.6958236694336,
+                "y": 709.2301025390625
+              },
+              "rotation": 0,
+              "width": 35.92359161376953
+            }
+          ],
+          "shapes": [],
+          "text": "carbon"
+        }
+      ]
+    }
+  ],
+  "processedDate": "2021-01-14 13:11:12"
+}

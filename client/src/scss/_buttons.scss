@@ -1,0 +1,15 @@
+@each $color, $value in $theme-colors {
+  .btn-#{$color} {
+    &.disabled,
+    &:disabled {
+      color: $value;
+      background-color: transparent;
+      border-color: $value;
+      opacity: 0.4;
+    }
+  }
+}
+
+.btn-xs {
+  @include button-size($btn-padding-y-xs, $btn-padding-x-xs, $btn-font-size-xs, $btn-line-height-xs, $btn-border-radius-xs);
+}

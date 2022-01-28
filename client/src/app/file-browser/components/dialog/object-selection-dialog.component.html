@@ -1,0 +1,86 @@
+<form (ngSubmit)="submit()">
+  <app-modal-header (cancel)="cancel()">
+    {{ title }}
+  </app-modal-header>
+
+  <app-modal-body>
+    <ng-container *ngIf="objectSelect.hashId != null; else projectList">
+      <ng-container *ngIf="(objectSelect.object$ | addStatus | async) as result">
+        <ng-template [ngIf]="result.error">
+          <app-module-error [error]="result.error" class="d-block p-4">
+          </app-module-error>
+        </ng-template>
+
+        <ng-template [ngIf]="result.loading">
+          <div class="mb-3 d-flex">
+            <button class="btn btn-secondary" type="button" disabled>
+              <i class="fa fa-fw fa-arrow-left" aria-hidden="true"></i>
+            </button>
+          </div>
+
+          <div>
+            Loading...
+          </div>
+        </ng-template>
+
+        <ng-template [ngIf]="result.value">
+          <div class="mb-3 d-flex align-items-center">
+            <button class="btn btn-secondary" type="button" (click)="objectSelect.goUp()">
+              <i class="fa fa-fw fa-arrow-left" aria-hidden="true"></i>
+            </button>
+            <div class="ml-2 text-truncate module-title d-flex align-items-center">
+              <i class="fa fa-fw fa-folder text-icon" aria-hidden="true"></i>
+              <div class="text-truncate ml-2">
+                {{ result.value.effectiveName }}
+              </div>
+            </div>
+          </div>
+
+          <div class="flex-fill overflow-auto border-top">
+            <app-object-list [objects]="result.value.children"
+                           (refreshRequest)="objectSelect.load(result.value.hashId)"
+                           (objectOpen)="objectSelect.open($event)"
+                           [objectControls]="false"
+                           [emptyDirectoryMessage]="emptyDirectoryMessage"></app-object-list>
+          </div>
+        </ng-template>
+      </ng-container>
+    </ng-container>
+    <ng-template #projectList>
+      <ng-container *ngIf="(objectSelect.projectList$ | addStatus | async) as result">
+        <ng-template [ngIf]="result.error">
+          <app-module-error [error]="result.error" class="d-block p-4">
+          </app-module-error>
+        </ng-template>
+
+        <ng-template [ngIf]="result.loading">
+          Loading...
+        </ng-template>
+
+        <ng-template [ngIf]="result.value">
+          <div class="tile-deck tile-deck-sm">
+            <div *ngFor="let p of result.value.results.view" class="tile tile-sm d-flex flex-column">
+              <div class="flex-fill d-flex justify-content-center align-items-center my-2">
+                <a (click)="openProject(p); $event.preventDefault()" href="#" class="text-muted">
+                  <i class="fas fa-layer-group fa-4x"></i>
+                </a>
+              </div>
+              <div class="text-truncate text-center">
+                <a (click)="openProject(p); $event.preventDefault()" href="#" class="d-block text-truncate">
+                  <strong>{{ p.projectName }}</strong>
+                </a>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      </ng-container>
+    </ng-template>
+  </app-modal-body>
+
+  <app-modal-footer class="text-truncate">
+    <button type="button" class="btn btn-secondary mr-2" (click)="cancel()">Cancel</button>
+    <button type="submit" class="btn btn-primary text-truncate">
+      OK
+    </button>
+  </app-modal-footer>
+</form>

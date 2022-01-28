@@ -1,0 +1,136 @@
+<div class="d-flex flex-column h-100">
+  <ul ngbNav #nav="ngbNav" [(activeId)]="infoPanel.activeTab" class="nav-tabs nav-sidebar-tabs">
+    <li ngbNavItem="properties">
+      <a ngbNavLink>Properties</a>
+      <ng-template ngbNavContent>
+        <div class="module-body">
+          <div class="form-group">
+            <label for="label">
+              Label:
+            </label>
+            <input [(ngModel)]="edge.label" class="form-control map-editor-initial-focus"
+                   (change)="doSave()" id="label" #displayName>
+          </div>
+
+          <div class="form-group">
+            <label for="detail">Detail:</label>
+            <textarea [(ngModel)]="edge.data.detail"
+                      rows="10" class="form-control" (change)="doSave()" id="detail"></textarea>
+          </div>
+
+          <div class="mt-4">
+            <app-links-panel title="Sources" singularTitle="Source" fontAwesomeIcon="far fa-book"
+                             [(ngModel)]="edge.data.sources"
+                             (ngModelChange)="doSave()"></app-links-panel>
+          </div>
+
+          <div class="mt-4">
+            <app-links-panel title="Hyperlinks" singularTitle="Hyperlink"
+                             [(ngModel)]="edge.data.hyperlinks"
+                             (ngModelChange)="doSave()"></app-links-panel>
+          </div>
+
+          <div class="mt-4">
+            <button (click)="doDelete()" type="button" class="btn btn-danger btn-block">
+              Delete
+            </button>
+          </div>
+        </div>
+      </ng-template>
+    </li>
+    <li ngbNavItem="style">
+      <a ngbNavLink>Style</a>
+      <ng-template ngbNavContent>
+        <div class="module-body">
+          <fieldset class="fieldset-properties">
+            <legend>Label Style</legend>
+
+            <div class="form-group d-flex align-items-center">
+              <label for="font-size" class="my-0 mr-2" ngbTooltip="Font size" container="body">
+                <i class="fa fa-fw fa-text-height"></i>
+              </label>
+              <app-percent-input min="20" max="1000" step="20" class="mr-1"
+                                 [(value)]="edge.style.fontSizeScale" (change)="doSave()"
+                                 default="100"
+                                 inputId="font-size"
+                                 [style.width]="'6rem'"></app-percent-input>
+              %
+            </div>
+
+          </fieldset>
+
+          <fieldset class="fieldset-properties mt-4">
+            <legend>Line Style</legend>
+
+            <div class="form-group d-flex align-items-center">
+              <label for="stroke-color" class="my-0 mr-2" ngbTooltip="Edge color" container="body">
+                <i class="fa fa-fw fa-fill"></i>
+              </label>
+              <app-color-chooser-component
+                id="stroke-color" [palette]="paletteChoices"
+                [(color)]="edge.style.strokeColor" emptyLabel="Default"
+                (colorChange)="doSave()"></app-color-chooser-component>
+            </div>
+
+            <div class="form-group d-flex align-items-center">
+              <label for="line-type" class="my-0 mr-2" ngbTooltip="Edge line type" container="body">
+                <i class="fa fa-fw fa-border-style"></i>
+              </label>
+              <select [(ngModel)]="edge.style.lineType" (change)="doSave()" class="custom-select"
+                      id="line-type">
+                <option *ngFor="let choice of lineTypeChoices" [value]="choice[0]">
+                  {{choice[1].name}}
+                </option>
+              </select>
+            </div>
+
+            <div class="form-group d-flex align-items-center">
+              <label for="line-width-scale" class="my-0 mr-2" ngbTooltip="Edge line thickness"
+                     container="body">
+                <i class="fa fa-fw fa-window-minimize"></i>
+              </label>
+              <app-percent-input min="20" max="1000" step="20" class="mr-1"
+                                 [(value)]="edge.style.lineWidthScale" (change)="doSave()"
+                                 default="100"
+                                 inputId="line-width-scale"
+                                 [style.width]="'6rem'"></app-percent-input>
+              %
+            </div>
+          </fieldset>
+
+          <fieldset class="fieldset-properties mt-4">
+            <legend>Arrowheads</legend>
+
+            <div class="form-group">
+              <label for="target-edge-type">
+                To:
+              </label>
+              <select [(ngModel)]="edge.style.targetHeadType" (change)="doSave()"
+                      class="custom-select"
+                      id="target-edge-type">
+                <option *ngFor="let choice of lineHeadTypeChoices" [value]="choice[0]">
+                  {{choice[1].name}}
+                </option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="source-edge-type">
+                From:
+              </label>
+              <select [(ngModel)]="edge.style.sourceHeadType" (change)="doSave()"
+                      class="custom-select"
+                      id="source-edge-type">
+                <option *ngFor="let choice of lineHeadTypeChoices" [value]="choice[0]">
+                  {{choice[1].name}}
+                </option>
+              </select>
+            </div>
+          </fieldset>
+        </div>
+      </ng-template>
+    </li>
+  </ul>
+
+  <div [ngbNavOutlet]="nav" class="flex-fill overflow-auto"></div>
+</div>

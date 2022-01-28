@@ -1,0 +1,122 @@
+{
+  "name": "test_gene_id_changes_to_result_from_kg_if_matched_with_organism.pdf",
+  "pages": [
+    {
+      "cropBox": {
+        "height": 792,
+        "lowerLeftPt": {
+          "x": 0,
+          "y": 0
+        },
+        "pivotPt": {
+          "x": 0,
+          "y": 0
+        },
+        "rotation": 0,
+        "width": 612
+      },
+      "mediaBox": {
+        "height": 792,
+        "lowerLeftPt": {
+          "x": 0,
+          "y": 0
+        },
+        "pivotPt": {
+          "x": 0,
+          "y": 0
+        },
+        "rotation": 0,
+        "width": 612
+      },
+      "pageNo": 1,
+      "pageText": "  il-7 coelacanth Tetraodon rubripes ",
+      "tokens": [
+        {
+          "pgIdx": 2,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 12,
+              "lowerLeftPt": {
+                "x": 76.89540100097656,
+                "y": 706.2301025390625
+              },
+              "pivotPt": {
+                "x": 76.89540100097656,
+                "y": 709.2301025390625
+              },
+              "rotation": 0,
+              "width": 15.666053771972656
+            }
+          ],
+          "shapes": [],
+          "text": "il-7"
+        },
+        {
+          "pgIdx": 7,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 12,
+              "lowerLeftPt": {
+                "x": 95.82766723632812,
+                "y": 706.2301025390625
+              },
+              "pivotPt": {
+                "x": 95.82766723632812,
+                "y": 709.2301025390625
+              },
+              "rotation": 0,
+              "width": 56.829681396484375
+            }
+          ],
+          "shapes": [],
+          "text": "coelacanth"
+        },
+        {
+          "pgIdx": 18,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 12,
+              "lowerLeftPt": {
+                "x": 155.71795654296875,
+                "y": 706.2301025390625
+              },
+              "pivotPt": {
+                "x": 155.71795654296875,
+                "y": 709.2301025390625
+              },
+              "rotation": 0,
+              "width": 52.25697326660156
+            }
+          ],
+          "shapes": [],
+          "text": "Tetraodon"
+        },
+        {
+          "pgIdx": 28,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 12,
+              "lowerLeftPt": {
+                "x": 211.24114990234375,
+                "y": 706.2301025390625
+              },
+              "pivotPt": {
+                "x": 211.24114990234375,
+                "y": 709.2301025390625
+              },
+              "rotation": 0,
+              "width": 42.448944091796875
+            }
+          ],
+          "shapes": [],
+          "text": "rubripes"
+        }
+      ]
+    }
+  ],
+  "processedDate": "2021-01-14 14:27:11"
+}

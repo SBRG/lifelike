@@ -1,0 +1,27 @@
+<div class="modal-header">
+  <h4 class="modal-title text-truncate">
+    {{title}}
+  </h4>
+</div>
+<div class="modal-body">
+  <div class="mb-2">
+    <ngb-progressbar *ngIf="lastProgress.mode === 'DETERMINATE'"
+                     type="primary" [value]="lastProgress.value * 100" [striped]="false" [animated]="false">
+    </ngb-progressbar>
+    <ngb-progressbar *ngIf="lastProgress.mode !== 'DETERMINATE'"
+                     type="primary" [value]="100" [striped]="true" [animated]="true">
+    </ngb-progressbar>
+  </div>
+
+  <div>
+    {{lastProgress.status}}
+  </div>
+
+  <ng-container *ngIf="cancellable">
+    <div class="mt-4">
+      <button class="btn btn-secondary" type="button" (click)="cancel()">
+        Cancel
+      </button>
+    </div>
+  </ng-container>
+</div>

@@ -1,0 +1,25 @@
+<div class="input-group w-100 d-flex">
+    <ng-content></ng-content>
+    <div *ngIf="resultCount" class="input-group-append flex-grow-1 text-center">
+              <span class="input-group-text w-100 d-inline-block">
+                {{resultIndex + 1}} of {{resultCount}}
+                  <span *ngIf="searching" class="d-inline-block ml-1">
+                  <i class="fa fa-spinner fa-spin text-dark"></i>
+                </span>
+              </span>
+    </div>
+    <div class="input-group-append">
+        <button class="btn btn-secondary" type="button" (click)="previous.emit(this.resultIndex - 1)"
+                [disabled]="disabled || resultCount == 0" ngbTooltip="Previous result" container="body">
+            <i class="fa fa-fw fa-chevron-up"></i>
+        </button>
+        <button class="btn btn-secondary" type="button" (click)="next.emit(this.resultIndex + 1)"
+                [disabled]="disabled || resultCount == 0" ngbTooltip="Next result" container="body">
+            <i class="fa fa-fw fa-chevron-down"></i>
+        </button>
+        <button class="btn btn-secondary" type="button" (click)="clear.emit()"
+                [disabled]="disabled || resultCount == 0">
+            <i class="fa fa-times"></i>
+        </button>
+    </div>
+</div>

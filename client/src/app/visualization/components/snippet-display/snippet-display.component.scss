@@ -1,0 +1,30 @@
+@import '~bootstrap/scss/functions';
+@import '~bootstrap/scss/variables';
+@import 'src/scss/variables';
+
+#page-limit-select {
+  max-width: 95px;
+}
+
+::ng-deep .mat-expansion-panel-body {
+  padding: 0 !important;
+}
+
+.mat-icon {
+  font-size: 12px;
+}
+
+.material-icons {
+  vertical-align: middle;
+}
+
+.snippet-panel-header {
+  background-color: rgba(0, 0, 0, 0.03);
+}
+.snippet-panel-header:focus {
+  background-color: rgba(0, 0, 0, 0.03);
+}
+
+.snippet-result {
+  white-space: normal;
+}

@@ -1,0 +1,58 @@
+<ng-container *ngIf="(loadTask.status$ | async) as status">
+  <ng-container *ngIf="status.failedErrorShown; else noError">
+    <div class="module-section">
+      <div class="module-section-header">
+        <h2 class="module-section-header-title">Community Content</h2>
+      </div>
+
+      <div class="module-section-body">
+        <app-module-error [error]="status.error">
+          <button class="btn btn-primary" type="button" (click)="refresh()">Retry</button>
+        </app-module-error>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-template #noError>
+    <ng-container *ngIf="status.placeholdersShown">
+      <div class="module-section">
+        <div class="module-section-header">
+          <h2 class="module-section-header-title"><span class="placeholder-box">Loading loading</span></h2>
+        </div>
+
+        <div class="module-section-body">
+          <div class="mb-3">
+            <span class="placeholder-box">Loading loading loading loading</span>
+          </div>
+
+          <div class="tile-deck tile-deck tile-deck-sm">
+            <div *ngFor="let p of [0, 1, 2]" class="tile d-flex flex-column justify-content-center align-items-center">
+              <div class="flex-fill d-flex align-items-center">
+            <span class="placeholder-box">
+              <i class="fas fa-layer-group fa-4x"></i>
+            </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="status.resultsShown">
+      <ng-container *ngIf="list.results.view.length">
+        <div class="module-section">
+          <div class="module-section-header">
+            <h2 class="module-section-header-title">Community Content</h2>
+          </div>
+
+          <div class="module-section-body">
+            <app-object-tile-deck [objects]="list.results" [newTabObject]="true" [newTabMore]="true"
+                                  [forEditing]="false"
+                                  [showMoreButton]="true" [moreLink]="['/community']"
+                                  tileDeckSize="sm"></app-object-tile-deck>
+          </div>
+        </div>
+      </ng-container>
+    </ng-container>
+  </ng-template>
+</ng-container>

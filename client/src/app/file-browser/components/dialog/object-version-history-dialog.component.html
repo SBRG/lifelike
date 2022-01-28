@@ -1,0 +1,25 @@
+<form [formGroup]="form" (ngSubmit)="submit()">
+  <app-modal-header (cancel)="cancel()">
+    <ng-container *ngIf="promptRestore; else viewOnlyHeader">
+      Restore Version of '{{ object.effectiveName }}'
+    </ng-container>
+    <ng-template #viewOnlyHeader>
+      Version History for '{{ object.effectiveName }}'
+    </ng-template>
+  </app-modal-header>
+
+  <app-modal-body>
+    <app-object-version-history [object]="object" formControlName="version"
+                                [showCheckboxes]="promptRestore"></app-object-version-history>
+  </app-modal-body>
+
+  <app-modal-footer class="text-truncate">
+    <ng-container *ngIf="promptRestore; else viewOnlyFooter">
+      <button type="button" class="btn btn-secondary mr-2" (click)="cancel()">Close</button>
+      <button type="submit" class="btn btn-primary">Restore</button>
+    </ng-container>
+    <ng-template #viewOnlyFooter>
+      <button type="button" class="btn btn-primary" (click)="cancel()">Close</button>
+    </ng-template>
+  </app-modal-footer>
+</form>

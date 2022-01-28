@@ -1,0 +1,157 @@
+<ng-container *ngIf="(loadTask.status$ | async) as status">
+  <div class="module" appContainerBreakpoints>
+    <div class="module-header">
+      <div class="module-toolbar mt-2">
+        <ng-container *ngIf="searchTypes">
+          <app-content-search-form class="w-100"
+                                   [(queryString)]="queryString"
+                                   (formResult)="search($event)">
+          </app-content-search-form>
+        </ng-container>
+      </div>
+      <div class="d-flex w-100 justify-content-start">
+        <div class="btn btn-link p-0 mr-3" (click)="openAdvancedSearch()">Advanced Search</div>
+        <div class="btn btn-link p-0" (click)="openSynonymSearch()">Find Synonyms</div>
+      </div>
+    </div>
+
+    <div class="module-body-split module-body-preview-split overflow-auto">
+      <div class="module-body-split-main overflow-auto" #body>
+        <ng-container *ngIf="!valid; else searchEntered">
+          <div class="module-body">
+            <div class="text-center my-4 px-4">
+              Please enter a query in the search box above.
+            </div>
+          </div>
+        </ng-container>
+
+        <ng-template #searchEntered>
+          <ng-container *ngIf="status.placeholdersShown">
+            <div class="module-body">
+              <div class="mb-3">
+                <span class="placeholder-box">Showing 10 of 20 results</span>
+              </div>
+
+              <div class="search-results">
+                <div class="search-results-item">
+                  <h5 class="search-results-item-title">
+                    <span class="placeholder-box">Loading loading</span>
+                  </h5>
+                  <div class="search-results-item-body">
+                    <div>
+                      <span class="placeholder-box">Loading loading loading</span>
+                    </div>
+                    <div class="mt-2">
+                      <span class="placeholder-box">Loading loading loading loading</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="search-results-item">
+                  <h5 class="search-results-item-title">
+                    <span class="placeholder-box">Loading load loading</span>
+                  </h5>
+                  <div class="search-results-item-body">
+                    <div>
+                      <span class="placeholder-box">Loading loading</span>
+                    </div>
+                    <div class="mt-2">
+                      <span class="placeholder-box">Loading loading loading load loading</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+
+          <ng-container *ngIf="status.resultsShown">
+            <ng-container *ngIf="results.length; else noResults">
+              <div class="module-body text-muted">
+                <div class="mb-3">
+                  <app-results-summary
+                      [page]="params.page"
+                      [pageSize]="params.limit"
+                      [collectionSize]="collectionSize"></app-results-summary>
+                </div>
+
+                <div class="search-results search-results-selectable">
+                  <div *ngFor="let result of results.view" class="search-results-item"
+                       (appTabSelectable)="results.select(result)"
+                       [class.active]="results.isSelected(result)"
+                       draggable="true" (dragstart)="itemDragStart($event, result.item)">
+                    <div class="text-truncate mb-1">
+                      <app-object-path [object]="result.item.parent" [newTab]="true"></app-object-path>
+                    </div>
+                    <div class="search-results-item-header text-truncate">
+                      <h5 class="text-truncate" [style.padding]="'1px 0'">
+                        <app-file-type-label [object]="result.item" [showLabel]="false"
+                          class="mr-1"></app-file-type-label>
+                        <a [appLink]="result.item.getCommands(false)" [newTab]="true" [sideBySide]="true"
+                           (dragstart)="itemDragStart($event, result.item, true)">
+                          <app-term-highlight
+                            [text]="result.item.name"
+                            [highlightTerms]="highlightTerms"
+                            [highlightOptions]="highlightOptions"
+                          ></app-term-highlight>
+                        </a>
+                      </h5>
+                    </div>
+                    <div class="mt-2 text-truncate"><i>Created by <app-user [user]="result.item.user"></app-user> on {{ result.item.creationDate | date: 'fullDate'}}</i></div>
+                    <div class="mt-2 paragraph-truncate-3">
+                      <app-term-highlight
+                        [text]="result.item.description"
+                        [highlightTerms]="highlightTerms"
+                        [highlightOptions]="highlightOptions"
+                      ></app-term-highlight>
+                    </div>
+                    <ng-container *ngIf="result.item.highlight">
+                      <div class="dropdown-divider"></div>
+                      <div class="mt-2 paragraph-truncate-3">
+                        <app-highlight-text [highlight]="result.item.highlight[0]"></app-highlight-text>
+                      </div>
+                      <div class="d-flex align-items-center justify-content-end">
+                        <a
+                        *ngIf="result.item.doi"
+                        [href]="result.item.doi"
+                        target="_blank">DOI Link</a>
+                      </div>
+                    </ng-container>
+                  </div>
+                </div>
+                <div class="mt-4">
+                  <ngb-pagination
+                      [page]="params.page"
+                      [pageSize]="params.limit"
+                      [collectionSize]="collectionSize"
+                      (pageChange)="goToPage($event)"></ngb-pagination>
+                </div>
+              </div>
+            </ng-container>
+            <ng-template #noResults>
+              <div *ngIf="emptyParams" class="module-body">
+                <div class="text-center my-4 px-4">
+                  Please enter a query in the search box above.
+                </div>
+              </div>
+              <div *ngIf="!emptyParams" class="module-body">
+                <div class="text-center my-4 px-4">
+                  No records match your current filters.
+                </div>
+              </div>
+            </ng-template>
+          </ng-container>
+        </ng-template>
+      </div>
+      <div class="module-body-split-sidebar">
+        <ng-container *ngIf="results.selection.length">
+          <app-object-info [forEditing]="false"
+                           (highlightClick)="highlightClicked(results.selection[0].item, $event)"
+                           (highlightDisplayLimitChange)="highlightDisplayLimitChanged(results.selection[0].item, $event)"
+                           [object]="results.selection[0].item"
+                           (objectOpen)="openObject($event)"
+                           [highlightTerms]="highlightTerms"></app-object-info>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</ng-container>

@@ -1,0 +1,81 @@
+<form class="d-flex flex-column justify-content-between">
+    <fieldset class="fieldset-properties mt-2">
+        <legend container="body"
+                ngbTooltip="Click a checkbox to filter annotations of that type"
+                placement="top left right">Node
+            Details:
+        </legend>
+        <ngb-accordion ngbAccordion activeIds="n_desc">
+            <ngb-panel id="n_desc" title="Description">
+                <ng-template ngbPanelContent>
+                    <p [innerHTML]="entity.description" [style.whiteSpace]="'pre-wrap'"></p>
+                </ng-template>
+            </ngb-panel>
+            <ngb-panel [disabled]="true">
+                <ng-template disabled="true" ngbPanelHeader>
+                    <app-button-with-selectable-text ngbPanelToggle [disabled]="true">
+                        <b title>Value</b>
+                        {{ parseProperty(entity._value) }}
+                    </app-button-with-selectable-text>
+                </ng-template>
+            </ngb-panel>
+            <ngb-panel [disabled]="true">
+                <ng-template disabled="true" ngbPanelHeader>
+                    <app-button-with-selectable-text ngbPanelToggle [disabled]="true">
+                        <b title>Label</b>
+                        {{ parseProperty(entity.label) }}
+                    </app-button-with-selectable-text>
+                </ng-template>
+            </ngb-panel>
+            <ngb-panel *ngIf="entity.stId" [disabled]="true">
+                <ng-template disabled="true" ngbPanelHeader>
+                    <a [href]="reactomeLink(entity.stId)"
+                       class="btn btn-link w-100 d-flex align-items-center justify-content-between"
+                       target="_blank">
+                        <span>Reactome</span>
+                        {{ entity.stId }}
+                    </a>
+                </ng-template>
+            </ngb-panel>
+            <ngb-panel *ngIf="entity.biocyc_id" [disabled]="true">
+                <ng-template disabled="true" ngbPanelHeader>
+                    <a [href]="biocycLink(entity.biocyc_id)"
+                       class="btn btn-link w-100 d-flex align-items-center justify-content-between"
+                       target="_blank">
+                        <span>BioCyc</span>
+                        {{ entity.biocyc_id }}
+                    </a>
+                </ng-template>
+            </ngb-panel>
+            <ngb-panel cardClass="filled-card" title="Neo4j Labels">
+                <ng-template ngbPanelContent>
+                    <ul class="list-group list-group-flush">
+                        <li *ngFor="let label of entity.labels"
+                            class="list-group-item"
+                        >{{ label }}</li>
+                    </ul>
+                </ng-template>
+            </ngb-panel>
+            <ngb-panel cardClass="filled-card" title="Properties">
+                <ng-template ngbPanelContent>
+                    <ul class="list-group list-group-flush">
+                        <li *ngFor="let property of options.nodeValueAccessors | keyvalue"
+                            [ngClass]="{
+                                'list-group-item': true,
+                                 'd-flex': true,
+                                 'flex-wrap': true,
+                                 'justify-content-between': true,
+                                active: property.key === state.nodeValueAccessorId
+                              }"
+                        ><b>{{ property.value.description }}</b>{{parseProperty(entity[property.value.description])}}</li>
+                    </ul>
+                </ng-template>
+            </ngb-panel>
+            <ngb-panel title="Details">
+                <ng-template ngbPanelContent>
+                    <app-object-explorer [dataSource]="entity"></app-object-explorer>
+                </ng-template>
+            </ngb-panel>
+        </ngb-accordion>
+    </fieldset>
+</form>

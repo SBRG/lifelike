@@ -1,0 +1,29 @@
+## This is an example values files for a high availability Lifelike deployment.
+
+# Enable ingress for routing traffic to the application, requires NGINX Ingress Controller to be previously installed in the cluster.
+# Automatic TLS with Let's Encrypt requires cert-manager to be previously installed in the cluster)
+ingress:
+  enabled: true
+  hostname: demo.lifelike.cloud
+  className: nginx
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    # See other useful annotations available for the NGINX Ingress controller: https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/annotations/
+    nginx.ingress.kubernetes.io/proxy-body-size: "2g"
+  tls:
+    - secretName: lifelike-tls
+      hosts:
+        - demo.lifelike.cloud
+
+# Customize the initial admin user (password is "password" until changed)
+api:
+  extraEnv:
+    INITIAL_ADMIN_EMAIL: admin@demo.lifelike.cloud
+
+# Deploy two load-balanced replicas of the frontend
+frontend:
+  replicaCount: 2
+
+# Deploy two load-balanced replicas of the pdfparser service
+pdfparser:
+  replicaCount: 2

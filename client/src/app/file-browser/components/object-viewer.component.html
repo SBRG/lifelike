@@ -1,0 +1,22 @@
+<div class="module" *ngIf="(object$ | addStatus | async) as result">
+    <app-module-error *ngIf="result.error" [error]="result.error">
+    </app-module-error>
+
+    <app-module-progress *ngIf="result.loading">
+        Loading file...
+    </app-module-progress>
+
+    <ng-container *ngIf="result.value">
+        <app-module-header [object]="result.value">
+                <app-module-menu [object]="result.value" [forEditing]="false"
+                                 [showOpen]="false" [showDelete]="false">
+                </app-module-menu>
+        </app-module-header>
+        <div class="d-flex my-auto text-center justify-content-center text-truncate p-4">
+            <button type="button" class="btn btn-primary text-truncate"
+                    (click)="downloadObject(result.value); $event.preventDefault()">
+                Download {{ result.value.filename }}
+            </button>
+        </div>
+    </ng-container>
+</div>

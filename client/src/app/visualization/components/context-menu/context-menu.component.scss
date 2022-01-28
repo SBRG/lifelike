@@ -1,0 +1,80 @@
+@import '~bootstrap/scss/functions';
+@import '~bootstrap/scss/variables';
+@import 'src/scss/variables';
+
+.context-menu {
+    background: $primary;
+    border-radius: 0.25rem;
+    border: thin solid $floating-toolbar-border-color;
+    border-bottom: none;
+    opacity: .95;
+}
+
+.context-menu-group {
+    border-bottom: thin solid $floating-toolbar-border-color;
+    color: #FFFFFF;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 5px 0;
+    width: 100%;
+}
+
+.context-menu-item {
+    height: 22px;
+    padding: 2px 8px 2px 20px;
+}
+.context-menu-item:hover {
+    background: #6c757d;
+}
+
+.fade-out {
+    animation: fadeOut ease .2s forwards;
+    -webkit-animation: fadeOut ease .2s forwards;
+    -moz-animation: fadeOut ease .2s forwards;
+    -o-animation: fadeOut ease .2s forwards;
+    -ms-animation: fadeOut ease .2s forwards;
+  }
+  @keyframes fadeOut {
+    0% {
+      opacity:1;
+    }
+    100% {
+      opacity:0;
+    }
+  }
+
+  @-moz-keyframes fadeOut {
+    0% {
+      opacity:1;
+    }
+    100% {
+      opacity:0;
+    }
+  }
+
+  @-webkit-keyframes fadeOut {
+    0% {
+      opacity:1;
+    }
+    100% {
+      opacity:0;
+    }
+  }
+
+  @-o-keyframes fadeOut {
+    0% {
+      opacity:1;
+    }
+    100% {
+      opacity:0;
+    }
+  }
+
+  @-ms-keyframes fadeOut {
+    0% {
+      opacity:1;
+    }
+    100% {
+      opacity:0;
+  }
+}

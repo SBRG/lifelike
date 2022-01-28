@@ -1,0 +1,27 @@
+#!/bin/sh
+
+# Runs linting on only files that are staged
+staged_files=$(getStaged appserver '\.(py)$')
+
+# Turn debugging on by the flag
+if [[ -n $DEBUG_HOOKS ]];
+then
+  echo "> 🐛 mypy version:"
+  docker exec appserver mypy --version
+  echo "> 🐛 pycodestyle version:"
+  docker exec appserver pycodestyle --version
+fi
+
+# shellcheck disable=SC2236
+if [[ -n $staged_files ]];
+then
+  (
+    echo "> 🥧 Running mypy..."
+    echo ${staged_files} | xargs docker exec appserver mypy
+  ) && (
+    echo "> 🐍 Running pycodestyle..."
+    echo ${staged_files} | xargs docker exec appserver pycodestyle
+  )
+else
+  echo "> Skipping..."
+fi

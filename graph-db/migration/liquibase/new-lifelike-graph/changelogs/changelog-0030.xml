@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd">
+
+  <changeSet id="LL-3211 load NCBI gene constraints on date 10072021" author="Binh Vu">
+    <comment>Create constraints and indexes for NCBI gene nodes</comment>
+    <sql>
+    CREATE CONSTRAINT constraint_gene_id IF NOT EXISTS ON (n:Gene) ASSERT n.eid IS UNIQUE;
+CREATE CONSTRAINT constraint_synonym_name IF NOT EXISTS ON (n:Synonym) ASSERT n.name IS UNIQUE;
+CREATE INDEX index_gene_name IF NOT EXISTS FOR (n:Gene) ON (n.name);
+CREATE INDEX index_locus_tag IF NOT EXISTS FOR (n:Gene) ON (n.locus_tag);
+CREATE INDEX index_gene_taxid IF NOT EXISTS FOR (n:Gene) ON (n.tax_id);
+    </sql>
+  </changeSet>
+
+  <changeSet id="LL-3211 NCBI gene data on date 10072021" author="Binh Vu">
+    <comment>
+        Load NCBI gene nodes
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.FileQueryHandler"
+      query="
+      UNWIND $rows as row
+MERGE (n:Gene {eid: row.eid})
+SET n:db_NCBI:Master,n.name=row.name,n.locus_tag=row.locus_tag,n.full_name=row.full_name,n.tax_id=row.tax_id,n.data_source=row.data_source
+      "
+      fileName="jira-LL-3211-gene.zip"
+      startAt="1"
+      fileType="TSV" 
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="LL-3211 load NCBI gene synonym relationship on date 10072021" author="Binh Vu">
+    <comment>
+        Load NCBI gene synonym relationship
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.FileQueryHandler"
+      query="
+      UNWIND $rows AS row
+MERGE (a:Synonym {name: row.synonym}) SET a.lowercase_name=toLower(row.synonym)
+WITH row, a MATCH (b:Gene {eid: row.eid})
+MERGE (b)-[r:HAS_SYNONYM]->(a)
+      "
+      fileName="jira-LL-3211-gene_synonym.zip"
+      startAt="1"
+      fileType="TSV" 
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="LL-3211 load NCBI gene to GO on date 10072021" author="Binh Vu">
+    <comment>
+        Load NCBI gene to GO
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.FileQueryHandler"
+      query="
+      UNWIND $rows AS row
+MATCH (a:Gene {eid: row.GeneID}), (b:db_GO {eid: row.GO_ID})
+MERGE (a)-[r:GO_LINK]->(b)
+RETURN COUNT(*)
+      "
+      fileName="jira-LL-3211-gene2go.zip"
+      startAt="1"
+      fileType="TSV" 
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="LL-3211 update GO_LINK rel to have tax_id on date 10072021" author="Binh Vu">
+    <comment>tax_id is used by statistical enrichment cypher queries</comment>
+    <sql>
+    
+        CALL apoc.periodic.iterate(
+        'MATCH (n:db_GO)-[r:GO_LINK]-(g:Gene) RETURN g.tax_id AS taxid, r',
+        'SET r.tax_id = taxid', {batchSize: 5000})
+        
+    </sql>
+  </changeSet>
+
+  <changeSet id="LL-3211 update NCBI gene synonyms to have locus tag name on date 10072021" author="Binh Vu">
+    <comment>NCBI gene synonym names should be locus tag</comment>
+    <sql>
+    
+        CALL apoc.periodic.iterate(
+        'MATCH (n:Gene:db_NCBI) WHERE exists(n.locus_tag) AND n.locus_tag &lt;> &quot;&quot; AND n.locus_tag &lt;> n.name RETURN n',
+        'MERGE (s:Synonym {name:n.locus_tag}) SET s.lowercase_name = toLower(n.locus_tag) MERGE (n)-[:HAS_SYNONYM]->(s)',
+        {batchSize:10000})
+        
+    </sql>
+  </changeSet>
+
+  <changeSet id="LL-3211 create relationship between gene and taxonomy nodes on date 10072021" author="Binh Vu">
+    <comment>Gene and taxonomy need to be linked; important for annotations etc</comment>
+    <sql>
+    
+        CALL apoc.periodic.iterate(
+        'MATCH (n:Gene:db_NCBI), (t:Taxonomy {eid:n.tax_id}) RETURN n, t',
+        'MERGE (n)-[:HAS_TAXONOMY]->(t)', {batchSize:5000})
+        
+    </sql>
+  </changeSet>
+</databaseChangeLog>

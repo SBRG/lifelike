@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+echo "Cleaning database"
+flask drop_tables
+echo "Upgrading PostgreSQL"
+flask db upgrade --x-arg data_migrate="True"
+# echo "Seeding PostgreSQL"
+echo "Seed appserver using docker-compose exec appserver flask seed"
+echo "Setting up neo4j indexes"
+# Sets up the indexes for neo4j
+echo "Set up the indexes manually by running"
+# Sets up the pipeline for elasticsearch
+echo "Configuring Elasticsearch"
+flask reset-elastic

@@ -1,0 +1,269 @@
+{
+  "name": "test_no_annotation_for_abbreviation.pdf",
+  "pages": [
+    {
+      "cropBox": {
+        "height": 792,
+        "lowerLeftPt": {
+          "x": 0,
+          "y": 0
+        },
+        "pivotPt": {
+          "x": 0,
+          "y": 0
+        },
+        "rotation": 0,
+        "width": 612
+      },
+      "mediaBox": {
+        "height": 792,
+        "lowerLeftPt": {
+          "x": 0,
+          "y": 0
+        },
+        "pivotPt": {
+          "x": 0,
+          "y": 0
+        },
+        "rotation": 0,
+        "width": 612
+      },
+      "pageNo": 1,
+      "pageText": "  pentose phosphate pathway (PPP) pentose-phosphate pathway (PPP) Pulmonary arterial hypertension (PAH) ",
+      "tokens": [
+        {
+          "pgIdx": 2,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 12,
+              "lowerLeftPt": {
+                "x": 76.89540100097656,
+                "y": 706.2301025390625
+              },
+              "pivotPt": {
+                "x": 76.89540100097656,
+                "y": 709.2301025390625
+              },
+              "rotation": 0,
+              "width": 41.80982971191406
+            }
+          ],
+          "shapes": [],
+          "text": "pentose"
+        },
+        {
+          "pgIdx": 10,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 12,
+              "lowerLeftPt": {
+                "x": 121.971435546875,
+                "y": 706.2301025390625
+              },
+              "pivotPt": {
+                "x": 121.971435546875,
+                "y": 709.2301025390625
+              },
+              "rotation": 0,
+              "width": 54.879364013671875
+            }
+          ],
+          "shapes": [],
+          "text": "phosphate"
+        },
+        {
+          "pgIdx": 20,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 12,
+              "lowerLeftPt": {
+                "x": 180.11700439453125,
+                "y": 706.2301025390625
+              },
+              "pivotPt": {
+                "x": 180.11700439453125,
+                "y": 709.2301025390625
+              },
+              "rotation": 0,
+              "width": 43.762481689453125
+            }
+          ],
+          "shapes": [],
+          "text": "pathway"
+        },
+        {
+          "pgIdx": 29,
+          "possibleAbbrev": true,
+          "rects": [
+            {
+              "height": 12,
+              "lowerLeftPt": {
+                "x": 231.0557403564453,
+                "y": 706.2301025390625
+              },
+              "pivotPt": {
+                "x": 231.0557403564453,
+                "y": 709.2301025390625
+              },
+              "rotation": 0,
+              "width": 23.509658813476562
+            }
+          ],
+          "shapes": [],
+          "text": "PPP"
+        },
+        {
+          "pgIdx": 34,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 12,
+              "lowerLeftPt": {
+                "x": 76.89540100097656,
+                "y": 692.5230102539062
+              },
+              "pivotPt": {
+                "x": 76.89540100097656,
+                "y": 695.5230102539062
+              },
+              "rotation": 0,
+              "width": 100.60392761230469
+            }
+          ],
+          "shapes": [],
+          "text": "pentose-phosphate"
+        },
+        {
+          "pgIdx": 52,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 12,
+              "lowerLeftPt": {
+                "x": 180.76553344726562,
+                "y": 692.5230102539062
+              },
+              "pivotPt": {
+                "x": 180.76553344726562,
+                "y": 695.5230102539062
+              },
+              "rotation": 0,
+              "width": 43.762481689453125
+            }
+          ],
+          "shapes": [],
+          "text": "pathway"
+        },
+        {
+          "pgIdx": 61,
+          "possibleAbbrev": true,
+          "rects": [
+            {
+              "height": 12,
+              "lowerLeftPt": {
+                "x": 231.70428466796875,
+                "y": 692.5230102539062
+              },
+              "pivotPt": {
+                "x": 231.70428466796875,
+                "y": 695.5230102539062
+              },
+              "rotation": 0,
+              "width": 23.509658813476562
+            }
+          ],
+          "shapes": [],
+          "text": "PPP"
+        },
+        {
+          "pgIdx": 66,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 12,
+              "lowerLeftPt": {
+                "x": 76.89540100097656,
+                "y": 678.81591796875
+              },
+              "pivotPt": {
+                "x": 76.89540100097656,
+                "y": 681.81591796875
+              },
+              "rotation": 0,
+              "width": 56.15998840332031
+            }
+          ],
+          "shapes": [],
+          "text": "Pulmonary"
+        },
+        {
+          "pgIdx": 76,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 12,
+              "lowerLeftPt": {
+                "x": 136.31924438476562,
+                "y": 678.81591796875
+              },
+              "pivotPt": {
+                "x": 136.31924438476562,
+                "y": 681.81591796875
+              },
+              "rotation": 0,
+              "width": 35.911865234375
+            }
+          ],
+          "shapes": [],
+          "text": "arterial"
+        },
+        {
+          "pgIdx": 85,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 12,
+              "lowerLeftPt": {
+                "x": 175.497314453125,
+                "y": 678.81591796875
+              },
+              "pivotPt": {
+                "x": 175.497314453125,
+                "y": 681.81591796875
+              },
+              "rotation": 0,
+              "width": 67.27684020996094
+            }
+          ],
+          "shapes": [],
+          "text": "hypertension"
+        },
+        {
+          "pgIdx": 99,
+          "possibleAbbrev": true,
+          "rects": [
+            {
+              "height": 12,
+              "lowerLeftPt": {
+                "x": 249.9527587890625,
+                "y": 678.81591796875
+              },
+              "pivotPt": {
+                "x": 249.9527587890625,
+                "y": 681.81591796875
+              },
+              "rotation": 0,
+              "width": 23.289947509765625
+            }
+          ],
+          "shapes": [],
+          "text": "PAH"
+        }
+      ]
+    }
+  ],
+  "processedDate": "2021-03-24 08:54:18"
+}

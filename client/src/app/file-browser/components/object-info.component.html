@@ -1,0 +1,100 @@
+<div class="d-flex flex-column h-100">
+  <div class="module-body">
+    <div class="mb-3">
+      <app-file-type-label [object]="object"></app-file-type-label>
+    </div>
+
+    <h5 (click)="objectEdit.emit(object)">
+      <div *ngIf="object.name.slice(object.name.length - 11) !== '.enrichment'">
+        <app-term-highlight
+          [text]="object.name"
+          [highlightTerms]="highlightTerms"
+          [highlightOptions]="highlightOptions"
+        ></app-term-highlight>
+      </div>
+      <div *ngIf="object.name.slice(object.name.length - 11) === '.enrichment'">
+        <app-term-highlight
+          [text]="object.name.slice(0, -11)"
+          [highlightTerms]="highlightTerms"
+          [highlightOptions]="highlightOptions"
+        ></app-term-highlight>
+      </div>
+    </h5>
+
+    <div class="mt-3" [style.white-space]="'pre-wrap'" *ngIf="object.description" (click)="objectEdit.emit(object)">
+      <app-term-highlight
+        [text]="object.description"
+        [highlightTerms]="highlightTerms"
+        [highlightOptions]="highlightOptions"
+      ></app-term-highlight>
+    </div>
+
+    <hr class="my-3">
+
+    <ul class="list-unstyled mt-3 mb-0">
+      <li *ngIf="object.public">
+        <i class="fa fa-fw text-icon fa-globe"></i> Public
+      </li>
+      <li *ngIf="object.isAnnotatable">
+        <strong>Annotated:</strong>
+        <span *ngIf="object.annotationDate; else noAnnotations">
+          {{ object.annotationDate | date: 'short' }}
+        </span>
+        <ng-template #noAnnotations>
+          <em class="text-muted">Not annotated</em>
+        </ng-template>
+      </li>
+      <li *ngIf="object.isAnnotatable">
+        <strong>Annotation Organism:</strong>&nbsp;<app-organism [organism]="object.fallbackOrganism" [highlightTerms]="highlightTerms"></app-organism>
+      </li>
+      <li *ngIf="object.modificationDate">
+        <strong>Modified:</strong> {{ object.modificationDate | date: 'short' }}
+      </li>
+      <li *ngIf="object.creationDate">
+        <strong>Created:</strong> {{ object.creationDate | date: 'short' }}
+      </li>
+      <li *ngIf="object.user">
+        <strong>Author:</strong>&nbsp;<app-user [user]="object.user" [highlightTerms]="highlightTerms"></app-user>
+      </li>
+      <li *ngIf="object.doi" class="text-truncate">
+        <strong>DOI:</strong>&nbsp;<a [href]="object.doi" target="_blank">{{ object.doi }}</a>
+      </li>
+      <li *ngIf="object.uploadUrl" class="text-truncate">
+        <strong>External URL:</strong>&nbsp;<a [href]="object.uploadUrl" target="_blank">{{ object.uploadUrl }}</a>
+      </li>
+    </ul>
+    <div class="mt-3" *ngIf="objectControls">
+      <div ngbDropdown container="body">
+        <button class="btn btn-secondary" ngbDropdownToggle>
+          Actions
+        </button>
+        <div ngbDropdownMenu>
+          <app-object-menu [object]="object" [forEditing]="forEditing" [showDelete]="showDelete"
+                           (objectOpen)="this.objectOpen.next($event)"
+                           (refreshRequest)="this.refreshRequest.next($event)">
+          </app-object-menu>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="object.type === 'file' && object.highlight" class="mt-5">
+      <h5>Term matches in document:</h5>
+      <div *ngFor="let highlight of shownHighlights" (dragstart)="highlightDragStart($event)">
+        <hr class="my-3">
+        <div class="mt-2">
+          <app-highlight-text [highlight]="highlight"></app-highlight-text>
+          <a href="#" (click)="highlightClick.emit(highlight); $event.preventDefault()" ngbTooltip="Find in document">
+            (open)
+          </a>
+        </div>
+      </div>
+      <div *ngIf="!reachedHighlightLimit" class="mt-4">
+        <a href="#" (click)="displayMoreHighlights(); $event.preventDefault()">More...</a>
+      </div>
+    </div>
+  </div>
+  <div class="flex-grow-1 position-relative overflow-auto">
+    <div class="border-top h-100">
+      <app-object-preview [object]="object" [highlightTerms]="highlightTerms"></app-object-preview>
+    </div>
+  </div>
+</div>

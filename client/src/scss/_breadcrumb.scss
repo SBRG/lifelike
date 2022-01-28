@@ -1,0 +1,30 @@
+.breadcrumb {
+  display: flex;
+  background: none;
+  padding: 0;
+  margin: 0;
+  color: $gray-600;
+
+  a {
+    &:link, &:visited {
+      color: $gray-600;
+    }
+  }
+}
+
+.breadcrumb-item {
+  display: flex;
+  align-items: center;
+
+  + .breadcrumb-item {
+    &::before {
+      display: block;
+      font-family: FontAwesome, sans-serif;
+      font-size: 60%;
+      content: '\f054';
+      line-height: 1;
+      position: relative;
+      top: -1px;
+    }
+  }
+}

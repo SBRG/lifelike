@@ -1,0 +1,50 @@
+<div class="module" *ngIf="(loadTask.status$ | async) as status">
+    <app-module-progress *ngIf="status.running">
+        Retrieving file data...
+    </app-module-progress>
+
+    <app-module-error *ngIf="status.failedErrorShown"
+                      [error]="status.error">
+        <a appLink="/projects">Go to Projects <i class="fa fa-fw fa-arrow-right"></i></a>
+    </app-module-error>
+
+    <ng-container *ngIf="status.resultsShown">
+        <ng-template #tabTitle>
+            <ng-container *ngIf="object?.isDirectory && !object.parent">
+                Project Navigator for: {{object.project.name}}
+            </ng-container>
+            <ng-container *ngIf="object?.isDirectory && object.parent">
+                Project Navigator for: {{object.filename}}
+            </ng-container>
+            <ng-container *ngIf="!object?.isDirectory">
+                File Navigator
+            </ng-container>
+        </ng-template>
+        <app-module-header [titleTemplate]="tabTitle" [object]="object" [showObjectMenu]="false"></app-module-header>
+        <div class="flex-fill overflow-auto">
+            <!-- Body -->
+            <div class="module-body" *ngIf="object?.isFile" [class.border-bottom]="object.hasWordCloud">
+                <app-associated-maps [object]="object"></app-associated-maps>
+            </div>
+
+            <div class="module-body flex-fill" *ngIf="object?.hasWordCloud"
+                 style="height: 100%; min-height: 60vh">
+                <app-word-cloud [object]="object" [clickableWords]="true"
+                                (wordOpen)="openWord($event.entity, $event.keywordsShown)"></app-word-cloud>
+            </div>
+
+            <div class="module-body border-top" *ngIf="object?.isAnnotatable">
+                <div class="module-section">
+                    <div class="module-section-header">
+                        <h2 class="module-section-header-title">Annotation History</h2>
+                    </div>
+
+                    <div class="module-section-body">
+                        <app-object-annotation-history [object]="object"
+                                                       [limit]="10"></app-object-annotation-history>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ng-container>
+</div>

@@ -1,0 +1,113 @@
+<form [formGroup]="form" (ngSubmit)="submit()">
+  <app-modal-header (cancel)="cancel()">
+    {{ title }}
+  </app-modal-header>
+
+  <app-modal-body>
+    <app-form-input-feedback [control]="form" [formLevel]="true"></app-form-input-feedback>
+
+    <ng-container *ngIf="promptUpload">
+      <ul ngbNav #nav="ngbNav" class="nav-tabs" [activeId]="form.get('contentSource').value"
+          (activeIdChange)="activeTabChanged($event)">
+        <li ngbNavItem="contentValue">
+          <a ngbNavLink>From Device</a>
+          <ng-template ngbNavContent>
+            <app-form-row for="content-value" label="File" [control]="form.get('contentValue')">
+              <div class="d-flex align-items-center text-truncate">
+                <button type="button" class="btn btn-secondary mr-2" (click)="showFileDialog()">
+                  Browse...
+                </button>
+                <div class="text-truncate" *ngIf="form.get('contentValue').value != null; else noFileChosen">
+                  <i class="fa fa-fw fa-file-upload text-icon"></i>
+                  {{ form.get('contentValue').value.name }}
+                </div>
+                <ng-template #noFileChosen>
+                </ng-template>
+              </div>
+              <input type="file" id="content-value" (change)="fileChanged($event)"
+                     class="d-none" #fileInput>
+            </app-form-row>
+          </ng-template>
+        </li>
+        <li ngbNavItem="contentUrl">
+          <a ngbNavLink>From URL</a>
+          <ng-template ngbNavContent>
+            <app-form-row for="content-url" label="URL" [control]="form.get('contentUrl')">
+              <input type="text" formControlName="contentUrl" id="content-url" [appFormInput]="form.get('contentUrl')"
+                     placeholder="https://www.example.com/file.pdf" (change)="urlChanged($event)">
+            </app-form-row>
+          </ng-template>
+        </li>
+      </ul>
+
+      <div [ngbNavOutlet]="nav" class="mt-4"></div>
+    </ng-container>
+
+    <app-form-row for="parent" [label]="parentLabel" [control]="form.get('parent')" *ngIf="promptParent">
+      <div class="d-flex align-items-center text-truncate">
+        <button type="button" class="btn btn-secondary mr-2" (click)="showParentDialog()">
+          Browse...
+        </button>
+        <div class="text-truncate" *ngIf="form.get('parent').value != null; else noParentChosen">
+          <i class="fa fa-fw fa-folder text-icon"></i>
+          {{ form.get('parent').value.effectiveName }}
+        </div>
+        <ng-template #noParentChosen>
+        </ng-template>
+      </div>
+    </app-form-row>
+
+    <app-form-row for="filename" label="Filename" [control]="form.get('filename')">
+      <input type="text" formControlName="filename" id="filename" [appFormInput]="form.get('filename')"
+             appAutoFocus [autoSelect]="true">
+    </app-form-row>
+
+    <app-form-row for="description" label="Description" [control]="form.get('description')">
+      <textarea formControlName="description" id="description" [appFormInput]="form.get('description')"
+                rows="10"></textarea>
+    </app-form-row>
+
+    <app-form-row [control]="form.get('public')" *ngIf="!object.isDirectory">
+      <div class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input" id="public" formControlName="public">
+        <label class="custom-control-label" for="public">Publicly share with the community</label>
+      </div>
+    </app-form-row>
+
+    <ng-container *ngIf="possiblyAnnotatable">
+      <fieldset class="fieldset-properties mt-4">
+        <legend>Annotation Options</legend>
+        <app-form-row
+          *ngIf="object.promptOrganism"
+          label="Organism"
+          ngbTooltip="If you know the specific organism strain related to the paper, you may optionally search for it by name here."
+        >
+          <app-organism-autocomplete
+            formId="organism"
+            [organismTaxId]="form.get('organism').value ? form.get('organism').value.tax_id : null"
+            (organismPicked)="organismChanged($event)"
+          ></app-organism-autocomplete>
+        </app-form-row>
+
+        <app-form-row>
+          <ngb-accordion>
+            <ngb-panel title="Annotation Configurations">
+              <ng-template ngbPanelContent>
+                <app-annotation-config-table
+                  [headers]="annotationMethods"
+                  [models]="annotationModels"
+                  [form]="form.get('annotationConfigs')"
+                  [fileType]="object.mimeType"></app-annotation-config-table>
+              </ng-template>
+            </ngb-panel>
+          </ngb-accordion>
+        </app-form-row>
+      </fieldset>
+    </ng-container>
+  </app-modal-body>
+
+  <app-modal-footer>
+    <button type="button" class="btn btn-secondary mr-2" (click)="cancel()">Cancel</button>
+    <button type="submit" class="btn btn-primary" [disabled]="form.invalid" >Save</button>
+  </app-modal-footer>
+</form>

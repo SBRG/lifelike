@@ -1,0 +1,44 @@
+@import '~bootstrap/scss/functions';
+@import '~bootstrap/scss/variables';
+@import 'src/scss/variables';
+
+#network-viz {
+    background-color: #F5F5F5;
+}
+
+#sidenav-container {
+    height: 80vh;
+    min-width: 400px;
+    padding: 10px 15px;
+    white-space: nowrap;
+}
+
+#sidenav-panel-btns-container {
+  height: 26px;
+  margin-bottom: 10px;
+}
+
+#sidenav-panel-close-btn {
+  float: right;
+  border-radius: 0.25rem;
+  height: 1.5rem;
+  width: 1.5rem;
+  padding: 0;
+  outline: none;
+}
+#sidenav-panel-close-btn:hover {
+  background-color: #FFFFFF;
+  color: #dc3545;
+  cursor: pointer;
+}
+#sidenav-panel-close-btn:active {
+  border: thin solid #dc3545;
+}
+
+.viz-canvas-legend-wrapper {
+    margin-left: $spacer;
+    margin-top: $spacer;
+    min-width: 6rem;
+    position: absolute;
+    z-index: 1;
+}

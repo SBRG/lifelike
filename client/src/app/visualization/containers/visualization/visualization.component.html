@@ -1,0 +1,29 @@
+<div class="module h-100 d-flex flex-column">
+  <div class="main-toolbar d-flex align-items-center toolbar d-flex" *ngIf="hasResultsButton()">
+    <div class="btn-group">
+      <button type="button" class="btn btn-secondary" (click)="goToResults()">
+        <i class="fa fa-fw fa-arrow-left"></i> Back
+      </button>
+    </div>
+  </div>
+
+  <div class="flex-fill overflow-hidden h-100">
+    <app-visualization-canvas
+      *ngIf="networkGraphData && !hideDisplay"
+      [nodes]="nodes"
+      [edges]="edges"
+      [expandNodeResult]="expandNodeResult"
+      [getEdgeSnippetsResult]="getEdgeSnippetsResult"
+      [getClusterSnippetsResult]="getClusterSnippetsResult"
+      [getSnippetsError]="getSnippetsError"
+      [legend]="legend"
+      [config]="networkGraphConfig"
+      (expandNode)="expandNode($event)"
+      (openLoadingClustersDialog)="openLoadingClustersDialog()"
+      (finishedClustering)="finishedClustering($event)"
+      (getNodeData)="nodeSelectedCallback()"
+      (getSnippetsForEdge)="getSnippetsForEdge($event)"
+      (getSnippetsForCluster)="getSnippetsForCluster($event)"
+    ></app-visualization-canvas>
+  </div>
+</div>

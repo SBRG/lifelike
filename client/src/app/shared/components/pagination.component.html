@@ -1,0 +1,24 @@
+<ng-container *ngIf="paging != null; else noInput">
+  <ngb-pagination *ngIf="alwaysShow || collectionSize > paging.limit"
+    [page]="paging.page"
+    [pageSize]="paging.limit"
+    [collectionSize]="collectionSize"
+    (pageChange)="goToPage($event)"></ngb-pagination>
+</ng-container>
+<ng-template #noInput>
+  <ul class="pagination">
+    <li class="page-item">
+      <a class="page-link">
+        <span aria-hidden="true">&laquo;</span>
+      </a>
+    </li>
+    <li class="page-item"><a class="page-link"><span class="placeholder-box">XX</span></a></li>
+    <li class="page-item"><a class="page-link"><span class="placeholder-box">XX</span></a></li>
+    <li class="page-item"><a class="page-link"><span class="placeholder-box">XX</span></a></li>
+    <li class="page-item">
+      <a class="page-link">
+        <span aria-hidden="true">&raquo;</span>
+      </a>
+    </li>
+  </ul>
+</ng-template>

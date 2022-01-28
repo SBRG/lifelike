@@ -1,0 +1,11 @@
+<app-modal-header (cancel)="cancel()">
+  Annotation History of '{{ object.name }}'
+</app-modal-header>
+
+<app-modal-body>
+  <app-object-annotation-history [object]="object" [limit]="20"></app-object-annotation-history>
+</app-modal-body>
+
+<app-modal-footer>
+  <button type="button" class="btn btn-primary" (click)="cancel()">Close</button>
+</app-modal-footer>

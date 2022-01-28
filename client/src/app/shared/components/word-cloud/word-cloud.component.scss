@@ -1,0 +1,47 @@
+@import '../../../../../node_modules/bootstrap/scss/functions';
+@import '../../../../../node_modules/bootstrap/scss/variables';
+@import '../../../../scss/variables';
+
+.min-h-100-l {
+  min-height: 200px;
+}
+
+.filter-btns-container {
+  height: 1.5rem;
+  margin-bottom: .25rem;
+}
+
+.filter-close-btn {
+  float: right;
+  border-radius: 0.25rem;
+  height: 1.5rem;
+  width: 1.5rem;
+  outline: none;
+}
+
+.filter-close-btn:hover {
+  background-color: #FFFFFF;
+  color: #dc3545;
+  cursor: pointer;
+}
+
+.filter-close-btn:active {
+  border: thin solid #dc3545;
+}
+
+.word-cloud-title {
+  min-width: 2rem;
+}
+
+.cloud-word {
+  cursor: default;
+}
+
+.cloud-word-clickable {
+  cursor: pointer;
+
+  &:hover {
+    fill: black !important;
+    outline: 4px solid rgba(255, 0, 0, 0.3);
+  }
+}

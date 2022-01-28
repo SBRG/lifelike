@@ -1,0 +1,30 @@
+# EditorConfig: http://EditorConfig.org
+
+# top-most EditorConfig file
+root = true
+
+[*]
+end_of_line = lf
+charset = utf-8
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+
+# 4 space indentation
+[*.{py,java,r,R,ts}]
+indent_size = 4
+
+# 2 space indentation
+[*.{js,json,y{a,}ml,html,cwl,{s,}css}]
+indent_size = 2
+
+# Documentation
+[*.{md,Rmd,rst}]
+max_line_length = off
+trim_trailing_whitespace = false
+
+# Python
+[*.py]
+quote_type = single
+max_line_length = 100
+

@@ -1,0 +1,121 @@
+<ng-container *ngIf="(log$ | async) as log; else loading">
+  <div *ngIf="!log.results.length" class="p-4 text-center">
+    There is no history to show for this file.
+  </div>
+  <ng-container *ngIf="log.results.length">
+    <div class="split-view d-flex">
+      <div class="split-view-left">
+        <table class="table table-selectable">
+          <colgroup>
+            <col style="width: 1%">
+            <col style="width: 1%">
+          </colgroup>
+          <thead>
+          <tr>
+            <th>Entry</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let version of log.results.view"
+              [class.active]="log.results.isSelected(version)">
+            <td (click)="log.results.toggle(version)">
+              <ng-container *ngIf="showCheckboxes; else noCheckboxes">
+                <div class="custom-control custom-checkbox">
+                  <input type="checkbox" class="custom-control-input" id="version-{{ version.hashId }}"
+                         (change)="log.results.toggle(version)"
+                         [checked]="log.results.isSelected(version)">
+                  <label class="custom-control-label d-block" for="version-{{ version.hashId }}">
+                    {{ version.creationDate | date: 'short' }}
+                  </label>
+                </div>
+              </ng-container>
+              <ng-template #noCheckboxes>
+                {{ version.creationDate | date: 'short' }}
+              </ng-template>
+              <div class="mt-2">
+                By <app-user [user]="version.user"></app-user>
+              </div>
+              <div class="mt-2" *ngIf="version.message">
+                <em>
+                  {{ version.message }}
+                </em>
+              </div>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+
+        <div class="mt-4">
+          <ngb-pagination
+            [page]="page"
+            [pageSize]="limit"
+            [collectionSize]="log.collectionSize"
+            (pageChange)="goToPage($event)"></ngb-pagination>
+        </div>
+      </div>
+      <div class="split-view-right flex-fill d-flex flex-column">
+        <ng-container *ngIf="log.results.lastSelection">
+          <ng-container *ngIf="log.results.lastSelection.object; else previewLoading">
+            <app-object-preview [object]="log.results.lastSelection.object" [contentValue]="log.results.lastSelection.contentValue" class="flex-fill"></app-object-preview>
+          </ng-container>
+          <ng-template #previewLoading>
+            <div class="d-flex flex-fill align-items-center justify-content-center">
+              <div class="p-4">
+                <i class="fas fa-circle-notch fa-spin fa-2x text-muted"></i>
+              </div>
+            </div>
+          </ng-template>
+        </ng-container>
+      </div>
+    </div>
+  </ng-container>
+</ng-container>
+<ng-template #loading>
+  <div class="split-view d-flex">
+    <div class="split-view-left">
+      <table class="table table-selectable">
+        <colgroup>
+          <col style="width: 1%">
+          <col style="width: 1%">
+        </colgroup>
+        <thead>
+        <tr>
+          <th>Entry</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td>
+            <div class="custom-control custom-checkbox">
+              <span class="placeholder-box">Loading loading</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="custom-control custom-checkbox">
+              <span class="placeholder-box">Loading loading</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="custom-control custom-checkbox">
+              <span class="placeholder-box">Loading loading</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="custom-control custom-checkbox">
+              <span class="placeholder-box">Loading loading</span>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="split-view-right flex-fill">
+    </div>
+  </div>
+</ng-template>

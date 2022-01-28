@@ -1,0 +1,17 @@
+<span class="badge badge-warning badge-pill mx-1" *ngIf="(warnings | async).length"
+      (click)="open(warningList)"
+      ngbTooltip="There have been warnings while rendering the file" container="body">
+                        <i class="fas fa-exclamation-triangle"></i>
+</span>
+<ng-template #warningList let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">Warnings</h4>
+        <button (click)="modal.dismiss()" aria-label="Close" class="close"
+                type="button">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <app-warning-list [showAll]="true" [dismissible]="false"></app-warning-list>
+    </div>
+</ng-template>

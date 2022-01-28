@@ -1,0 +1,6 @@
+# Docker compose override
+docker-compose.override.yml
+
+# Dotenv files
+.env*
+!.env.example

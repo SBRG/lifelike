@@ -1,0 +1,33 @@
+<ng-container *ngIf="(currentUsers$ | async) as user">
+  <div class="module" appContainerBreakpoints>
+    <div class="module-header">
+      <div class="module-title-bar">
+        <div class="module-title">
+          User Settings
+        </div>
+      </div>
+    </div>
+
+    <div class="module-body flex-fill overflow-auto">
+      <div class="module-body-container">
+        <ul ngbNav #nav="ngbNav" [(activeId)]="activeTab" class="nav-tabs">
+          <li ngbNavItem="profile">
+            <a ngbNavLink>Profile</a>
+            <ng-template ngbNavContent>
+              <app-user-profile></app-user-profile>
+            </ng-template>
+          </li>
+
+          <li ngbNavItem="security">
+            <a ngbNavLink>Password</a>
+            <ng-template ngbNavContent>
+              <app-user-security [user]="user"></app-user-security>
+            </ng-template>
+          </li>
+        </ul>
+
+        <div [ngbNavOutlet]="nav" class="mt-4"></div>
+      </div>
+    </div>
+  </div>
+</ng-container>

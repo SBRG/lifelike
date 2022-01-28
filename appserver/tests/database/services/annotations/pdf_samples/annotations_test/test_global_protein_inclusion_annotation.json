@@ -1,0 +1,122 @@
+{
+  "name": "test_global_protein_inclusion_annotation.pdf",
+  "pages": [
+    {
+      "cropBox": {
+        "height": 792,
+        "lowerLeftPt": {
+          "x": 0,
+          "y": 0
+        },
+        "pivotPt": {
+          "x": 0,
+          "y": 0
+        },
+        "rotation": 0,
+        "width": 612
+      },
+      "mediaBox": {
+        "height": 792,
+        "lowerLeftPt": {
+          "x": 0,
+          "y": 0
+        },
+        "pivotPt": {
+          "x": 0,
+          "y": 0
+        },
+        "rotation": 0,
+        "width": 612
+      },
+      "pageNo": 1,
+      "pageText": "  protein-(12345) blah blah pokemon ",
+      "tokens": [
+        {
+          "pgIdx": 2,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 12,
+              "lowerLeftPt": {
+                "x": 76.89540100097656,
+                "y": 706.2301025390625
+              },
+              "pivotPt": {
+                "x": 76.89540100097656,
+                "y": 709.2301025390625
+              },
+              "rotation": 0,
+              "width": 80.33699035644531
+            }
+          ],
+          "shapes": [],
+          "text": "protein-(12345)"
+        },
+        {
+          "pgIdx": 18,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 12,
+              "lowerLeftPt": {
+                "x": 76.89540100097656,
+                "y": 692.5230102539062
+              },
+              "pivotPt": {
+                "x": 76.89540100097656,
+                "y": 695.5230102539062
+              },
+              "rotation": 0,
+              "width": 22.212570190429688
+            }
+          ],
+          "shapes": [],
+          "text": "blah"
+        },
+        {
+          "pgIdx": 23,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 12,
+              "lowerLeftPt": {
+                "x": 102.37417602539062,
+                "y": 692.5230102539062
+              },
+              "pivotPt": {
+                "x": 102.37417602539062,
+                "y": 695.5230102539062
+              },
+              "rotation": 0,
+              "width": 22.212570190429688
+            }
+          ],
+          "shapes": [],
+          "text": "blah"
+        },
+        {
+          "pgIdx": 28,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 12,
+              "lowerLeftPt": {
+                "x": 127.85295867919922,
+                "y": 692.5230102539062
+              },
+              "pivotPt": {
+                "x": 127.85295867919922,
+                "y": 695.5230102539062
+              },
+              "rotation": 0,
+              "width": 48.332847595214844
+            }
+          ],
+          "shapes": [],
+          "text": "pokemon"
+        }
+      ]
+    }
+  ],
+  "processedDate": "2021-01-14 13:36:39"
+}

@@ -1,0 +1,332 @@
+{
+  "name": "test_local_exclusion_affect_gene_organism_matching.pdf",
+  "pages": [
+    {
+      "cropBox": {
+        "height": 792,
+        "lowerLeftPt": {
+          "x": 0,
+          "y": 0
+        },
+        "pivotPt": {
+          "x": 0,
+          "y": 0
+        },
+        "rotation": 0,
+        "width": 612
+      },
+      "mediaBox": {
+        "height": 792,
+        "lowerLeftPt": {
+          "x": 0,
+          "y": 0
+        },
+        "pivotPt": {
+          "x": 0,
+          "y": 0
+        },
+        "rotation": 0,
+        "width": 612
+      },
+      "pageNo": 1,
+      "pageText": "  hooman is spelled wrong so BOLA3 is not correct, but it is aotus nancymaae ",
+      "tokens": [
+        {
+          "pgIdx": 2,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 11,
+              "lowerLeftPt": {
+                "x": 76.89540100097656,
+                "y": 706.4801025390625
+              },
+              "pivotPt": {
+                "x": 76.89540100097656,
+                "y": 709.2301025390625
+              },
+              "rotation": 0,
+              "width": 40.68927001953125
+            }
+          ],
+          "shapes": [],
+          "text": "hooman"
+        },
+        {
+          "pgIdx": 9,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 11,
+              "lowerLeftPt": {
+                "x": 120.71478271484375,
+                "y": 706.4801025390625
+              },
+              "pivotPt": {
+                "x": 120.71478271484375,
+                "y": 709.2301025390625
+              },
+              "rotation": 0,
+              "width": 8.131561279296875
+            }
+          ],
+          "shapes": [],
+          "text": "is"
+        },
+        {
+          "pgIdx": 12,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 11,
+              "lowerLeftPt": {
+                "x": 131.9741973876953,
+                "y": 706.4801025390625
+              },
+              "pivotPt": {
+                "x": 131.9741973876953,
+                "y": 709.2301025390625
+              },
+              "rotation": 0,
+              "width": 35.68107604980469
+            }
+          ],
+          "shapes": [],
+          "text": "spelled"
+        },
+        {
+          "pgIdx": 20,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 11,
+              "lowerLeftPt": {
+                "x": 170.78536987304688,
+                "y": 706.4801025390625
+              },
+              "pivotPt": {
+                "x": 170.78536987304688,
+                "y": 709.2301025390625
+              },
+              "rotation": 0,
+              "width": 30.6661376953125
+            }
+          ],
+          "shapes": [],
+          "text": "wrong"
+        },
+        {
+          "pgIdx": 26,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 11,
+              "lowerLeftPt": {
+                "x": 204.5816192626953,
+                "y": 706.4801025390625
+              },
+              "pivotPt": {
+                "x": 204.5816192626953,
+                "y": 709.2301025390625
+              },
+              "rotation": 0,
+              "width": 11.889938354492188
+            }
+          ],
+          "shapes": [],
+          "text": "so"
+        },
+        {
+          "pgIdx": 29,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 11,
+              "lowerLeftPt": {
+                "x": 219.6016845703125,
+                "y": 706.4801025390625
+              },
+              "pivotPt": {
+                "x": 219.6016845703125,
+                "y": 709.2301025390625
+              },
+              "rotation": 0,
+              "width": 36.30035400390625
+            }
+          ],
+          "shapes": [],
+          "text": "BOLA3"
+        },
+        {
+          "pgIdx": 35,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 11,
+              "lowerLeftPt": {
+                "x": 259.03216552734375,
+                "y": 706.4801025390625
+              },
+              "pivotPt": {
+                "x": 259.03216552734375,
+                "y": 709.2301025390625
+              },
+              "rotation": 0,
+              "width": 8.13153076171875
+            }
+          ],
+          "shapes": [],
+          "text": "is"
+        },
+        {
+          "pgIdx": 38,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 11,
+              "lowerLeftPt": {
+                "x": 270.29156494140625,
+                "y": 706.4801025390625
+              },
+              "pivotPt": {
+                "x": 270.29156494140625,
+                "y": 709.2301025390625
+              },
+              "rotation": 0,
+              "width": 15.65509033203125
+            }
+          ],
+          "shapes": [],
+          "text": "not"
+        },
+        {
+          "pgIdx": 42,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 11,
+              "lowerLeftPt": {
+                "x": 289.072265625,
+                "y": 706.4801025390625
+              },
+              "pivotPt": {
+                "x": 289.072265625,
+                "y": 709.2301025390625
+              },
+              "rotation": 0,
+              "width": 34.413299560546875
+            }
+          ],
+          "shapes": [],
+          "text": "correct"
+        },
+        {
+          "pgIdx": 51,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 11,
+              "lowerLeftPt": {
+                "x": 329.7390441894531,
+                "y": 706.4801025390625
+              },
+              "pivotPt": {
+                "x": 329.7390441894531,
+                "y": 709.2301025390625
+              },
+              "rotation": 0,
+              "width": 15.65509033203125
+            }
+          ],
+          "shapes": [],
+          "text": "but"
+        },
+        {
+          "pgIdx": 55,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 11,
+              "lowerLeftPt": {
+                "x": 348.519775390625,
+                "y": 706.4801025390625
+              },
+              "pivotPt": {
+                "x": 348.519775390625,
+                "y": 709.2301025390625
+              },
+              "rotation": 0,
+              "width": 5.631927490234375
+            }
+          ],
+          "shapes": [],
+          "text": "it"
+        },
+        {
+          "pgIdx": 58,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 11,
+              "lowerLeftPt": {
+                "x": 357.27734375,
+                "y": 706.4801025390625
+              },
+              "pivotPt": {
+                "x": 357.27734375,
+                "y": 709.2301025390625
+              },
+              "rotation": 0,
+              "width": 8.13153076171875
+            }
+          ],
+          "shapes": [],
+          "text": "is"
+        },
+        {
+          "pgIdx": 61,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 11,
+              "lowerLeftPt": {
+                "x": 368.5367431640625,
+                "y": 706.4801025390625
+              },
+              "pivotPt": {
+                "x": 368.5367431640625,
+                "y": 709.2301025390625
+              },
+              "rotation": 0,
+              "width": 27.5450439453125
+            }
+          ],
+          "shapes": [],
+          "text": "aotus"
+        },
+        {
+          "pgIdx": 67,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 11,
+              "lowerLeftPt": {
+                "x": 399.20965576171875,
+                "y": 706.4801025390625
+              },
+              "pivotPt": {
+                "x": 399.20965576171875,
+                "y": 709.2301025390625
+              },
+              "rotation": 0,
+              "width": 58.211181640625
+            }
+          ],
+          "shapes": [],
+          "text": "nancymaae"
+        }
+      ]
+    }
+  ],
+  "processedDate": "2021-01-14 14:38:31"
+}

@@ -1,0 +1,47 @@
+# Overrides base docker-compose.yml file for running in development mode.
+version: "3.9"
+
+services:
+  webserver:
+    build:
+      context: ../client
+      args:
+        - ANGULAR_CONFIG=dev
+
+  appserver:
+    build:
+      context: ../appserver
+      args:
+        DEV: 1
+    environment:
+      - FLASK_ENV=development
+      - FLASK_DEBUG=1
+      - FRONTEND_URL=http://localhost:8080
+      # Unset to use the default LMDB data directory
+      - LMDB_DATA_DIR=
+    volumes:
+      - ../appserver:/app
+    user: root
+
+  statistical-enrichment:
+    build:
+      context: ../statistical-enrichment
+      args:
+        DEV: 1
+    environment:
+      - FLASK_ENV=development
+      - FLASK_DEBUG=1
+    volumes:
+      - ../statistical-enrichment:/app
+    user: root
+
+  cache-invalidator:
+    build:
+      context: ../cache-invalidator
+      args:
+        DEV: 1
+    environment:
+      - LOG_LEVEL=DEBUG
+    volumes:
+      - ../cache-invalidator:/app
+    user: root

@@ -1,0 +1,420 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd">
+
+  <changeSet id="LL-3782 delete all Zenodo related nodes" author="Binh Vu">
+    <comment>
+      The Zenodo literature data are wrong, need to delete them to re-seed.
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.ConditionQueryHandler"
+      query="
+      
+        CALL apoc.periodic.iterate(
+        'MATCH (n:db_Literature) WHERE NOT &quot;Publication&quot; IN labels(n) AND NOT &quot;AssociationType&quot; IN labels(n) RETURN n LIMIT 100000',
+        'DETACH DELETE n', {batchSize:10000})
+        
+      "
+      conditionQuery="MATCH (n:db_Literature) WHERE NOT 'Publication' IN labels(n) AND NOT 'AssociationType' IN labels(n) RETURN COUNT(n)"
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+    />
+  </changeSet>
+
+  <changeSet id="LL-3782 load Zenodo literature constraints on date 11022021" author="Binh Vu">
+    <comment>Create constraints and indexes for Zenodo literature</comment>
+    <sql>
+    CREATE CONSTRAINT constraint_association_id IF NOT EXISTS ON (n:Association) ASSERT n.eid IS UNIQUE;
+CREATE CONSTRAINT constraint_snippet_id IF NOT EXISTS ON (n:Snippet) ASSERT n.eid IS UNIQUE;
+CREATE CONSTRAINT constraint_literatureentity_id IF NOT EXISTS ON (n:LiteratureEntity) ASSERT n.eid IS UNIQUE;
+CREATE CONSTRAINT constraint_literaturedisease_id IF NOT EXISTS ON (n:LiteratureDisease) ASSERT n.eid IS UNIQUE;
+CREATE CONSTRAINT constraint_literaturechemical_id IF NOT EXISTS ON (n:LiteratureChemical) ASSERT n.eid IS UNIQUE;
+CREATE CONSTRAINT constraint_literaturegene_id IF NOT EXISTS ON (n:LiteratureGene) ASSERT n.eid IS UNIQUE;
+CREATE CONSTRAINT constraint_publication_pmid IF NOT EXISTS ON (n:Publication) ASSERT n.pmid IS UNIQUE;
+    </sql>
+  </changeSet>
+
+  <changeSet id="LL-3782 Zenodo literature data Chemical-Disease on date 11022021" author="Binh Vu">
+    <comment>
+        Split creation of Chemical-Disease nodes and assocation from snippet creation; seem to be faster instead of one giant cypher. Need to use foreach because if some entities can have two entity type so the on create will not set the second, and cannot use normal set cause it could add a duplicate.
+The name property is a duplicate data property, and only used for the visualizer. Not sure why this decision was made, cause the information is available in the (n)-[MAPPED_TO]-(m) in m.name, the extra relationship does not seem to make any difference, in fact it is faster since the current visualizer query returns the entire node.
+Need to also consider the fact the property could be at risk for being outdated.
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.FileQueryHandler"
+      query="
+      
+        UNWIND $rows AS row
+        MERGE (n1:db_Literature:LiteratureEntity {eid:row.entry1_id})
+            ON CREATE SET n1.name = row.entry1_name
+            FOREACH (item IN CASE WHEN NOT 'LiteratureChemical' IN labels(n1) THEN [1] ELSE [] END | SET n1:LiteratureChemical)
+        MERGE (n2:db_Literature:LiteratureEntity {eid:row.entry2_id})
+            ON CREATE SET n2.name = row.entry2_name
+            FOREACH (item IN CASE WHEN NOT 'LiteratureDisease' IN labels(n2) THEN [1] ELSE [] END | SET n2:LiteratureDisease)
+        WITH n1, n2, row
+        MERGE (a:Association {eid:row.entry1_id + '-' + row.entry2_id + '-' + row.theme})
+        ON CREATE
+        SET a:db_Literature,
+            a.entry1_type = 'Chemical',
+            a.entry2_type = 'Disease',
+            a.description = row.description,
+            a.type = row.theme,
+            a.data_source = 'Literature'
+        MERGE (n1)-[:ASSOCIATED {description:row.description, type:row.theme}]->(n2)
+        MERGE (n1)-[:HAS_ASSOCIATION]->(a)
+        MERGE (a)-[:HAS_ASSOCIATION]->(n2)
+        WITH a, row
+        MERGE (t:AssociationType {name: row.theme})
+        MERGE (a)-[:HAS_TYPE]->(t)
+        
+      "
+      fileName="jira-LL-3782-Chemical2Disease_assoc_theme.zip"
+      startAt="1"
+      fileType="TSV" 
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="LL-3782 Zenodo literature data Chemical-Gene on date 11022021" author="Binh Vu">
+    <comment>
+        Split creation of Chemical-Gene nodes and assocation from snippet creation; seem to be faster instead of one giant cypher. Need to use foreach because if some entities can have two entity type so the on create will not set the second, and cannot use normal set cause it could add a duplicate.
+The name property is a duplicate data property, and only used for the visualizer. Not sure why this decision was made, cause the information is available in the (n)-[MAPPED_TO]-(m) in m.name, the extra relationship does not seem to make any difference, in fact it is faster since the current visualizer query returns the entire node.
+Need to also consider the fact the property could be at risk for being outdated.
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.FileQueryHandler"
+      query="
+      
+        UNWIND $rows AS row
+        MERGE (n1:db_Literature:LiteratureEntity {eid:row.entry1_id})
+            ON CREATE SET n1.name = row.entry1_name
+            FOREACH (item IN CASE WHEN NOT 'LiteratureChemical' IN labels(n1) THEN [1] ELSE [] END | SET n1:LiteratureChemical)
+        MERGE (n2:db_Literature:LiteratureEntity {eid:row.entry2_id})
+            ON CREATE SET n2.name = row.entry2_name
+            FOREACH (item IN CASE WHEN NOT 'LiteratureGene' IN labels(n2) THEN [1] ELSE [] END | SET n2:LiteratureGene)
+        WITH n1, n2, row
+        MERGE (a:Association {eid:row.entry1_id + '-' + row.entry2_id + '-' + row.theme})
+        ON CREATE
+        SET a:db_Literature,
+            a.entry1_type = 'Chemical',
+            a.entry2_type = 'Gene',
+            a.description = row.description,
+            a.type = row.theme,
+            a.data_source = 'Literature'
+        MERGE (n1)-[:ASSOCIATED {description:row.description, type:row.theme}]->(n2)
+        MERGE (n1)-[:HAS_ASSOCIATION]->(a)
+        MERGE (a)-[:HAS_ASSOCIATION]->(n2)
+        WITH a, row
+        MERGE (t:AssociationType {name: row.theme})
+        MERGE (a)-[:HAS_TYPE]->(t)
+        
+      "
+      fileName="jira-LL-3782-Chemical2Gene_assoc_theme.zip"
+      startAt="1"
+      fileType="TSV" 
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="LL-3782 Zenodo literature data Gene-Disease on date 11022021" author="Binh Vu">
+    <comment>
+        Split creation of Gene-Disease nodes and assocation from snippet creation; seem to be faster instead of one giant cypher. Need to use foreach because if some entities can have two entity type so the on create will not set the second, and cannot use normal set cause it could add a duplicate.
+The name property is a duplicate data property, and only used for the visualizer. Not sure why this decision was made, cause the information is available in the (n)-[MAPPED_TO]-(m) in m.name, the extra relationship does not seem to make any difference, in fact it is faster since the current visualizer query returns the entire node.
+Need to also consider the fact the property could be at risk for being outdated.
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.FileQueryHandler"
+      query="
+      
+        UNWIND $rows AS row
+        MERGE (n1:db_Literature:LiteratureEntity {eid:row.entry1_id})
+            ON CREATE SET n1.name = row.entry1_name
+            FOREACH (item IN CASE WHEN NOT 'LiteratureGene' IN labels(n1) THEN [1] ELSE [] END | SET n1:LiteratureGene)
+        MERGE (n2:db_Literature:LiteratureEntity {eid:row.entry2_id})
+            ON CREATE SET n2.name = row.entry2_name
+            FOREACH (item IN CASE WHEN NOT 'LiteratureDisease' IN labels(n2) THEN [1] ELSE [] END | SET n2:LiteratureDisease)
+        WITH n1, n2, row
+        MERGE (a:Association {eid:row.entry1_id + '-' + row.entry2_id + '-' + row.theme})
+        ON CREATE
+        SET a:db_Literature,
+            a.entry1_type = 'Gene',
+            a.entry2_type = 'Disease',
+            a.description = row.description,
+            a.type = row.theme,
+            a.data_source = 'Literature'
+        MERGE (n1)-[:ASSOCIATED {description:row.description, type:row.theme}]->(n2)
+        MERGE (n1)-[:HAS_ASSOCIATION]->(a)
+        MERGE (a)-[:HAS_ASSOCIATION]->(n2)
+        WITH a, row
+        MERGE (t:AssociationType {name: row.theme})
+        MERGE (a)-[:HAS_TYPE]->(t)
+        
+      "
+      fileName="jira-LL-3782-Gene2Disease_assoc_theme.zip"
+      startAt="1"
+      fileType="TSV" 
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="LL-3782 Zenodo literature data Gene-Gene on date 11022021" author="Binh Vu">
+    <comment>
+        Split creation of Gene-Gene nodes and assocation from snippet creation; seem to be faster instead of one giant cypher. Need to use foreach because if some entities can have two entity type so the on create will not set the second, and cannot use normal set cause it could add a duplicate.
+The name property is a duplicate data property, and only used for the visualizer. Not sure why this decision was made, cause the information is available in the (n)-[MAPPED_TO]-(m) in m.name, the extra relationship does not seem to make any difference, in fact it is faster since the current visualizer query returns the entire node.
+Need to also consider the fact the property could be at risk for being outdated.
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.FileQueryHandler"
+      query="
+      
+        UNWIND $rows AS row
+        MERGE (n1:db_Literature:LiteratureEntity {eid:row.entry1_id})
+            ON CREATE SET n1.name = row.entry1_name
+            FOREACH (item IN CASE WHEN NOT 'LiteratureGene' IN labels(n1) THEN [1] ELSE [] END | SET n1:LiteratureGene)
+        MERGE (n2:db_Literature:LiteratureEntity {eid:row.entry2_id})
+            ON CREATE SET n2.name = row.entry2_name
+            FOREACH (item IN CASE WHEN NOT 'LiteratureGene' IN labels(n2) THEN [1] ELSE [] END | SET n2:LiteratureGene)
+        WITH n1, n2, row
+        MERGE (a:Association {eid:row.entry1_id + '-' + row.entry2_id + '-' + row.theme})
+        ON CREATE
+        SET a:db_Literature,
+            a.entry1_type = 'Gene',
+            a.entry2_type = 'Gene',
+            a.description = row.description,
+            a.type = row.theme,
+            a.data_source = 'Literature'
+        MERGE (n1)-[:ASSOCIATED {description:row.description, type:row.theme}]->(n2)
+        MERGE (n1)-[:HAS_ASSOCIATION]->(a)
+        MERGE (a)-[:HAS_ASSOCIATION]->(n2)
+        WITH a, row
+        MERGE (t:AssociationType {name: row.theme})
+        MERGE (a)-[:HAS_TYPE]->(t)
+        
+      "
+      fileName="jira-LL-3782-Gene2Gene_assoc_theme.zip"
+      startAt="1"
+      fileType="TSV" 
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="LL-3782 Zenodo literature snippet data Chemical-Disease on date 11022021" author="Binh Vu">
+    <comment>
+        Link snippets for Chemical-Disease to publication. 
+Need to include properties in INDICATES relationship merge to be unique because there are multiple rows in data that can result in incorrectly merging the relationships.
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.FileQueryHandler"
+      query="
+      
+        UNWIND $rows AS row
+        MERGE (s:Snippet {eid:row.snippet_id})
+        ON CREATE
+        SET s:db_Literature,
+            s.pmid = row.pmid,
+            s.sentence = row.sentence,
+            s.data_source = 'Literature'
+        WITH s, row
+        MATCH (a:Association {eid:row.entry1_id + '-' + row.entry2_id + '-' + row.theme})
+        MERGE (s)-[i:INDICATES {normalized_score:toFloat(row.relscore), raw_score:toFloat(row.score), entry1_text:row.entry1_name, entry2_text:row.entry2_name, path:row.path}]->(a)
+        MERGE (pub:Publication {pmid:row.pmid}) SET pub:db_Literature
+        MERGE (s)-[:IN_PUB]->(pub)
+        
+      "
+      fileName="jira-LL-3782-Chemical2Disease_assoc_theme.zip"
+      startAt="1"
+      fileType="TSV" 
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="LL-3782 Zenodo literature snippet data Chemical-Gene on date 11022021" author="Binh Vu">
+    <comment>
+        Link snippets for Chemical-Gene to publication. 
+Need to include properties in INDICATES relationship merge to be unique because there are multiple rows in data that can result in incorrectly merging the relationships.
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.FileQueryHandler"
+      query="
+      
+        UNWIND $rows AS row
+        MERGE (s:Snippet {eid:row.snippet_id})
+        ON CREATE
+        SET s:db_Literature,
+            s.pmid = row.pmid,
+            s.sentence = row.sentence,
+            s.data_source = 'Literature'
+        WITH s, row
+        MATCH (a:Association {eid:row.entry1_id + '-' + row.entry2_id + '-' + row.theme})
+        MERGE (s)-[i:INDICATES {normalized_score:toFloat(row.relscore), raw_score:toFloat(row.score), entry1_text:row.entry1_name, entry2_text:row.entry2_name, path:row.path}]->(a)
+        MERGE (pub:Publication {pmid:row.pmid}) SET pub:db_Literature
+        MERGE (s)-[:IN_PUB]->(pub)
+        
+      "
+      fileName="jira-LL-3782-Chemical2Gene_assoc_theme.zip"
+      startAt="1"
+      fileType="TSV" 
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="LL-3782 Zenodo literature snippet data Gene-Disease on date 11022021" author="Binh Vu">
+    <comment>
+        Link snippets for Gene-Disease to publication. 
+Need to include properties in INDICATES relationship merge to be unique because there are multiple rows in data that can result in incorrectly merging the relationships.
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.FileQueryHandler"
+      query="
+      
+        UNWIND $rows AS row
+        MERGE (s:Snippet {eid:row.snippet_id})
+        ON CREATE
+        SET s:db_Literature,
+            s.pmid = row.pmid,
+            s.sentence = row.sentence,
+            s.data_source = 'Literature'
+        WITH s, row
+        MATCH (a:Association {eid:row.entry1_id + '-' + row.entry2_id + '-' + row.theme})
+        MERGE (s)-[i:INDICATES {normalized_score:toFloat(row.relscore), raw_score:toFloat(row.score), entry1_text:row.entry1_name, entry2_text:row.entry2_name, path:row.path}]->(a)
+        MERGE (pub:Publication {pmid:row.pmid}) SET pub:db_Literature
+        MERGE (s)-[:IN_PUB]->(pub)
+        
+      "
+      fileName="jira-LL-3782-Gene2Disease_assoc_theme.zip"
+      startAt="1"
+      fileType="TSV" 
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="LL-3782 Zenodo literature snippet data Gene-Gene on date 11022021" author="Binh Vu">
+    <comment>
+        Link snippets for Gene-Gene to publication. 
+Need to include properties in INDICATES relationship merge to be unique because there are multiple rows in data that can result in incorrectly merging the relationships.
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.FileQueryHandler"
+      query="
+      
+        UNWIND $rows AS row
+        MERGE (s:Snippet {eid:row.snippet_id})
+        ON CREATE
+        SET s:db_Literature,
+            s.pmid = row.pmid,
+            s.sentence = row.sentence,
+            s.data_source = 'Literature'
+        WITH s, row
+        MATCH (a:Association {eid:row.entry1_id + '-' + row.entry2_id + '-' + row.theme})
+        MERGE (s)-[i:INDICATES {normalized_score:toFloat(row.relscore), raw_score:toFloat(row.score), entry1_text:row.entry1_name, entry2_text:row.entry2_name, path:row.path}]->(a)
+        MERGE (pub:Publication {pmid:row.pmid}) SET pub:db_Literature
+        MERGE (s)-[:IN_PUB]->(pub)
+        
+      "
+      fileName="jira-LL-3782-Gene2Gene_assoc_theme.zip"
+      startAt="1"
+      fileType="TSV" 
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="LL-3782 create MAPPED_TO for literature chemical on date 11022021" author="Binh Vu">
+    <comment>LiteratureChemical should be MAPPED_TO Chemical nodes (Chebi and Mesh).
+    Need to use foreach because if label is included in the merge, it will create two different relationships if an entity has more than one entity label.
+    And update the Literature names to be the correct name in case Zenodo used different casing etc</comment>
+    <sql>
+    
+        CALL apoc.periodic.iterate(
+        'MATCH (n:db_Literature:LiteratureChemical) WHERE n.eid CONTAINS "MESH:" RETURN n',
+        'MERGE (c:db_MESH {eid:split(n.eid, ":")[1]}) WITH c,n MERGE (n)-[:MAPPED_TO]->(c) SET n.name = c.name FOREACH (item IN CASE WHEN NOT "Chemical" IN labels(c) THEN [1] ELSE [] END | SET c:Chemical)',
+        {batchSize:10000});
+        CALL apoc.periodic.iterate(
+        'MATCH (n:db_Literature:LiteratureChemical) WHERE n.eid CONTAINS "CHEBI:" RETURN n',
+        'MERGE (c:db_CHEBI {eid:split(n.eid, ":")[1]}) WITH c,n MERGE (n)-[:MAPPED_TO]->(c) SET n.name = c.name FOREACH (item IN CASE WHEN NOT "Chemical" IN labels(c) THEN [1] ELSE [] END | SET c:Chemical)',
+        {batchSize:10000});
+        
+    </sql>
+  </changeSet>
+
+  <changeSet id="LL-3782 create MAPPED_TO for literature disease on date 11022021" author="Binh Vu">
+    <comment>LiteratureDisease should be MAPPED_TO Diseases nodes (db_MESH and Disease not in a domain, e.g OMIM:xxxxxx id).
+    Need to use foreach because if label is included in the merge, it will create two different relationships if an entity has more than one entity label.
+    And update the Literature names to be the correct name in case Zenodo used different casing etc</comment>
+    <sql>
+    
+        CALL apoc.periodic.iterate(
+        'MATCH (n:db_Literature:LiteratureDisease) WHERE n.eid CONTAINS "MESH:" RETURN n',
+        'MERGE (d:db_MESH {eid:split(n.eid, ":")[1]}) WITH d,n MERGE (n)-[:MAPPED_TO]->(d) SET n.name = d.name FOREACH (item IN CASE WHEN NOT "Disease" IN labels(d) THEN [1] ELSE [] END | SET d:Disease)',
+        {batchSize:10000});
+        CALL apoc.periodic.iterate(
+        'MATCH (n:db_Literature:LiteratureDisease) WHERE NOT n.eid CONTAINS "MESH:" RETURN n',
+        'MERGE (d:Disease {eid:n.eid}) WITH d,n MERGE (n)-[:MAPPED_TO]->(d) SET n.name = d.name',
+        {batchSize:10000});
+        
+    </sql>
+  </changeSet>
+
+  <changeSet id="LL-3782 create MAPPED_TO for literature gene on date 11022021" author="Binh Vu">
+    <comment>LiteratureGene should be MAPPED_TO Gene nodes, and update the Literature names to be the correct name in case Zenodo used different casing etc</comment>
+    <sql>
+    
+        CALL apoc.periodic.iterate(
+        'MATCH (n:db_Literature:LiteratureGene) RETURN n',
+        'MERGE (g:db_NCBI:Gene {eid:n.eid}) WITH g,n MERGE (n)-[:MAPPED_TO]->(g) SET n.name = g.name',
+        {batchSize:10000});
+        
+    </sql>
+  </changeSet>
+</databaseChangeLog>

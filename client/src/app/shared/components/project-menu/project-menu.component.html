@@ -1,0 +1,22 @@
+<ng-container *ngIf="project.privileges.administrable">
+  <button ngbDropdownItem (click)="openEditDialog(project)">
+    Edit project...
+  </button>
+  <button ngbDropdownItem (click)="openCollaboratorsDialog(project)">
+    Edit collaborators...
+  </button>
+</ng-container>
+<ng-container *ngIf="showTools">
+  <div class="dropdown-divider" *ngIf="project.privileges.administrable"></div>
+  <button ngbDropdownItem (click)="openShareDialog(project)">
+    Copy{{ nameEntity ? ' project' : '' }} link...
+  </button>
+  <ng-container *ngIf="project.root">
+    <div class="dropdown-divider"></div>
+    <button ngbDropdownItem [appLink]="['/file-navigator', project.name, project.root.hashId]"
+            [parentAddress]="['/projects', project.name]"
+            [newTab]="true" [sideBySide]="true" [forceWorkbench]="true" [openParentFirst]="true">
+      Open file navigator
+    </button>
+  </ng-container>
+</ng-container>

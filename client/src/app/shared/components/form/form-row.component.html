@@ -1,0 +1,7 @@
+<div class="form-group" [class.row]="label != null">
+  <label [for]="for" class="col-form-label col-sm-3" *ngIf="label != null">{{ label }}:</label>
+  <div [class.col-sm-9]="label != null">
+    <ng-content></ng-content>
+    <app-form-input-feedback *ngIf="control != null" [control]="control" [errors]="errors"></app-form-input-feedback>
+  </div>
+</div>

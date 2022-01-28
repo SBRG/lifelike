@@ -1,0 +1,36 @@
+  📓
+
+    888        d8b    .d888             888   d8b   888
+    888        Y8P   d88P"              888   Y8P   888
+    888              888                888         888
+    888        888   888888   .d88b.    888   888   888  888    .d88b.
+    888        888   888     d8P  Y8b   888   888   888 .88P   d8P  Y8b
+    888        888   888     88888888   888   888   888888K    88888888
+    888        888   888     Y8b.       888   888   888 "88b   Y8b.
+    88888888   888   888      "Y8888    888   888   888  888    "Y8888
+
+
+    Please be patient while Lifelike is being deployed ⏳
+
+
+   🚀  To watch the resources being ready, run:
+
+           kubectl -n {{ .Release.Namespace }} get pods --watch
+
+
+   🌐  To access Lifelike once it's ready:
+          {{- if .Values.ingress.enabled }}
+
+          Navigate to http://{{ .Values.ingress.hostname }}
+          {{- else }}
+
+          1. Forward frontend service port to your local machine:
+
+              kubectl -n {{ .Release.Namespace }} port-forward svc/{{ include "lifelike.fullname" . }}-frontend 8080:{{ .Values.frontend.service.port }}
+
+          2. Then access Lifelike in a browser:
+
+              http://localhost:8080
+
+          You may also consider enabling ingress with `ingress.enabled=true`
+          {{- end }}

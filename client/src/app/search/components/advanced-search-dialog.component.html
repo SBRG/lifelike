@@ -1,0 +1,137 @@
+<form [formGroup]="form" (ngSubmit)="close()">
+  <app-modal-header (cancel)="dismiss()">Advanced Search</app-modal-header>
+
+  <app-modal-body>
+    <!-- <div>
+      <div class="font-weight-bold mb-2">Find content</div>
+    </div> -->
+
+    <!-- AND Words field -->
+    <div class="form-group row">
+      <label class="col-sm-4 col-form-label">Find:</label>
+      <div class="col-sm-8">
+        <input class="form-control border" formControlName="q">
+        <app-form-input-feedback [control]="form.get('q')"></app-form-input-feedback>
+      </div>
+    </div>
+
+    <!-- Types field -->
+    <div class="form-group row">
+      <label class="col-sm-4 col-form-label">File Types:</label>
+      <div class="col-sm-8">
+        <app-select formId="types" [choices]="typeChoices"
+                [values]="form.value.types" (valuesChange)="form.get('types').setValue($event)"
+                (touch)="form.get('types').markAsTouched()"
+                [choiceLabel]="typeLabel">
+        </app-select>
+      </div>
+    </div>
+
+    <div>
+      <label class="m-0">Folders to Include (default all if none selected):</label>
+      <div *ngIf="hierarchyLoaded; else hierarchyNotLoaded" style="max-height: 480px; overflow: auto;">
+        <app-hierarchy-search-tree
+          [treeData]="fileHierarchyTree"
+          [initiallyCheckedNodesFilterFn]="initiallyCheckedNodesFilterFn"
+          [resetTree]="resetHierarchyTreeSubject"
+          (folderSelectionChanged)="updateFolders($event)"
+        ></app-hierarchy-search-tree>
+      </div>
+      <ng-template #hierarchyNotLoaded>
+        <div class="d-flex flex-column">
+          <span class="placeholder-box w-25 mb-2">Loading loading</span>
+          <span class="placeholder-box w-25 mb-2">Loading loading</span>
+          <span class="placeholder-box w-25">Loading loading</span>
+        </div>
+      </ng-template>
+
+    </div>
+
+    <!-- TODO: Might add this back in the future -->
+    <!-- <div class="form-group row">
+      <div class="col-sm-6">
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="synonyms" formControlName="synonyms">
+          <label class="custom-control-label" for="synonyms">Match Synonyms of Search Terms</label>
+        </div>
+      </div>
+    </div> -->
+
+    <div class="d-flex my-4 border-bottom"></div>
+
+    <div>
+      Tips:
+      <ul>
+        <li class="small-font">
+          Surround one or more words with " to create a phrase term. Ex: "Homo Sapiens"
+        </li>
+        <li class="small-font">
+          Use * in a word to match 0 or more characters. ? will match 0 or 1 characters. Ex: CO*ID, CO?ID
+        </li>
+      </ul>
+    </div>
+
+    <!--
+      Removing the "Phrase" and "Wildcard" fields for now. My intuition is that as the number of options grows, we're going to return to
+      this method of displaying them, because putting them all in a lengthy "Hint" is arguably far worse UX.
+    -->
+
+    <!-- Phrase field -->
+    <!-- <div class="form-group row">
+      <label class="col-sm-4 col-form-label">with the <strong>exact phrase</strong></label>
+      <div class="col-sm-8">
+        <input class="form-control border" formControlName="phrase" placeholder="e.g., patients with comorbidities">
+      </div>
+    </div> -->
+
+    <!-- Wildcards field -->
+    <!-- <div class="form-group row">
+      <label class="col-sm-4 col-form-label">with the <strong>wildcard</strong> words</label>
+      <div class="col-sm-8">
+        <input class="form-control border" formControlName="wildcards" placeholder="e.g., C*ID, CO?ID">
+        <small class="form-text text-muted">
+          Use '*' anywhere in a word to match 0 or more characters. '?' will match 0 or 1 characters.
+        </small>
+      </div>
+    </div> -->
+
+    <!-- TODOs -->
+
+    <!-- OR Words field -->
+    <!-- <div class="form-group row">
+      <label class="col-sm-4 col-form-label">with <strong>at least one</strong> of the words</label>
+      <div class="col-sm-8">
+        <input class="form-control border w-100" disabled placeholder="Coming Soon!">
+      </div>
+    </div> -->
+
+    <!-- Author field -->
+    <!-- <div class="d-flex justify-content-between align-items-center mb-2">
+      <div class="field-label mr-2">
+        <span>Return content <strong>authored</strong> by</span>
+      </div>
+      <div class="field-value">
+        <input class="form-control border w-100" disabled placeholder="Coming Soon!">
+      </div>
+    </div> -->
+
+    <!-- Dates fields -->
+    <!-- <div class="d-flex justify-content-between align-items-center mb-2">
+      <div class="field-label mr-2">
+        <span>Return content <strong>dated</strong> between</span>
+      </div>
+      <div class="field-value">
+        <input class="form-control border w-100" disabled placeholder="Coming Soon!">
+      </div>
+    </div> -->
+  </app-modal-body>
+
+  <app-modal-footer>
+    <button type="button"
+            class="btn btn-secondary mr-1"
+            ngbTooltip="Reset Advanced Options"
+            placement="top"
+            (click)="resetForm()"><i class="fa fa-sync"></i></button>
+    <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i></button>
+  </app-modal-footer>
+</form>

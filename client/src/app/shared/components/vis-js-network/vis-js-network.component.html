@@ -1,0 +1,100 @@
+<div *ngIf="!stabilized else stable" class="h-100 w-100 d-flex justify-content-center align-items-center">
+  <i class="fa fa-spinner fa-spin fa-3x text-primary"></i>
+</div>
+<ng-template #stable>
+  <div class="network-container navigation">
+    <div class="d-flex">
+      <div class="pointer-events-on">
+        <app-legend [legend]="legend"></app-legend>
+      </div>
+      <div class="d-block h-100 ml-2 pointer-events-on">
+        <app-search-control
+          [(ngModel)]="searchQuery" (ngModelChange)="searchQueryChanged()"
+          [resultIndex]="currentSearchIndex"
+          [resultCount]="searchResults.length"
+          (previous)="findPrevious()" (next)="findNext()">
+        </app-search-control>
+      </div>
+      <div class="d-flex h-100 ml-2 pointer-events-on">
+        <div>
+          <button class="btn btn-secondary border-white"
+                  (click)="fitToNetwork()"
+                  ngbTooltip="Fit Canvas"
+                  container="body"
+                  placement="bottom right left top">
+            <i class="fas fa-fw fa-expand-arrows-alt"></i>
+          </button>
+        </div>
+        <div>
+          <button class="btn btn-secondary border-white"
+                  (click)="zoomIn()"
+                  ngbTooltip="Zoom In"
+                  container="body"
+                  placement="bottom right left top">
+            <i class="fa fa-fw fa-search-plus"></i>
+          </button>
+        </div>
+        <div>
+          <button class="btn btn-secondary border-white"
+                  (click)="zoomOut()"
+                  ngbTooltip="Zoom Out"
+                  container="body"
+                  placement="bottom right left top">
+            <i class="fa fa-fw fa-search-minus"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="network-container utilities bottom-0">
+    <app-collapsible-window title="Network Layout Options" [reversed]="true" class="flex-fill">
+      <div class="window-body">
+        <form>
+          <div class="form-group">
+            <div class="custom-control custom-checkbox my-1 mr-sm-2">
+              <input type="checkbox" class="custom-control-input" [id]="networkContainerId + '-physics-enabled-checkbox'" [checked]="physicsEnabled" (click)="togglePhysics()">
+              <label class="custom-control-label" [for]="networkContainerId + '-physics-enabled-checkbox'">Physics enabled</label>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="my-1 mr-2">Layout Strategy:</label>
+            <select class="custom-select" [value]="currentSolver" (change)="updateNetworkLayout($event.target.value)">
+              <option *ngFor="let solver of solverMap | keyvalue" [value]="solver.key">{{ solver.value }}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="my-1 mr-2">Edge Smoothing:</label>
+            <select class="custom-select" [value]="currentSmooth" (change)="updateNetworkEdgeSmooth($event.target.value)">
+              <option *ngFor="let smooth of smoothMap | keyvalue" [value]="smooth.key">{{ smooth.value }}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label [for]="networkContainerId + '-central-gravity'">Central Gravity: {{ currentCentralGravity }}</label>
+            <input type="range"
+                   class="custom-range"
+                   [id]="networkContainerId + '-central-gravity'"
+                   [value]="currentCentralGravity"
+                   (change)="updateNetworkCentralGravity($event.target.value)"
+                   min="0"
+                   max="1"
+                   step="0.10">
+          </div>
+        </form>
+      </div>
+    </app-collapsible-window>
+  </div>
+  <div class="network-container selection right-0 bottom-0" *ngIf="(selected | async)?.edges?.length">
+    <app-collapsible-window title="Selection" [reversed]="true" class="flex-fill">
+      <div class="window-body" style="max-height: 80vh;">
+          <ng-container *ngTemplateOutlet="selection; context: selected | async"></ng-container>
+      </div>
+    </app-collapsible-window>
+  </div>
+</ng-template>
+<div [id]="networkContainerId"
+     class="h-100 w-100"
+     [ngStyle]="{
+        'display': stabilized ? 'block' : 'hidden',
+        'cursor': cursorStyle
+      }"
+></div>

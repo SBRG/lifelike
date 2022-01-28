@@ -1,0 +1,17 @@
+<!-- table component -->
+<div class="table-holder" *ngIf="tableCaption(passage)" class="table-caption table_caption">
+    <b>{{ tableCaption(passage) }}: </b>
+    <app-bioc-annotated-text [text]="passage.text" [annotations]="passage.annotations" [offset]="passage.offset">
+    </app-bioc-annotated-text>
+</div>
+
+<div class="table-holder" *ngIf="isTable(passage)">
+    <div *ngIf="advancedView(passage)" [innerHTML]="advancedView(passage)" class="advanced-view">
+        {{ advancedView(passage) }}
+    </div>
+
+    <app-bioc-annotated-text *ngIf="!advancedView(passage)" 
+        [text]="passage.text" [annotations]="passage.annotations" [offset]="passage.offset"
+        [ngClass]="passage.infons.type">
+    </app-bioc-annotated-text>
+</div>

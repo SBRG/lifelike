@@ -1,0 +1,66 @@
+.tile-deck {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  grid-auto-rows: 1fr;
+  grid-gap: $spacer / 2;
+
+  &::before {
+    content: '';
+    width: 0;
+    padding-bottom: 100%;
+    grid-row: 1 / 1;
+    grid-column: 1 / 1;
+  }
+
+  & > *:first-child {
+    grid-row: 1 / 1;
+    grid-column: 1 / 1;
+  }
+}
+
+.tile-deck-xs {
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+}
+
+.tile-deck-sm {
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+}
+
+.tile-deck-md {
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+}
+
+.tile-deck-lg {
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+}
+
+.tile {
+  border-radius: $border-radius;
+  position: relative;
+  padding: $spacer;
+  border: 2px solid $gray-300;
+}
+
+.tile-deck-selectable {
+  .tile {
+    cursor: pointer;
+
+    &.active {
+      background: $table-row-active-bg;
+    }
+
+    &:hover {
+      box-shadow: $table-row-focus-box-shadow;
+    }
+
+    &:focus, &.active:hover {
+      box-shadow: $table-row-focus-box-shadow;
+    }
+  }
+}
+
+.tile-toolbar {
+  position: absolute;
+  top: ($spacer / 2);
+  right: ($spacer / 2);
+}

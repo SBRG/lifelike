@@ -1,0 +1,38 @@
+<div class="module-header">
+    <!-- Breadcrumbs -->
+    <div class="module-breadcrumb-bar mb-1" *ngIf="showBreadCrumbs">
+        <app-object-path [object]="object.parent" [newTab]="true"></app-object-path>
+    </div>
+    <div class="module-title-bar">
+        <button type="button" class="module-title-bar-back mr-1" [appLink]="returnUrl"
+                *ngIf="returnUrl">
+            <i class="fa fa-fw fa-arrow-left"></i>
+        </button>
+        <!-- Needs wrapping in this way so when we get content of H1 node it does not include Angular comment -->
+        <ng-container *ngIf="!titleTemplate; else titleFromTemplate">
+            <h1 class="toolbar-title text-truncate" [draggable]="dragStarted.observers.length"
+                (dragstart)="dragStarted.next($event)">
+                {{ object.filename }}
+            </h1>
+        </ng-container>
+        <ng-template #titleFromTemplate>
+            <h1 class="toolbar-title text-truncate" [draggable]="dragStarted.observers.length"
+                (dragstart)="dragStarted.next($event)">
+                <ng-container [ngTemplateOutlet]="titleTemplate"></ng-container>
+            </h1>
+        </ng-template>
+        <div ngbDropdown class="d-inline-block mr-3" container="body" *ngIf="showObjectMenu">
+            <a href="#" class="dropdown-no-arrow" ngbDropdownToggle (click)="$event.preventDefault()">
+                <i class="fas fa-chevron-down fa-fw text-icon"></i>
+            </a>
+            <div ngbDropdownMenu>
+                <ng-content select="app-module-menu"></ng-content>
+                <ng-content select="[moduleMenuAdditions]"></ng-content>
+            </div>
+        </div>
+        <button class="btn btn-secondary ml-1" (click)="openNewWindow()"  *ngIf="showNewWindowButton">
+            <i class="fas fa-external-link-alt" ngbTooltip="Open in new window"></i>
+        </button>
+        <ng-content></ng-content>
+    </div>
+</div>

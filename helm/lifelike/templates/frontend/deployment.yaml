@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "lifelike.fullname" . }}-fontend
+  labels: {{- include "lifelike.labels" . | nindent 4 }}
+    app.kubernetes.io/component: frontend
+spec:
+  selector:
+    matchLabels: {{- include "lifelike.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: frontend
+  replicas: {{ .Values.frontend.replicaCount }}
+  template:
+    metadata:
+      annotations: {{ toYaml .Values.frontend.podAnnotations | nindent 8 }}
+      labels: {{- include "lifelike.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: frontend
+        {{- if .Values.frontend.podLabels }}
+        {{- toYaml .Values.frontend.podLabels | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- include "lifelike.podSpec" .Values.frontend | nindent 6 }}
+      containers:
+        - name: {{ .Chart.Name }}-frontend
+          {{- include "lifelike.image" (dict "image" .Values.frontend.image "Chart" .Chart) | nindent 10 }}
+          {{- include "lifelike.healthChecks" .Values.frontend | nindent 10 }}
+          resources: {{ toYaml (default dict .Values.frontend.resources) | nindent 12 }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.frontend.service.port }}
+          env:
+            - name: APPSERVER_URL
+              value: http://{{ include "lifelike.fullname" . }}-api:{{ .Values.api.service.port }}
+            {{- range $envName, $envValue := .Values.frontend.extraEnv }}
+            - name: {{ $envName }}
+              value: {{ $envValue | quote }}
+            {{- end -}}

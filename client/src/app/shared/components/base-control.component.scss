@@ -1,0 +1,26 @@
+@import "~scss/variables";
+
+:host {
+  display: contents;
+}
+
+.input-group-append button {
+  // carefully overwrite default border color to come along with input styling
+  &:not(:hover) {
+    border-top: $input-border-width solid $input-group-addon-border-color;
+    border-bottom: $input-border-width solid $input-group-addon-border-color;
+
+    &:first-child {
+      border-left: $input-border-width solid $input-group-addon-border-color;
+    }
+
+    &:last-child {
+      border-right: $input-border-width solid $input-group-addon-border-color;
+    }
+  }
+
+  // fix border overlap from margin -1px
+  &:hover {
+    z-index: 3;
+  }
+}

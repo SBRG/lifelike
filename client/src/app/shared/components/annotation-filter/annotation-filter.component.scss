@@ -1,0 +1,22 @@
+@import '~bootstrap/scss/functions';
+@import '~bootstrap/scss/variables';
+@import 'src/scss/variables';
+
+// The little dot next to each entity type indicating the color
+.entity-type-legend {
+  display: inline-block;
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 10rem;
+}
+
+.invalid-input {
+  border-color: $danger;
+}
+.invalid-input:focus {
+  box-shadow: 0 0 0 0.2rem rgba($danger, 0.25);
+}
+
+.small-font {
+  font-size: $font-size-sm;
+}

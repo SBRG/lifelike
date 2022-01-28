@@ -1,0 +1,14 @@
+#!/bin/bash
+# Template of script is used for running git hook and recusing to services hooks.
+
+# Path from shell to folder containing this file
+__dir__="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+
+# load utility functions
+source $__dir__/utils.sh
+
+# recurse folders and call pre-commit hook in each service .githooks folder
+recurseHook pre-commit
+
+# exit with no error if no error has been found
+exit 0

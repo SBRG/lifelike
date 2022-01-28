@@ -1,0 +1,48 @@
+# Dependabot configuration. Documentation for all configuration options:
+# https://help.github.com/github/administering-a-repository/configuration-options-for-dependency-updates
+
+version: 2
+updates:
+  # Maintain dependencies for GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    commit-message:
+      prefix: "[ci]"
+
+  # Maintain dependencies for Python
+  - package-ecosystem: "pip"
+    directory: "/appserver"
+    schedule:
+      interval: "daily"
+    commit-message:
+      prefix: "[appserver]"
+  - package-ecosystem: "pip"
+    directory: "/statistical-enrichment"
+    schedule:
+      interval: "daily"
+    commit-message:
+      prefix: "[statistical-enrichment]"
+  - package-ecosystem: "pip"
+    directory: "/cache-invalidator"
+    schedule:
+      interval: "daily"
+    commit-message:
+      prefix: "[cache-invalidator]"
+
+  # Maintain dependencies for Node.js
+  - package-ecosystem: "npm"
+    directory: "/client"
+    schedule:
+      interval: "daily"
+    commit-message:
+      prefix: "[client]"
+
+  # Maintain dependencies for Java
+  - package-ecosystem: "maven"
+    directory: "/graph-db"
+    schedule:
+      interval: "daily"
+    commit-message:
+      prefix: "[graph-db]"

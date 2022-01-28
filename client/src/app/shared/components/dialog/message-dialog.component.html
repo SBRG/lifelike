@@ -1,0 +1,25 @@
+<form (ngSubmit)="close()">
+  <app-modal-header (cancel)="dismiss()">
+    {{ title }}
+  </app-modal-header>
+
+  <app-modal-body>
+    <div>
+      {{message}}
+    </div>
+    <br>
+
+    <div *ngFor="let msg of additionalMsgs">
+      <p>{{msg}}</p>
+    </div>
+
+    <div *ngIf="stacktrace" class="detail">
+      <div class="detail-title">Technical Details</div>
+      <pre>{{stacktrace}}</pre>
+    </div>
+  </app-modal-body>
+
+  <app-modal-footer>
+    <button type="submit" class="btn btn-danger">OK</button>
+  </app-modal-footer>
+</form>

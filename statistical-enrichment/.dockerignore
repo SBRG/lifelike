@@ -1,0 +1,9 @@
+Dockerfile
+**/__pycache__
+**/*.pyc
+**/.cache
+**/.mypy_cache
+**/*.env
+*.git*
+.githooks/
+.venv/

@@ -1,0 +1,88 @@
+<div class="module" *ngIf="(loadTask.status$ | async) as status">
+    <app-module-progress *ngIf="status.running">
+        Downloading file...
+    </app-module-progress>
+
+    <app-module-error *ngIf="status.failedErrorShown" [error]="status.error">
+        <a appLink="/projects">Go to Projects <i class="fa fa-fw fa-arrow-right"></i></a>
+    </app-module-error>
+
+    <ng-container *ngIf="status.resultsShown">
+        <app-module-header *ngIf="object"
+                           [object]="object"
+                           (dragStarted)="dragStarted($event)"
+                           (dragEnd)="dragEnd($event)"
+                           [returnUrl]="returnUrl"
+        >
+            <app-module-menu [object]="object" [forEditing]="true" [showOpen]="false"
+                             [showDelete]="false" (objectRefresh)="requestRefresh()">
+            </app-module-menu>
+        </app-module-header>
+        <div class="module-body overflow-auto">
+            <div class="document" *ngFor="let doc of biocData">
+                <h1 class="title ordertop">
+                    <app-bioc-annotated-text [position]="0" [text]="doc.passages[0].text"
+                        [annotations]="doc.passages[0].annotations" [offset]="doc.passages[0].offset"
+                        [ngClass]="doc.passages[0].infons.type">
+                    </app-bioc-annotated-text>
+                </h1>
+                <ng-template ngFor let-passage [ngForOf]="doc.passages.slice(1)" let-index="index">
+
+                    <!-- generic component -->
+                    <app-bioc-annotated-text *ngIf="isGeneric(passage)" [position]="index+1" [text]="passage.text"
+                        [annotations]="passage.annotations" [offset]="passage.offset"
+                        [ngClass]="passage.infons.type">
+                    </app-bioc-annotated-text>
+
+                    <app-bioc-table-view *ngIf="isTableView(passage)" [passage]="passage"></app-bioc-table-view>
+
+                        <!-- figure view -->
+                        <div *ngIf="isFigure(passage)" class="figure row">
+                            <div class="col-lg-3 col-md-12 col-sm-12 figure-img">
+                                <a href="{{ buildFigureLink(doc, passage) }}" target="_blank">
+                                    <img src="{{ buildFigureLink(doc, passage) }}">
+                                </a>
+                            </div>
+                            <div class="figure-text col-lg-9 col-md-12 col-sm-12">
+                                <b>{{ getFigureCaption(passage) }}: </b>
+                                <app-bioc-annotated-text [position]="index+1" [text]="passage.text" [annotations]="passage.annotations"
+                                    [offset]="passage.offset" [ngClass]="passage.infons.type">
+                                </app-bioc-annotated-text>
+                            </div>
+                    </div>
+
+                    <div class="sentences">
+                        <div *ngFor="let sentence of passage.sentences">
+                            {{sentence}}
+                        </div>
+                    </div>
+                    <div class="relations">
+                        <div *ngFor="let relation of passage.relations">
+                            {{relation}}
+                        </div>
+                    </div>
+                </ng-template>
+
+                <div class="date" *ngIf="doc.created">{{doc.created.$date | date}}</div>
+                <div *ngIf="doc.accessions && doc.accessions.length > 0" class="accessions">
+                    Accessions:
+                    <ul>
+                        <li *ngFor="let accession of doc.accessions">
+                            {{accession}}
+                        </li>
+                    </ul>
+                </div>
+                <div class="meta">
+                    <span class="pmid"><a href="{{ pmid(doc)[1] }} ">{{ pmid(doc)[0] }}</a></span>
+                    <span class="authors">
+                        <span>
+                            {{ authors(doc) }}
+                        </span>
+                    </span>
+                    <span class="journal">{{ journal(doc) }}</span>
+                    <span class="year">{{ year(doc) }}</span>
+                </div>
+            </div>
+        </div>
+    </ng-container>
+</div>

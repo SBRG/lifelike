@@ -1,0 +1,80 @@
+{
+  "name": "test_global_inclusion_normalized_already_in_lmdb.pdf",
+  "pages": [
+    {
+      "cropBox": {
+        "height": 792,
+        "lowerLeftPt": {
+          "x": 0,
+          "y": 0
+        },
+        "pivotPt": {
+          "x": 0,
+          "y": 0
+        },
+        "rotation": 0,
+        "width": 612
+      },
+      "mediaBox": {
+        "height": 792,
+        "lowerLeftPt": {
+          "x": 0,
+          "y": 0
+        },
+        "pivotPt": {
+          "x": 0,
+          "y": 0
+        },
+        "rotation": 0,
+        "width": 612
+      },
+      "pageNo": 1,
+      "pageText": "  human IL-8 ",
+      "tokens": [
+        {
+          "pgIdx": 2,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 12,
+              "lowerLeftPt": {
+                "x": 76.89540100097656,
+                "y": 706.2301025390625
+              },
+              "pivotPt": {
+                "x": 76.89540100097656,
+                "y": 709.2301025390625
+              },
+              "rotation": 0,
+              "width": 35.92359924316406
+            }
+          ],
+          "shapes": [],
+          "text": "human"
+        },
+        {
+          "pgIdx": 8,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 12,
+              "lowerLeftPt": {
+                "x": 116.085205078125,
+                "y": 706.2301025390625
+              },
+              "pivotPt": {
+                "x": 116.085205078125,
+                "y": 709.2301025390625
+              },
+              "rotation": 0,
+              "width": 20.243438720703125
+            }
+          ],
+          "shapes": [],
+          "text": "IL-8"
+        }
+      ]
+    }
+  ],
+  "processedDate": "2021-03-16 11:01:58"
+}

@@ -1,0 +1,462 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd">
+
+  <changeSet id="RegulonDB data initial load 12202021" author="Binh Vu">
+    <comment>Create constraints and indexes for regulon nodes</comment>
+    <sql>
+    CREATE CONSTRAINT constraint_regulondb_id IF NOT EXISTS ON (n:db_RegulonDB) ASSERT n.eid IS UNIQUE;
+CREATE INDEX index_regulondb_name IF NOT EXISTS FOR (n:db_RegulonDB) ON (n.name);
+    </sql>
+  </changeSet>
+
+  <changeSet id="LL-3218 Create RegulonDB gene nodes on date 12202021" author="Binh Vu">
+    <comment>
+        Property regulondb_id is for backward compatibility in Lifelike, some queries uses it.
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.FileQueryHandler"
+      query="
+      UNWIND $rows as row
+MERGE (n:db_RegulonDB {eid: row.regulondb_id})
+SET n:Gene,n.regulondb_id=row.regulondb_id,n.name=row.name,n.left_end_position=row.left_end_position,n.right_end_position=row.right_end_position,n.strand=row.strand,n.data_source='RegulonDB'
+      "
+      fileName="jira-LL-3218-gene.zip"
+      startAt="1"
+      fileType="TSV" 
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="LL-3218 Create RegulonDB operon nodes on date 12202021" author="Binh Vu">
+    <comment>
+        Property regulondb_id is for backward compatibility in Lifelike, some queries uses it.
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.FileQueryHandler"
+      query="
+      UNWIND $rows as row
+MERGE (n:db_RegulonDB {eid: row.regulondb_id})
+SET n:Operon,n.regulondb_id=row.regulondb_id,n.name=row.name,n.left_end_position=row.left_end_position,n.right_end_position=row.right_end_position,n.strand=row.strand,n.data_source='RegulonDB'
+      "
+      fileName="jira-LL-3218-operon.zip"
+      startAt="1"
+      fileType="TSV" 
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="LL-3218 Create RegulonDB gene product nodes on date 12202021" author="Binh Vu">
+    <comment>
+        Property regulondb_id is for backward compatibility in Lifelike, some queries uses it.
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.FileQueryHandler"
+      query="
+      UNWIND $rows as row
+MERGE (n:db_RegulonDB {eid: row.regulondb_id})
+SET n:GeneProduct,n.regulondb_id=row.regulondb_id,n.name=row.name,n.molecular_weight=row.molecular_weight,n.location=row.location,n.data_source='RegulonDB'
+      "
+      fileName="jira-LL-3218-product.zip"
+      startAt="1"
+      fileType="TSV" 
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="LL-3218 Create RegulonDB promoter nodes on date 12202021" author="Binh Vu">
+    <comment>
+        Property regulondb_id is for backward compatibility in Lifelike, some queries uses it.
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.FileQueryHandler"
+      query="
+      UNWIND $rows as row
+MERGE (n:db_RegulonDB {eid: row.regulondb_id})
+SET n:Promoter,n.regulondb_id=row.regulondb_id,n.name=row.name,n.pos_1=row.pos_1,n.sigma_factor=row.sigma_factor,n.sequence=row.sequence,n.strand=row.strand,n.data_source='RegulonDB'
+      "
+      fileName="jira-LL-3218-promoter.zip"
+      startAt="1"
+      fileType="TSV" 
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="LL-3218 Create RegulonDB nodes on date 12202021" author="Binh Vu">
+    <comment>
+        Property regulondb_id is for backward compatibility in Lifelike, some queries uses it.
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.FileQueryHandler"
+      query="
+      UNWIND $rows as row
+MERGE (n:db_RegulonDB {eid: row.regulondb_id})
+SET n:Regulon,n.regulondb_id=row.regulondb_id,n.name=row.name,n.num_tfs=row.num_tfs,n.data_source='RegulonDB'
+      "
+      fileName="jira-LL-3218-regulon_d_tmp.zip"
+      startAt="1"
+      fileType="TSV" 
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="LL-3218 Create RegulonDB terminator nodes on date 12202021" author="Binh Vu">
+    <comment>
+        Property regulondb_id is for backward compatibility in Lifelike, some queries uses it.
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.FileQueryHandler"
+      query="
+      UNWIND $rows as row
+MERGE (n:db_RegulonDB {eid: row.regulondb_id})
+SET n:Terminator,n.regulondb_id=row.regulondb_id,n.left_end_position=row.left_end_position,n.right_end_position=row.right_end_position,n.terminator_class=row.terminator_class,n.sequence=row.sequence,n.data_source='RegulonDB'
+      "
+      fileName="jira-LL-3218-terminator.zip"
+      startAt="1"
+      fileType="TSV" 
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="LL-3218 Create RegulonDB transcription factor nodes on date 12202021" author="Binh Vu">
+    <comment>
+        Property regulondb_id is for backward compatibility in Lifelike, some queries uses it.
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.FileQueryHandler"
+      query="
+      UNWIND $rows as row
+MERGE (n:db_RegulonDB {eid: row.regulondb_id})
+SET n:TranscriptionFactor,n.regulondb_id=row.regulondb_id,n.name=row.name,n.regulator_family=row.regulator_family,n.data_source='RegulonDB'
+      "
+      fileName="jira-LL-3218-transcription_factor.zip"
+      startAt="1"
+      fileType="TSV" 
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="LL-3218 Create RegulonDB transcription unit nodes on date 12202021" author="Binh Vu">
+    <comment>
+        Property regulondb_id is for backward compatibility in Lifelike, some queries uses it.
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.FileQueryHandler"
+      query="
+      UNWIND $rows as row
+MERGE (n:db_RegulonDB {eid: row.regulondb_id})
+SET n:TranscriptionUnit,n.regulondb_id=row.regulondb_id,n.name=row.name,n.comment=row.comment,n.data_source='RegulonDB'
+      "
+      fileName="jira-LL-3218-transcription_unit.zip"
+      startAt="1"
+      fileType="TSV" 
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="LL-3218 Create RegulonDB promoter transcription unit rels on date 12202021" author="Binh Vu">
+    <comment>
+        Property regulondb_id is for backward compatibility in Lifelike, some queries uses it.
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.FileQueryHandler"
+      query="
+      UNWIND $rows AS row
+MATCH (a:db_RegulonDB {eid: row.promoter_id}), (b:db_RegulonDB {eid: row.transcription_unit_id})
+MERGE (a)-[r:ELEMENT_OF]->(b)
+      "
+      fileName="jira-LL-3218-promoter_to_transcription_unit_link.zip"
+      startAt="1"
+      fileType="TSV" 
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="LL-3218 Create RegulonDB operon transcription unit rels on date 12202021" author="Binh Vu">
+    <comment>
+        Property regulondb_id is for backward compatibility in Lifelike, some queries uses it.
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.FileQueryHandler"
+      query="
+      UNWIND $rows AS row
+MATCH (a:db_RegulonDB {eid: row.transcription_unit_id}), (b:db_RegulonDB {eid: row.operon_id})
+MERGE (a)-[r:ELEMENT_OF]->(b)
+      "
+      fileName="jira-LL-3218-transcription_unit_to_operon_link.zip"
+      startAt="1"
+      fileType="TSV" 
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="LL-3218 Create RegulonDB encodes rels on date 12212021" author="Binh Vu">
+    <comment>
+        
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.FileQueryHandler"
+      query="
+      UNWIND $rows AS row
+MATCH (a:db_RegulonDB {eid: row.gene_id}), (b:db_RegulonDB {eid: row.product_id})
+MERGE (a)-[r:ENCODES]->(b)
+      "
+      fileName="jira-LL-3218-gene_product_link.zip"
+      startAt="1"
+      fileType="TSV" 
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="LL-3218 Create RegulonDB regulates rels on date 12212021" author="Binh Vu">
+    <comment>
+        
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.FileQueryHandler"
+      query="
+      UNWIND $rows AS row
+MATCH (a:db_RegulonDB {eid: row.regulator_id}), (b:db_RegulonDB {eid: row.regulated_id})
+MERGE (a)-[r:REGULATES]->(b)
+SET r.regulator_id=row.regulator_id, r.regulated_id=row.regulated_id, r.function=row.function, r.evidence=row.evidence
+      "
+      fileName="jira-LL-3218-genetic_network_link.zip"
+      startAt="1"
+      fileType="TSV" 
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="LL-3218 Create RegulonDB product transfactor rels on date 12212021" author="Binh Vu">
+    <comment>
+        
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.FileQueryHandler"
+      query="
+      UNWIND $rows AS row
+MATCH (a:db_RegulonDB {eid: row.product_id}), (b:db_RegulonDB {eid: row.transcript_factor_id})
+MERGE (a)-[r:COMPONENT_OF]->(b)
+      "
+      fileName="jira-LL-3218-product_tf_link.zip"
+      startAt="1"
+      fileType="TSV" 
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="LL-3218 Create RegulonDB promoter function rels on date 12212021" author="Binh Vu">
+    <comment>
+        
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.FileQueryHandler"
+      query="
+      UNWIND $rows AS row
+MATCH (a:db_RegulonDB {eid: row.regulon_id}), (b:db_RegulonDB {eid: row.promoter_id})
+MERGE (a)-[r:REGULATES]->(b) SET r.function=row.function
+      "
+      fileName="jira-LL-3218-func_promoter_link.zip"
+      startAt="1"
+      fileType="TSV" 
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="LL-3218 Create RegulonDB transcription factor rels on date 12212021" author="Binh Vu">
+    <comment>
+        
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.FileQueryHandler"
+      query="
+      UNWIND $rows AS row
+MATCH (a:db_RegulonDB {eid: row.transcript_factor_id}), (b:db_RegulonDB {eid: row.regulon_id})
+MERGE (a)-[r:COMPONENT_OF]->(b)
+      "
+      fileName="jira-LL-3218-regulon_transfac_link.zip"
+      startAt="1"
+      fileType="TSV" 
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="LL-3218 Create RegulonDB gene transcription unit rels on date 12212021" author="Binh Vu">
+    <comment>
+        
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.FileQueryHandler"
+      query="
+      UNWIND $rows AS row
+MATCH (a:db_RegulonDB {eid: row.gene_id}), (b:db_RegulonDB {eid: row.transcription_unit_id})
+MERGE (a)-[r:ELEMENT_OF]->(b)
+      "
+      fileName="jira-LL-3218-gene_transunit_link.zip"
+      startAt="1"
+      fileType="TSV" 
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="LL-3218 Create RegulonDB terminator transcription unit rels on date 12212021" author="Binh Vu">
+    <comment>
+        
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.FileQueryHandler"
+      query="
+      UNWIND $rows AS row
+MATCH (a:db_RegulonDB {eid: row.terminator_id}), (b:db_RegulonDB {eid: row.transcription_unit_id})
+MERGE (a)-[r:ELEMENT_OF]->(b)
+      "
+      fileName="jira-LL-3218-terminator_transunit_link.zip"
+      startAt="1"
+      fileType="TSV" 
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="LL-3218 Create RegulonDB NCBI gene rels on date 12212021" author="Binh Vu">
+    <comment>
+        
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.FileQueryHandler"
+      query="
+      UNWIND $rows AS row
+MATCH (a:db_RegulonDB {eid: row.regulon_id}), (b:Gene {locus_tag: row.locus_tag})
+MERGE (a)-[r:IS]->(b)
+      "
+      fileName="jira-LL-3218-regulon_ncbi_gene_link.zip"
+      startAt="1"
+      fileType="TSV" 
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="LL-3218 Add RegulonDB name as synonym on date 12212021" author="Binh Vu">
+    <comment></comment>
+    <sql>MATCH (n:db_RegulonDB) WHERE exists(n.name) WITH n MERGE (s:Synonym {name:n.name}) MERGE (n)-[:HAS_SYNONYM]->(s)</sql>
+  </changeSet>
+
+  <changeSet id="LL-3218 Setup RegulonDB data for enrichment on date 12212021" author="Binh Vu">
+    <comment>Data is used by enrichment features in Lifelike</comment>
+    <sql>
+        MATCH (n:Gene:db_RegulonDB)-[:ENCODES]-(p)-[]-(t:TranscriptionFactor) SET n.regulator_family = t.regulator_family;
+        MATCH (n:Gene:db_RegulonDB)-[r:REGULATES]-(t) WHERE r.function = '+' WITH n, collect(t.name) AS regulators SET n.activated_by = regulators;
+        MATCH (n:Gene:db_RegulonDB)-[r:REGULATES]-(t) WHERE r.function = '-' WITH n, collect(t.name) AS regulators SET n.repressed_by = regulators;
+    </sql>
+  </changeSet>
+</databaseChangeLog>

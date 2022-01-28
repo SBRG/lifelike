@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd">
+
+  <changeSet id="LL-3686 remove stale global inclusion node properties" author="Binh Vu">
+    <comment>
+      There are leftover node properties that were added when we were in the early stages of implementing global inclusions to the graph.
+      Need to remove those as they are not used.
+    </comment>
+    <sql>
+      MATCH (n:db_MESH) WHERE exists(n.entity_type) REMOVE n.entity_type;
+      MATCH (n:db_MESH) WHERE exists(n.inclusion_date) REMOVE n.inclusion_date;
+      MATCH (n:db_MESH) WHERE exists(n.user) REMOVE n.user;
+      MATCH (n:Gene) WHERE exists(n.inclusion_date) REMOVE n.inclusion_date;
+      MATCH (n:Gene) WHERE exists(n.user) REMOVE n.user;
+      MATCH (n:Taxonomy) WHERE exists(n.entity_type) REMOVE n.entity_type;
+      MATCH (n:Taxonomy) WHERE exists(n.inclusion_date) REMOVE n.inclusion_date;
+      MATCH (n:Taxonomy) WHERE exists(n.user) REMOVE n.user;
+      MATCH (n:db_UniProt) WHERE exists(n.user) REMOVE n.user;
+      MATCH (n:db_UniProt) WHERE exists(n.inclusion_date) REMOVE n.inclusion_date;
+      MATCH (n:db_Lifelike) WHERE exists(n.external_id) REMOVE n.external_id;
+      MATCH (n:db_Lifelike) WHERE exists(n.entity_type) REMOVE n.entity_type;
+      MATCH (n:db_Lifelike) WHERE exists(n.hyperlink) REMOVE n.hyperlink;
+      MATCH (n:db_Lifelike) WHERE exists(n.inclusion_date) REMOVE n.inclusion_date;
+      MATCH (n:db_Lifelike) WHERE exists(n.user) REMOVE n.user;
+    </sql>
+  </changeSet>
+</databaseChangeLog>

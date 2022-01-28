@@ -1,0 +1,101 @@
+{
+  "name": "test_global_exclusions_does_not_interfere_with_other_entities.pdf",
+  "pages": [
+    {
+      "cropBox": {
+        "height": 792,
+        "lowerLeftPt": {
+          "x": 0,
+          "y": 0
+        },
+        "pivotPt": {
+          "x": 0,
+          "y": 0
+        },
+        "rotation": 0,
+        "width": 612
+      },
+      "mediaBox": {
+        "height": 792,
+        "lowerLeftPt": {
+          "x": 0,
+          "y": 0
+        },
+        "pivotPt": {
+          "x": 0,
+          "y": 0
+        },
+        "rotation": 0,
+        "width": 612
+      },
+      "pageNo": 1,
+      "pageText": "  adenosine rat dog ",
+      "tokens": [
+        {
+          "pgIdx": 2,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 12,
+              "lowerLeftPt": {
+                "x": 76.89540100097656,
+                "y": 706.2301025390625
+              },
+              "pivotPt": {
+                "x": 76.89540100097656,
+                "y": 709.2301025390625
+              },
+              "rotation": 0,
+              "width": 54.22611999511719
+            }
+          ],
+          "shapes": [],
+          "text": "adenosine"
+        },
+        {
+          "pgIdx": 12,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 12,
+              "lowerLeftPt": {
+                "x": 134.38772583007812,
+                "y": 706.2301025390625
+              },
+              "pivotPt": {
+                "x": 134.38772583007812,
+                "y": 709.2301025390625
+              },
+              "rotation": 0,
+              "width": 13.71337890625
+            }
+          ],
+          "shapes": [],
+          "text": "rat"
+        },
+        {
+          "pgIdx": 16,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 12,
+              "lowerLeftPt": {
+                "x": 151.36260986328125,
+                "y": 706.2301025390625
+              },
+              "pivotPt": {
+                "x": 151.36260986328125,
+                "y": 709.2301025390625
+              },
+              "rotation": 0,
+              "width": 19.601959228515625
+            }
+          ],
+          "shapes": [],
+          "text": "dog"
+        }
+      ]
+    }
+  ],
+  "processedDate": "2021-01-14 14:02:14"
+}

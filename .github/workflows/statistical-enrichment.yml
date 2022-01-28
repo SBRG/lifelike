@@ -1,0 +1,20 @@
+name: Build and push statistical-enrichment Docker image
+
+on:
+  push:
+    branches:
+      - 'master'
+    paths:
+      - 'statistical-enrichment/**'
+      - '.github/**'
+
+jobs:
+  doker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Docker publish
+        uses: ./.github/actions/docker-publish.yml
+        with:
+          image: lifelike/statistical-enrichment
+          dockerfile: ./statistical-enrichment/Dockerfile
+          context: ./statistical-enrichment

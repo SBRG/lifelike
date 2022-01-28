@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd">
+
+  <changeSet id="LL-3210 load UniProt constraints on date 10262021" author="Binh Vu">
+    <comment>Create constraints and indexes for UniProt data</comment>
+    <sql>
+    CREATE CONSTRAINT constraint_uniprot_id IF NOT EXISTS ON (n:db_UniProt) ASSERT n.eid IS UNIQUE;
+CREATE INDEX index_uniprot_name IF NOT EXISTS FOR (n:db_UniProt) ON (n.name);
+CREATE INDEX index_protein_name IF NOT EXISTS FOR (n:Protein) ON (n.name);
+CREATE CONSTRAINT constraint_synonym_name IF NOT EXISTS ON (n:Synonym) ASSERT n.name IS UNIQUE;
+    </sql>
+  </changeSet>
+
+  <changeSet id="LL-3210 load UniProt protein on date 10262021" author="Binh Vu">
+    <comment>
+        
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.FileQueryHandler"
+      query="
+      UNWIND $rows as row
+MERGE (n:db_UniProt {eid: row.eid})
+SET n:Protein,n.name=row.name,n.tax_id=row.tax_id,n.pathway=row.pathway,n.function=row.function,n.data_source='UniProt',n.original_entity_types=split('Protein', '|')
+      "
+      fileName="jira-LL-3210-sprot.zip"
+      startAt="1"
+      fileType="TSV" 
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="LL-3210 load UniProt protein/gene on date 10262021" author="Binh Vu">
+    <comment>
+        
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.FileQueryHandler"
+      query="
+      UNWIND $rows AS row
+MATCH (a:db_UniProt {eid: row.eid}), (b:Gene {eid: row.gene_id})
+MERGE (a)-[r:HAS_GENE]->(b)
+      "
+      fileName="jira-LL-3210-sprot2gene.zip"
+      startAt="1"
+      fileType="TSV" 
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="LL-3210 load UniProt protein/gene synonyms  on date 10262021" author="Binh Vu">
+    <comment>
+        
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.FileQueryHandler"
+      query="
+      UNWIND $rows AS row
+MERGE (a:Synonym {name: row.name}) SET a.lowercase_name=toLower(row.name)
+WITH row, a MATCH (b:db_UniProt {eid: row.eid})
+MERGE (b)-[r:HAS_SYNONYM]->(a)
+SET r.type=row.type
+      "
+      fileName="jira-LL-3210-sprot2syn.zip"
+      startAt="1"
+      fileType="TSV" 
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="LL-3210 load UniProt protein/gene synonyms derived on date 10262021" author="Binh Vu">
+    <comment>
+        
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.FileQueryHandler"
+      query="
+      UNWIND $rows AS row
+MERGE (a:Synonym {name: row.name}) SET a.lowercase_name=toLower(row.name)
+WITH row, a MATCH (b:db_UniProt {eid: row.eid})
+MERGE (b)-[r:HAS_SYNONYM]->(a)
+SET r.type=row.type
+      "
+      fileName="jira-LL-3210-sprot2syn_derived.zip"
+      startAt="1"
+      fileType="TSV" 
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="LL-3210 load UniProt protein/synonym relationship on date 10262021" author="Binh Vu">
+    <comment>Create a synonym relationships for Protein id and name</comment>
+    <sql>
+    
+        CALL apoc.periodic.iterate(
+        'MATCH (n:db_UniProt) RETURN n',
+        'MERGE (s1:Synonym {name:n.name}) MERGE (s2:Synonym {name:n.eid}) MERGE (n)-[:HAS_SYNONYM]->(s1) MERGE (n)-[:HAS_SYNONYM]->(s2)',
+        {batchSize:5000})
+        
+    </sql>
+  </changeSet>
+
+  <changeSet id="LL-3210 load UniProt protein-GO on date 10262021" author="Binh Vu">
+    <comment>
+        Create relationship between protein and GO
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.FileQueryHandler"
+      query="
+      UNWIND $rows AS row
+MATCH (a:db_UniProt {eid: row.eid}), (b:db_GO {eid: row.go_id})
+MERGE (a)-[r:GO_LINK]->(b)
+      "
+      fileName="jira-LL-3210-sprot2go.zip"
+      startAt="1"
+      fileType="TSV" 
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="LL-3210 load UniProt protein/taxonomy relationship on date 10262021" author="Binh Vu">
+    <comment>Create a synonym relationship for Protein and Taxonomy</comment>
+    <sql>
+    
+        CALL apoc.periodic.iterate(
+        'MATCH (n:db_UniProt), (t:Taxonomy {eid: n.tax_id}) RETURN n,t',
+        'MERGE (n)-[:HAS_TAXONOMY]->(t)', {batchSize:5000})
+        
+    </sql>
+  </changeSet>
+</databaseChangeLog>

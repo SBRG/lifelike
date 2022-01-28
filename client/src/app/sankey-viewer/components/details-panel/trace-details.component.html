@@ -1,0 +1,56 @@
+<form class="d-flex flex-column justify-content-between">
+    <fieldset class="fieldset-properties mt-2">
+        <legend container="body"
+                ngbTooltip="Click a checkbox to filter annotations of that type"
+                placement="top left right">Trace
+            Details:
+        </legend>
+        <ngb-accordion ngbAccordion activeIds="source target">
+            <ngb-panel id="source">
+                <ng-template disabled="true" ngbPanelHeader>
+                    <app-button-with-selectable-text ngbPanelToggle [disabled]="true">
+                        <b title>Source</b>
+                        {{ getNodeById(entity.source).id }}
+                    </app-button-with-selectable-text>
+                </ng-template>
+                <ng-template ngbPanelContent>
+                    {{ getNodeById(entity.source).description }}
+                </ng-template>
+            </ngb-panel>
+            <ngb-panel id="target">
+                <ng-template disabled="true" ngbPanelHeader>
+                    <app-button-with-selectable-text ngbPanelToggle [disabled]="true">
+                        <b title>Target</b>
+                        {{ getNodeById(entity.target).id }}
+                    </app-button-with-selectable-text>
+                </ng-template>
+                <ng-template ngbPanelContent>
+                    {{ getNodeById(entity.target).description }}
+                </ng-template>
+            </ngb-panel>
+            <ngb-panel [disabled]="true">
+                <ng-template disabled="true" ngbPanelHeader>
+                    <app-button-with-selectable-text ngbPanelToggle [disabled]="true">
+                        <b title>Group</b>
+                        {{ parseProperty(entity.group) }}
+                    </app-button-with-selectable-text>
+                </ng-template>
+            </ngb-panel>
+            <ngb-panel *ngIf="entity.detail_edges">
+                <ng-template disabled="true" ngbPanelHeader>
+                    <button (click)="openTraceView(entity)" class="btn btn-link">Show detailed
+                        network
+                    </button>
+                </ng-template>
+            </ngb-panel>
+            <ngb-panel title="Details">
+                <ng-template ngbPanelContent>
+                    <app-object-explorer [dataSource]="entity"></app-object-explorer>
+                </ng-template>
+            </ngb-panel>
+        </ngb-accordion>
+    </fieldset>
+</form>
+
+
+

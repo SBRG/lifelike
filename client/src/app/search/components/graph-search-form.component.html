@@ -1,0 +1,68 @@
+<form [formGroup]="form" (ngSubmit)="submit()">
+  <div class="form-group">
+    <div class="input-group">
+    <span class="input-group-prepend">
+      <div class="input-group-text bg-transparent border-right-0">
+        <i class="fa fa-search"></i>
+      </div>
+    </span>
+      <input class="form-control py-2 pl-0 border-left-0 border" formControlName="query"
+             placeholder="Search (e.g. Gas Gangrene)">
+    </div>
+
+    <app-form-input-feedback [control]="form.get('query')"></app-form-input-feedback>
+  </div>
+
+  <div class="mt-2">
+    <div class="d-flex w-100 flex-spaced-wrap">
+      <div class="form-group d-flex align-items-start mb-0 mr-3">
+        <label for="domain" class="my-0 mr-2 mt-2">
+          Domains:
+        </label>
+        <div class="d-flex flex-column">
+          <app-select formId="domain" [choices]="domainChoices"
+                      [values]="form.value.domains" (valuesChange)="form.get('domains').setValue($event)"
+                      (touch)="form.get('domains').markAsDirty()"
+                      [choiceLabel]="choiceLabel">
+          </app-select>
+
+          <app-form-input-feedback [control]="form.get('domains')"></app-form-input-feedback>
+        </div>
+      </div>
+
+      <div class="form-group d-flex align-items-start mb-0 mr-3">
+        <label for="entity-types" class="my-0 mr-2 mt-2">
+          Entities:
+        </label>
+
+        <div class="d-flex flex-column">
+          <app-select formId="entity-types" [choices]="entityChoices"
+                      [values]="form.value.entities" (valuesChange)="form.get('entities').setValue($event)"
+                      (touch)="form.get('entities').markAsDirty()"
+                      [choiceLabel]="choiceLabel">
+          </app-select>
+
+          <app-form-input-feedback [control]="form.get('entities')"></app-form-input-feedback>
+        </div>
+      </div>
+
+      <div class="form-group d-flex align-items-start mb-0 mr-3">
+        <label for="organism" class="my-0 mr-2 mt-2">
+          Organism:
+        </label>
+
+        <div class="d-flex flex-column">
+          <app-organism-autocomplete
+            formId="organism"
+            [organismTaxId]="organismChoice"
+            (organismPicked)="setOrganism($event)"
+          ></app-organism-autocomplete>
+        </div>
+      </div>
+
+      <div class="ml-auto">
+        <button type="submit" class="btn btn-primary" [disabled]="form.invalid">Search</button>
+      </div>
+    </div>
+  </div>
+</form>

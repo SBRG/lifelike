@@ -1,0 +1,172 @@
+<app-modal-header (cancel)="dismiss()">Find Synonyms</app-modal-header>
+<app-modal-body>
+  <div class="mb-4">
+    <div>
+      <p>
+        Enter a term below and click the search button to find synonyms for the term.
+      </p>
+    </div>
+    <form [formGroup]="form" (ngSubmit)="submitSearch()">
+      <div class="form-group">
+        <div class="input-group">
+          <input class="form-control py-2 border" formControlName="q"
+                 placeholder="Search (ex: Human)">
+          <button type="submit" class="btn btn-primary ml-1"><i class="fa fa-search"></i></button>
+        </div>
+        <app-form-input-feedback [control]="form.get('q')" [errors]="form.errors"></app-form-input-feedback>
+      </div>
+    </form>
+    <div class="d-flex">
+      <div class="d-flex mr-3">
+        <label class="m-0 mt-2 mr-2">Entities:</label>
+        <app-select class="font-weight-normal"
+                    [formId]="id + '-synonym-checklist-type-dropdown'"
+                    [choices]="typeFilters"
+                    [values]="selectedTypeFilters"
+                    (valuesChange)="typeFiltersChanged($event)">
+        </app-select>
+      </div>
+
+      <div class="d-flex">
+        <label class="m-0 mt-2 mr-2">Taxonomy:</label>
+        <app-select class="font-weight-normal"
+                    [formId]="id + '-synonym-checklist-organism-dropdown'"
+                    [choices]="organismFilters"
+                    [values]="selectedOrganismFilters"
+                    (valuesChange)="organismFiltersChanged($event)">
+        </app-select>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="loading">
+    <div>
+      <p>
+        To add the terms in the "synonyms" column to your search query, select any number of rows and click submit. Duplicates will be removed.
+      </p>
+    </div>
+
+    <div class="synonym-table">
+      <table class="table">
+        <thead>
+          <tr>
+            <th class="col-1" scope="col">
+              <div class="custom-control custom-checkbox">
+                <input [id]="id + '-loading-checklist-header'" type="checkbox" class="custom-control-input" disabled>
+                <label class="custom-control-label" [for]="id + '-loading-checklist-header'"></label>
+              </div>
+            </th>
+            <th class="text-nowrap col-1" scope="col">Type</th>
+            <th class="text-nowrap col-3" scope="col">Name</th>
+            <th class="text-nowrap col-2" scope="col">Taxonomy</th>
+            <th class="text-nowrap col-3" scope="col">Synonyms</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row"><span class="placeholder-box">Loading</span></th>
+            <td><span class="placeholder-box">Loading</span></td>
+            <td><span class="placeholder-box">Loading</span></td>
+            <td><span class="placeholder-box">Loading</span></td>
+            <td><span class="placeholder-box">Loading</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div *ngIf="errorMsg">
+    <div>
+      <p>
+        <i class="fas fa-exclamation-circle text-danger"></i>
+        {{ errorMsg }}
+      </p>
+    </div>
+  </div>
+
+  <div *ngIf="!loading && !errorMsg && synonymData">
+    <div>
+      <p>
+        To add the terms in the "synonyms" column to your search query, select any number of rows and click submit. Duplicates will be removed.
+      </p>
+    </div>
+    <!-- TODO: Turn this into a standalone "checklist table" component -->
+    <div class="synonym-table">
+      <table class="table">
+        <thead>
+          <tr>
+            <th class="col-1" scope="col">
+              <div class="custom-control custom-checkbox">
+                <input [id]="id + '-synonym-checklist-header'"
+                        type="checkbox"
+                        class="custom-control-input"
+                        [checked]="allEntitiesChecked()"
+                        (change)="toggleAllEntities()">
+                <label class="custom-control-label" [for]="id + '-synonym-checklist-header'"></label>
+              </div>
+            </th>
+            <th class="text-nowrap col-1" scope="col">Type</th>
+            <th class="text-nowrap col-3" scope="col">Name</th>
+            <th class="text-nowrap col-2" scope="col">Taxonomy</th>
+            <th class="text-nowrap col-3" scope="col">Synonyms</th>
+          </tr>
+        </thead>
+        <tbody *ngIf="synonymData.length; else noResults">
+          <tr *ngFor="let entity of synonymData; let i = index" (click)="toggleEntitySelection(entity)">
+            <th class="col-1" scope="row">
+              <div class="custom-control custom-checkbox">
+                <input [id]="id + '-synonym-row-' + i"
+                        type="checkbox"
+                        class="custom-control-input"
+                        [checked]="entityChecklistSelection.isSelected(entity)"
+                        (change)="toggleEntitySelection(entity)">
+                <label class="custom-control-label" [for]="id + '-synonym-row-' + i"></label>
+              </div>
+            </th>
+            <td class="col-1">{{ entity.type }}</td>
+            <td class="col-3">{{ entity.name }}</td>
+            <td class="col-2">{{ entity.organism }}</td>
+            <td class="col-3">
+              <div *ngFor="let a of entity.synonyms; let j = index" class="mr-2" style="display: inline-block;">
+                {{a + (j < entity.synonyms.length - 1 ? ';' : '')}}
+              </div>
+            </td>
+          </tr>
+        </tbody>
+        <ng-template #noResults>
+          <tbody>
+            <tr>
+              <td class="col-1"></td>
+              <td class="col-1"></td>
+              <td class="col-3"></td>
+              <td class="col-2"></td>
+              <td class="col-3"></td>
+            </tr>
+          </tbody>
+        </ng-template>
+      </table>
+      <ng-container *ngIf="!synonymData.length">
+        <div>
+          <p class="font-weight-bold">
+            No synonyms were found for the term "{{ mostRecentSearchTerm }}".
+          </p>
+        </div>
+      </ng-container>
+    </div>
+    <div class="d-flex justify-content-between mt-4">
+      <ngb-pagination
+        [page]="page"
+        [pageSize]="SYNONYM_SEARCH_LIMIT"
+        [collectionSize]="total"
+        (pageChange)="goToPage($event)">
+      </ngb-pagination>
+
+      <button type="submit"
+              class="btn btn-primary"
+              [disabled]="entityChecklistSelection.isEmpty()"
+              (click)="submit()">
+        Submit
+      </button>
+    </div>
+  </div>
+</app-modal-body>

@@ -1,0 +1,2 @@
+curl -u $biocyc_username:biocyc_password http://brg-files.ai.sri.com/public/dist/ecoli.tar.gz --out ecoli.tar.gz
+curl -u $biocyc_username:biocyc_password http://brg-files.ai.sri.com/public/dist/humancyc.tar.gz --out humancyc.tar.gz

@@ -1,0 +1,21 @@
+<div class="p-4 w-100 h-100 overflow-auto" *ngIf="document">
+  <div>
+    <strong>Organism:</strong> {{ document.organism }}
+  </div>
+  <div>
+    <strong>Genes:</strong>
+    <ul class="my-0 py-0">
+      <li *ngFor="let gene of document.importGenes">
+        {{ gene }}
+      </li>
+    </ul>
+  </div>
+  <div>
+    <strong>Domains:</strong>
+    <ul class="my-0 py-0">
+      <li *ngFor="let domain of document.domains">
+        {{ domain }}
+      </li>
+    </ul>
+  </div>
+</div>

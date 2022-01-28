@@ -1,0 +1,20 @@
+@import '~bootstrap/scss/functions';
+@import '~bootstrap/scss/variables';
+
+[ngbdropdownitem] {
+  display: flex;
+  align-items: baseline;
+  gap: map_get($spacers, 2);
+
+  & > * {
+    flex: 1 0 auto;
+
+    &:last-child {
+      flex-grow: 0;
+    }
+  }
+}
+
+.dropdown-divider:last-child {
+  display: none;
+}

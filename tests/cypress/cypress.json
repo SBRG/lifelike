@@ -1,0 +1,4 @@
+{
+  "experimentalSessionSupport": true,
+  "defaultCommandTimeout": 10000
+}

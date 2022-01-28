@@ -1,0 +1,13 @@
+<div class="popover">
+    <div class="popover-body">
+        <button type="button" class="btn btn-secondary btn-sm"
+                ngbTooltip="Create an annotation over your selection" container="body"
+                (click)="openAnnotationPanel($event)" [disabled]="!isSelectionAnnotatable()">
+            <span><i class="fa fa-fw fa-money-check-edit"></i> Annotate</span>
+        </button>
+        <button type="button" class="btn btn-secondary btn-sm ml-1" ngbTooltip="Copy text to clipboard"
+                container="body" (click)="copySelectionText($event)">
+            <i class="fa fa-fw fa-copy"></i>
+        </button>
+    </div>
+</div>

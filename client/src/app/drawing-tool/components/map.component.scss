@@ -1,0 +1,32 @@
+@import 'src/scss/variables';
+
+.graph-container {
+  width: 100%;
+  height: 100%;
+}
+
+.graph-view {
+  background: $gray-100;
+  width: 100%;
+  height: 100%;
+}
+
+.detail-overlay {
+  display: flex;
+  position: absolute;
+  top: $window-spacer;
+  left: $window-spacer;
+  width: 300px;
+  max-width: calc(100% - #{$spacer * 2});
+  max-height: calc(100% - #{$spacer * 2});
+  z-index: 1;
+}
+
+.detail-overlay-description {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 10;
+  line-clamp: 10;
+  overflow: hidden;
+  transition: 0.2s ease opacity;
+}

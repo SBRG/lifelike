@@ -1,0 +1,29 @@
+<div class="card m-auto" style="width: 500px">
+  <div class="card-header">
+    Login to Lifelike
+  </div>
+  <div class="card-body">
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <app-form-row for="email" label="Email" [control]="form.get('email')">
+        <input type="email" formControlName="email" id="email" [appFormInput]="form.get('email')" appAutoFocus>
+      </app-form-row>
+
+      <app-form-row for="password" label="Password" [control]="form.get('label')">
+        <input type="password" formControlName="password" id="password" [appFormInput]="form.get('password')">
+      </app-form-row>
+
+      <button type="submit" class="btn btn-primary btn-block">
+        Login
+      </button>
+    </form>
+    <button (click)="displayResetDialog()" class="btn btn-secondary btn-block mt-3 ">
+      Reset password
+    </button>
+  </div>
+  <div *ngIf="unsupportedBrowser" class="alert alert-warning m-0">
+    <p>
+      You seem to be using a browser which might provide a diminished experience within Lifelike.
+      For the best experience, please use <a target="_blank" href="https://www.google.com/chrome/">Google Chrome</a>.
+    </p>
+  </div>
+</div>

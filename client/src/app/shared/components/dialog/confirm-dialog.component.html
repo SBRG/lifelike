@@ -1,0 +1,14 @@
+<form (ngSubmit)="submit()">
+  <app-modal-header (cancel)="cancel()">
+    Confirm
+  </app-modal-header>
+
+  <app-modal-body>
+    {{ message }}
+  </app-modal-body>
+
+  <app-modal-footer>
+    <button type="submit" class="btn btn-secondary mr-2" (click)="setValue(false)">No</button>
+    <button type="submit" class="btn btn-primary" (click)="setValue(true)">Yes</button>
+  </app-modal-footer>
+</form>

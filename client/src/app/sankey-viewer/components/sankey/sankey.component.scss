@@ -1,0 +1,183 @@
+app-sankey {
+  $link-opacity: .9;
+  $link-dimmed-opacity: .1;
+  $link-stroke-opacity: .2;
+  $link-selected-stroke-opacity: .85;
+  $link-selected-stroke-width: 3;
+
+  $node-opacity: .9;
+  $node-dimmed-opacity: .1;
+  $node-stroke-opacity: .70;
+  $node-selected-stroke-opacity: .90;
+  $node-stroke-width: 1;
+  $node-selected-stroke-width: 3;
+
+  @keyframes searchBlink {
+    50% {
+      fill: red;
+    }
+  }
+
+  @mixin searchBlink {
+    animation-name: searchBlink;
+    animation-duration: 750ms;
+  }
+
+  position: relative;
+  //touch-action: none;
+  //user-select: none;
+  transform-origin: 0 0;
+
+  display: block;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  min-height: 100%;
+
+  svg {
+    width: 100%;
+    height: 100%;
+    background-color: white;
+
+    g {
+      .nodes {
+        z-index: 1;
+
+        g {
+          // todo reenable when performance improves
+          //transition: opacity 250ms 250ms;
+
+          rect {
+            cursor: move;
+            fill-opacity: $node-opacity;
+            shape-rendering: crispEdges;
+            stroke: #000000;
+            stroke-width: 1;
+            stroke-opacity: $node-stroke-opacity;
+            transition: opacity 200ms;
+          }
+
+          &[highlighted=false], &[selected=false], &[transitively-selected=false] {
+            & > rect {
+              opacity: $node-dimmed-opacity;
+            }
+
+            text {
+              opacity: $node-dimmed-opacity;
+            }
+          }
+
+          &[highlighted=true], &[transitively-selected=true] {
+            & > rect {
+              opacity: $node-opacity;
+            }
+
+            text {
+              opacity: $node-opacity;
+            }
+          }
+
+          &:hover, &[selected=true] {
+            & > rect {
+              opacity: $node-opacity;
+              stroke-width: $node-selected-stroke-width;
+              stroke: yellow;
+              stroke-opacity: 1;
+            }
+          }
+
+          &[searched=true] .text-shadow {
+            fill: rgba(187, 187, 187, 0.5);
+            stroke: red;
+            transform-origin: 15px 0;
+            transform: scaleY(1.5) scaleX(1.1);
+            filter: none;
+            display: initial;
+            mix-blend-mode: normal;
+          }
+
+          &[focused=true] {
+            .text-shadow {
+              fill: rgba(187, 187, 187, 0.85);
+              @include searchBlink();
+            }
+
+            text {
+              font-size: 1em;
+              fill: black;
+            }
+          }
+
+          .text-shadow {
+            mix-blend-mode: lighten;
+            stroke: none;
+            fill: #bbb;
+            display: none;
+            filter: blur(0.1em);
+            transform: scaleY(1.5);
+          }
+
+          &:hover .text-shadow {
+            display: initial;
+          }
+
+          text {
+            font-size: 0.5em;
+            // todo: reenable when performance improves
+            //transition: font-size 250ms 250ms, fill 250ms 250ms;
+            pointer-events: none;
+          }
+
+          &:hover text {
+            font-size: 1em;
+            fill: black;
+          }
+        }
+      }
+
+      .links {
+        fill: none;
+        stroke: #000;
+        transition: opacity 200ms;
+
+        path {
+          // todo reenable when performance improves
+          //transition: opacity 250ms 250ms;
+          opacity: $link-opacity;
+          stroke-opacity: $link-stroke-opacity;
+
+          &.circular {
+            stroke-dasharray: 4 4;
+          }
+
+          &[highlighted=false], &[selected=false], &[transitively-selected=false] {
+            opacity: $link-dimmed-opacity;
+          }
+
+          &[highlighted=true], &[transitively-selected=true] {
+            opacity: $link-opacity;
+          }
+
+          &:hover, &[selected=true] {
+            opacity: $link-opacity;
+            stroke-width: $link-selected-stroke-width;
+            stroke: yellow;
+            stroke-opacity: 1;
+          }
+
+          &[searched=true] {
+            opacity: $link-opacity;
+            stroke-opacity: $link-selected-stroke-opacity;
+            stroke: red;
+          }
+
+
+          &[focused=true] {
+            stroke-width: $link-selected-stroke-width;
+            @include searchBlink();
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,68 @@
+<ng-container
+  *ngIf="showOpen || (object.privileges.writable && (object.isEditable || object.isAnnotatable)) || object.isVersioned">
+  <button ngbDropdownItem (click)="this.objectOpen.next(object)" [disabled]="!object.isOpenable"
+          *ngIf="showOpen">
+    Open
+  </button>
+  <ng-container *ngIf="object.privileges.writable">
+    <button ngbDropdownItem (click)="openEditDialog(object)" *ngIf="object.isEditable">
+      Edit {{ nameEntity && object.isDirectory ? 'folder' : 'details'}}...
+    </button>
+    <button ngbDropdownItem (click)="reannotate([object])" *ngIf="object.isAnnotatable">
+      Re-annotate
+    </button>
+  </ng-container>
+  <ng-container *ngIf="object.isVersioned">
+    <button ngbDropdownItem (click)="openVersionHistoryDialog(object)" *ngIf="!showRestore">
+      Version history...
+    </button>
+    <button ngbDropdownItem (click)="openVersionRestoreDialog(object)" *ngIf="showRestore">
+      Restore from history...
+    </button>
+  </ng-container>
+  <div class="dropdown-divider"></div>
+</ng-container>
+
+<ng-container
+  *ngIf="(object.isCloneable || object.privileges.writable && (object.isMovable || object.isDeletable))">
+  <button ngbDropdownItem (click)="openCloneDialog(object)" *ngIf="object.isCloneable">
+    Copy{{ nameEntity && object.isDirectory ? ' folder' : ''}} to...
+  </button>
+  <ng-container *ngIf="object.privileges.writable && forEditing">
+    <button ngbDropdownItem (click)="openMoveDialog([object])" [disabled]="!object.isMovable">
+      Move{{ nameEntity && object.isDirectory ? ' folder' : ''}} to...
+    </button>
+  </ng-container>
+  <ng-container *ngIf="!nameEntity && object.privileges.writable && showDelete">
+    <button ngbDropdownItem (click)="openDeleteDialog([object])" [disabled]="!object.isDeletable">
+      Delete...
+    </button>
+  </ng-container>
+  <div class="dropdown-divider"></div>
+</ng-container>
+
+<ng-container>
+  <ng-container *ngIf="(exporters$ | addStatus | async) as exporters">
+    <ng-template [ngIf]="exporters.value && exporters.value.length">
+      <button ngbDropdownItem (click)="openExportDialog(object)">
+        Export...
+      </button>
+    </ng-template>
+  </ng-container>
+  <button ngbDropdownItem (click)="openShareDialog(object)">
+    Copy{{ nameEntity && object.isDirectory ? ' folder' : ''}} link...
+  </button>
+  <button *ngIf="object.uploadUrl" ngbDropdownItem (click)="openLink(object.uploadUrl)">
+    Open external URL...
+  </button>
+  <button *ngIf="object.doi" ngbDropdownItem (click)="openLink(object.doi)">
+    Open DOI...
+  </button>
+  <ng-container *ngIf="object.isNavigable">
+    <button ngbDropdownItem [appLink]="['/file-navigator', object.project.name, object.hashId]"
+            [parentAddress]="router.url"
+            [newTab]="true" [forceWorkbench]="true" [sideBySide]="true" [openParentFirst]="true">
+      Open file navigator
+    </button>
+  </ng-container>
+</ng-container>

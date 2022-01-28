@@ -1,0 +1,16 @@
+<app-base-control
+        [disabled]="disabled"
+        [resultCount]="resultCount"
+        [resultIndex]="resultIndex"
+        [searching]="searching"
+        (previous)="previous.emit(this.resultIndex - 1)"
+        (next)="next.emit(this.resultIndex + 1)"
+        (clear)="clear()"
+>
+    <input [value]="value" (blur)="this.blurred()"
+           type="text" class="form-control input-border"
+           [ngStyle]="{minWidth:searchInputWidth,flexGrow:9999}"
+           placeholder="Search" aria-label="Graph search" aria-describedby="graph-search"
+           [disabled]="disabled" (keyup)="inputKeyUp($event)"
+           #searchInput>
+</app-base-control>

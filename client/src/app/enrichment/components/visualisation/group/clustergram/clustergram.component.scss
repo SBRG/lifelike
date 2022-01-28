@@ -1,0 +1,287 @@
+//$tilted-text-shown-space: 6em;
+$cell-size: 1.5em;
+$first-column-width: 6em;
+$tilted-text-estimate-y-space: 36em;
+$tilted-text-estimate-x-space: $first-column-width;
+$column-header-angle: 45deg;
+$tooltip-arrow-height: 0.4rem;
+$tooltip-arrow-width: 2*$tooltip-arrow-height;
+$background-color: white;
+
+:host {
+  position: relative;
+  height: 100%;
+  display: block;
+
+
+  @keyframes forceScroll {
+    0% {
+      scroll-snap-type: y mandatory;
+    }
+    100% {
+      scroll-snap-type: y proximity;
+    }
+  }
+
+  &:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    background-image: linear-gradient(180deg, $background-color 0, transparent 1.5em),
+    linear-gradient(270deg, $background-color 0, transparent 1.5em);
+    z-index: 1;
+  }
+
+  .clustergram-wrapper {
+    position: relative;
+    overflow: auto;
+    scroll-padding-top: $first-column-width;
+    // force scroll only on load
+    animation: 0.01s 0s 1 forceScroll;
+    min-height: 300px;
+    max-height: 100%;
+
+
+
+    table {
+      margin-top: $tilted-text-estimate-y-space;
+      //table-layout: fixed;
+      scroll-snap-align: start;
+      // if there is enough space show tilted text clipped on the right
+      // rather than expanding columns
+      width: calc(100% - #{$tilted-text-estimate-x-space});
+
+      thead tr {
+        th {
+          position: relative;
+          width: $cell-size;
+          height: $cell-size;
+
+          &:first-child {
+            width: $first-column-width;
+            max-width: $first-column-width;
+          }
+
+          &[scope="col"] {
+
+            & div {
+              transform-origin: 0 50%;
+              transform: rotate(-$column-header-angle);
+              width: 0;
+              margin: 0 auto;
+
+              & span {
+                width: max-content;
+                overflow-wrap: initial;
+                display: block;
+              }
+
+              &::ng-deep .rotatedTooltip {
+                display: none;
+
+                &.show {
+                  display: block;
+                }
+
+                .arrow {
+                  position: absolute;
+                  display: block;
+                  width: $tooltip-arrow-width;
+                  height: $tooltip-arrow-height;
+
+                  &::before {
+                    position: absolute;
+                    content: "";
+                    border-style: solid;
+                  }
+                }
+
+                &.bs-tooltip-bottom-right, &.bs-tooltip-right-bottom {
+                  padding: $tooltip-arrow-height 0;
+
+                  .tooltip-inner {
+                    border-top-left-radius: 0;
+                    transform-origin: 50% 0;
+                    transform: translateX(50%) rotate(
+                                    $column-header-angle
+                    ) translate(2*$tooltip-arrow-height, 2*$tooltip-arrow-height);
+                  }
+
+                  .arrow {
+                    display: none;
+                  }
+                }
+
+                &.bs-tooltip-bottom-left, &.bs-tooltip-left-bottom {
+                  padding: $tooltip-arrow-height 0;
+                  transform: none !important;
+
+                  .tooltip-inner {
+                    border-top-right-radius: 0;
+                    transform-origin: 0 0;
+                    transform: rotate(
+                                    $column-header-angle
+                    ) translate(-100%, 0);
+                  }
+
+                  .arrow {
+                    display: none;
+                  }
+                }
+
+                // Code for non-used tooltip placements
+                //&.bs-tooltip-top-right, &.bs-tooltip-right-top {
+                //  padding: $tooltip-arrow-height 0;
+                //  transform: none !important;
+                //  left: unset;
+                //  right: 0;
+                //
+                //  .tooltip-inner {
+                //    border-bottom-left-radius: 0;
+                //    transform-origin: 100% 0;
+                //    transform: rotate($column-header-angle) translate(100%, -100%);
+                //  }
+                //
+                //  .arrow {
+                //    display: none;
+                //  }
+                //}
+
+                //&.bs-tooltip-top-left, &.bs-tooltip-left-top {
+                //  padding: $tooltip-arrow-height 0;
+                //
+                //  .tooltip-inner {
+                //    border-bottom-right-radius: 0;
+                //    transform-origin: 50% 100%;
+                //    transform: translateX(-50%) rotate(
+                //                    $column-header-angle
+                //    ) translate(2*$tooltip-arrow-height, 2*$tooltip-arrow-height);
+                //  }
+                //
+                //  .arrow {
+                //    display: none;
+                //  }
+                //}
+                //
+                //&.bs-tooltip-top {
+                //  padding: $tooltip-arrow-height 0;
+                //
+                //  &:not(.bs-tooltip-top-right):not(.bs-tooltip-right-top) {
+                //    transform-origin: 50% 50%;
+                //    transform: translateY(-50%) rotate(
+                //                    $column-header-angle
+                //    ) translateY(-50%) !important;
+                //  }
+                //
+                //  .arrow {
+                //    bottom: 0;
+                //
+                //    &::before {
+                //      top: 0;
+                //      border-width: $tooltip-arrow-height ($tooltip-arrow-width / 2) 0;
+                //    }
+                //  }
+                //}
+                //
+                //&.bs-tooltip-right {
+                //  padding: 0 $tooltip-arrow-height;
+                //
+                //  .tooltip-inner, .arrow {
+                //    transform-origin: 0 50%;
+                //    transform: rotate($column-header-angle) translateX(-2*$tooltip-arrow-height);
+                //  }
+                //
+                //  .arrow {
+                //    left: 0;
+                //    width: $tooltip-arrow-height;
+                //    height: $tooltip-arrow-width;
+                //
+                //    &::before {
+                //      right: 0;
+                //      border-width: ($tooltip-arrow-width / 2) $tooltip-arrow-height ($tooltip-arrow-width / 2) 0;
+                //    }
+                //  }
+                //}
+                //
+                //&.bs-tooltip-bottom {
+                //  padding: $tooltip-arrow-height 0;
+                //
+                //  &:not(.bs-tooltip-bottom-right):not(.bs-tooltip-right-bottom):not(.bs-tooltip-bottom-left):not(.bs-tooltip-left-bottom) {
+                //    transform-origin: 50% 0;
+                //    transform: rotate(
+                //                    $column-header-angle
+                //    ) translateY(100%) !important;
+                //  }
+                //
+                //
+                //  .arrow {
+                //    top: 0;
+                //
+                //    &::before {
+                //      bottom: 0;
+                //      border-width: 0 ($tooltip-arrow-width / 2) $tooltip-arrow-height;
+                //    }
+                //  }
+                //}
+                //
+                //&.bs-tooltip-left {
+                //  padding: 0 $tooltip-arrow-height;
+                //
+                //  .tooltip-inner, .arrow {
+                //    transform-origin: 100% 50%;
+                //    transform: rotate($column-header-angle) translateX(2*$tooltip-arrow-height);
+                //  }
+                //
+                //  .arrow {
+                //    right: 0;
+                //    width: $tooltip-arrow-height;
+                //    height: $tooltip-arrow-width;
+                //
+                //    &::before {
+                //      left: 0;
+                //      border-width: ($tooltip-arrow-width / 2) 0 ($tooltip-arrow-width / 2) $tooltip-arrow-height;
+                //    }
+                //  }
+                //}
+                //
+                //&.bs-tooltip-auto {
+                //  &[x-placement^="top"] {
+                //    @extend .bs-tooltip-top;
+                //  }
+                //
+                //  &[x-placement^="right"] {
+                //    @extend .bs-tooltip-right;
+                //  }
+                //
+                //  &[x-placement^="bottom"] {
+                //    @extend .bs-tooltip-bottom;
+                //  }
+                //
+                //  &[x-placement^="left"] {
+                //    @extend .bs-tooltip-left;
+                //  }
+                //}
+              }
+            }
+          }
+        }
+      }
+
+      .others {
+        // padding + 3 chars
+        width: calc(0.9rem + 3ch) !important;
+        min-width: calc(0.9rem + 3ch) !important;
+        white-space: pre;
+      }
+
+      tbody td.match {
+        border-left: 1px solid white;
+        opacity: 0.3;
+      }
+    }
+  }
+}

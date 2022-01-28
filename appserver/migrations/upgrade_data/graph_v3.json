@@ -1,0 +1,432 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "type": "object",
+  "properties": {
+    "directed": {
+      "type": "boolean"
+    },
+    "multigraph": {
+      "type": "boolean"
+    },
+    "graph": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "node_sets": {
+          "type": "object",
+          "patternProperties": {
+            ".*": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              }
+            }
+          }
+        },
+        "trace_networks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "description": {
+                "type": "string"
+              },
+              "method": {
+                "type": "string"
+              },
+              "sources": {
+                "type": "string"
+              },
+              "targets": {
+                "type": "string"
+              },
+              "traces": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "source": {
+                      "type": "integer"
+                    },
+                    "target": {
+                      "type": "integer"
+                    },
+                    "node_paths": {
+                      "type": "array",
+                      "items": {
+                        "type": "array",
+                        "items": {
+                          "type": "integer"
+                        }
+                      }
+                    },
+                    "edges": {
+                      "type": "array",
+                      "items": {
+                        "type": "integer"
+                      }
+                    },
+                    "detail_edges": {
+                      "type": "array",
+                      "items": {
+                        "type": "array",
+                        "items": {
+                          "type": [
+                            "integer",
+                            "object"
+                          ],
+                          "properties": {
+                            "type": {
+                              "type": "string"
+                            }
+                          },
+                          "additionalProperties": true
+                        }
+                      }
+                    },
+                    "group": {
+                      "type": "integer"
+                    }
+                  },
+                  "additionalProperties": true,
+                  "required": [
+                    "node_paths",
+                    "edges",
+                    "source",
+                    "target",
+                    "group"
+                  ]
+                }
+              }
+            },
+            "additionalProperties": true,
+            "required": [
+              "sources",
+              "targets",
+              "description",
+              "traces"
+            ]
+          }
+        },
+        "sizing": {
+          "type": "object",
+          "patternProperties": {
+            ".*": {
+              "type": "object",
+              "properties": {
+                "link_sizing": {
+                  "type": "string"
+                },
+                "node_sizing": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": true
+            }
+          }
+        },
+        "log": {
+          "anyOf": [
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            {
+              "type": "string"
+            }
+          ]
+        }
+      },
+      "additionalProperties": true,
+      "required": [
+        "node_sets",
+        "description",
+        "trace_networks"
+      ]
+    },
+    "nodes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "labels": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "description": {
+            "type": "string"
+          },
+          "schemaClass": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "Chemical",
+              "Protein",
+              "Entity",
+              "Reaction",
+              "Gene",
+              "Compound",
+              "Species",
+              "Study",
+              "Pathway",
+              "Phenotype",
+              "Anatomy",
+              "Lab Strain",
+              "Note",
+              "Cause",
+              "Observation",
+              "Association",
+              "Effect",
+              "Correlation",
+              "Map",
+              "Link",
+              "Lab Sample",
+              "Food",
+              "Phenomena",
+              "Company",
+              "Mutation"
+            ]
+          },
+          "oldStId": {
+            "type": "string"
+          },
+          "isInDisease": {
+            "type": "boolean"
+          },
+          "displayName": {
+            "type": "string"
+          },
+          "stIdVersion": {
+            "type": "string"
+          },
+          "dbId": {
+            "type": "integer"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              {
+                "type": "string"
+              }
+            ]
+          },
+          "referenceType": {
+            "type": "string"
+          },
+          "stId": {
+            "type": "string"
+          },
+          "endoHigh": {
+            "type": "boolean"
+          },
+          "endo": {
+            "type": "boolean"
+          },
+          "pageUpdown": {
+            "type": "number"
+          },
+          "pageMetab": {
+            "type": [
+              "number",
+              "integer"
+            ]
+          },
+          "label": {
+            "type": "string"
+          },
+          "speciesName": {
+            "type": "string"
+          },
+          "startCoordinate": {
+            "type": "integer"
+          },
+          "endCoordinate": {
+            "type": "integer"
+          },
+          "isChimeric": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": true,
+        "required": [
+          "id"
+        ]
+      }
+    },
+    "links": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "source": {
+            "type": "integer"
+          },
+          "target": {
+            "type": "integer"
+          },
+          "key": {
+            "type": "integer"
+          },
+          "inedge": {
+            "type": "object",
+            "properties": {
+              "types": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "nodes": {
+                "type": "array",
+                "items": {
+                  "type": "integer"
+                }
+              },
+              "left": {
+                "type": "boolean"
+              }
+            },
+            "additionalProperties": true,
+            "required": [
+              "types",
+              "nodes",
+              "left"
+            ]
+          },
+          "outedge": {
+            "type": "object",
+            "properties": {
+              "types": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "nodes": {
+                "type": "array",
+                "items": {
+                  "type": "integer"
+                }
+              },
+              "left": {
+                "type": "boolean"
+              }
+            },
+            "additionalProperties": true,
+            "required": [
+              "types",
+              "nodes",
+              "left"
+            ]
+          },
+          "node": {
+            "type": "integer"
+          },
+          "pageUpdown": {
+            "type": "number"
+          },
+          "1/pageUpdown": {
+            "type": [
+              "number",
+              "string"
+            ]
+          },
+          "pageMetab": {
+            "type": "number"
+          },
+          "1/pageMetab": {
+            "type": [
+              "number",
+              "string"
+            ]
+          },
+          "NLG": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": true,
+        "required": [
+          "description",
+          "source",
+          "target"
+        ]
+      }
+    },
+    "_views": {
+      "type": "object",
+      "patternProperties": {
+        ".*": {
+          "type": "object",
+          "properties": {
+            "state": {
+              "description": "UI state when saving view",
+              "type": "object",
+              "additionalProperties": true
+            },
+            "base": {
+              "type": "string"
+            },
+            "nodes": {
+              "type": "object",
+              "description": "Map node id to it's overwrites",
+              "patternProperties": {
+                ".*": {
+                  "description": "Link properties overwrites",
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            },
+            "links": {
+              "type": "object",
+              "description": "Map link index to it's overwrites",
+              "patternProperties": {
+                "[0-9]+": {
+                  "description": "Node properties overwrites",
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "required": [
+            "state",
+            "base",
+            "nodes",
+            "links"
+          ]
+        }
+      }
+    }
+  },
+  "additionalProperties": true,
+  "required": [
+    "directed",
+    "multigraph",
+    "graph",
+    "nodes",
+    "links"
+  ]
+}

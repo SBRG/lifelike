@@ -1,0 +1,22 @@
+<ng-template #rt let-r="result" let-t="term">
+  <ngb-highlight [result]="r.organism_name" [term]="t"></ngb-highlight>
+</ng-template>
+
+<div class="input-group input-border rounded">
+  <input type="text" class="form-control border-0"
+    [class.is-invalid]="fetchFailed" [(ngModel)]="organism"
+    [editable]='false' [inputFormatter]="formatter" [ngbTypeahead]="searcher" [resultTemplate]="rt"
+    (selectItem)="notifySelection($event)"
+  >
+  <div *ngIf="organism" class="input-group-append">
+    <button type="button"
+            class="form-control border-0"
+            (click)="clear()">
+      <i class="fa fa-times"></i>
+    </button>
+  </div>
+  <div *ngIf="isFetching" class="input-group-append">
+    <span class="input-group-text">Searching...</span>
+  </div>
+  <div class="invalid-feedback" *ngIf="fetchFailed">Sorry, suggestions could not be loaded.</div>
+</div>

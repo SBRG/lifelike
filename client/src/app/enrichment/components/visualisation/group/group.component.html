@@ -1,0 +1,70 @@
+<div class="card fill-width">
+    <div class="card-header d-flex flex-wrap align-items-center card-header-with-buttons">
+        <span class="title">{{title}}</span>
+        <ng-container>
+            <div class="module-toolbar d-flex align-items-center ml-auto">
+
+                <ul ngbNav #nav="ngbNav"
+                    [destroyOnHide]="false"
+                     (navChange)="tabStatus[$event.nextId]=true"
+                    class="nav-tabs">
+                    <li ngbNavItem="table">
+                        <a ngbNavLink>Table</a>
+                        <ng-template ngbNavContent let-active>
+                            <app-table-complete
+                                    [data]="data"
+                                    [show]="active"
+                                    [showMore]="showMore"
+                            >
+
+                            </app-table-complete>
+                        </ng-template>
+                    </li>
+                    <li ngbNavItem="graph">
+                        <a ngbNavLink>Graph</a>
+                        <ng-template ngbNavContent let-active>
+                            <app-chart *ngIf="tabStatus['graph']"
+                                    [style.display]="'block'"
+                                    [data]="data"
+                                    [show]="active"
+                                    [showMore]="showMore"
+                            >
+                            </app-chart>
+                        </ng-template>
+                    </li>
+                    <li ngbNavItem="clustergram">
+                        <a ngbNavLink>Clustergram</a>
+                        <ng-template ngbNavContent let-active>
+                            <app-clustergram *ngIf="tabStatus['clustergram']"
+                                    [data]="data"
+                                    [show]="active"
+                                    [showMore]="showMore"
+                            >
+                            </app-clustergram>
+                        </ng-template>
+                    </li>
+                    <li ngbNavItem="cloud">
+                        <a ngbNavLink>Cloud</a>
+                        <ng-template ngbNavContent let-active>
+                            <app-cloud-viewer
+                                    *ngIf="tabStatus['cloud']"
+                                    [show]="active"
+                                    [timeInterval]="30"
+                                    [data]="data"
+                                    [showMore]="showMore"
+                            >
+                            </app-cloud-viewer>
+                        </ng-template>
+                    </li>
+                </ul>
+            </div>
+        </ng-container>
+    </div>
+    <div class="card-body" [ngbNavOutlet]="nav">
+    </div>
+    <div class="card-footer" [ngStyle]="{textAlign: 'right', cursor: 'pointer'}" (click)="showMoreToggle()">
+        {{showMore ? "show less..." : "show more..."}}
+    </div>
+
+
+</div>

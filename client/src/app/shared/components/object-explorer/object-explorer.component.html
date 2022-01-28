@@ -1,0 +1,36 @@
+<app-tree-view [dataSource]="dataSource"
+               [getChildren]="getChildren"
+               [hasChild]="hasChild"
+               [treeNode]="treeNode"
+               [nestedTreeNode]="nestTreeNode"
+>
+    <!-- This is the tree node template for leaf nodes -->
+    <ng-template #treeNode let-node>
+        <ng-container *ngIf="node.label !== undefined; else rawNodeContent">
+            <!-- Adjust font to match other used icons size -->
+            <i class="fas fa-circle o-80 f-5" [ngStyle]="{
+                        fontSize: '0.5em',
+                        verticalAlign: 'middle'
+                        }"></i>
+            {{ node.label }}
+            <!-- values can be falsy -->
+            <ng-container *ngIf="node.value !== undefined">
+                : {{node.value}}
+            </ng-container>
+        </ng-container>
+        <ng-template #rawNodeContent>
+            <!-- Allow breaking of long text but maintain whitespaces -->
+            <pre [style.whiteSpace]="'pre-wrap'" class="m-0">{{ node }}</pre>
+        </ng-template>
+    </ng-template>
+    <!-- This is the tree node template for expandable nodes -->
+    <ng-template #nestTreeNode let-node>
+        <ng-container *ngIf="node.label; else counter">
+            {{ node.label }}
+        </ng-container>
+        <ng-template #counter>
+            <!-- Show counter using css node counting -->
+            <span [attr.data-counter]="true"></span>
+        </ng-template>
+    </ng-template>
+</app-tree-view>

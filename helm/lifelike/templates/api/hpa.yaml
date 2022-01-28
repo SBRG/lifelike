@@ -1,0 +1,29 @@
+{{- if .Values.api.autoScaling.enabled }}
+apiVersion: autoScaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ include "lifelike.fullname" . }}-api
+  labels:
+    {{- include "lifelike.labels" . | nindent 4 }}
+    app.kubernetes.io/component: api
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ include "lifelike.fullname" . }}-api
+  minReplicas: {{ .Values.api.autoScaling.minReplicas }}
+  maxReplicas: {{ .Values.api.autoScaling.maxReplicas }}
+  metrics:
+    {{- if .Values.api.autoScaling.targetCPUUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: cpu
+        targetAverageUtilization: {{ .Values.api.autoScaling.targetCPUUtilizationPercentage }}
+    {{- end }}
+    {{- if .Values.api.autoScaling.targetMemoryUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: memory
+        targetAverageUtilization: {{ .Values.api.autoScaling.targetMemoryUtilizationPercentage }}
+    {{- end }}
+{{- end }}

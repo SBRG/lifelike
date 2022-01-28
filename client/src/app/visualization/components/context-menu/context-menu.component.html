@@ -1,0 +1,121 @@
+<!-- Root Context Menus -->
+<div [id]="tooltipSelector" [ngClass]="contextMenuClass">
+  <div *ngIf="clusterSelected; else clusterNotSelected">
+    <ng-template [ngTemplateOutlet]="getDataGroup"></ng-template>
+    <div class="context-menu-group">
+      <div
+        [id]="'pull-out-node-from-cluster-menu-item-' + tooltipId"
+        class="context-menu-item d-flex flex-row justify-content-between align-items-center"
+        (mouseenter)="showPullOutNodeSubMenu()"
+        (mouseleave)="mouseLeaveNodeRow()">
+        <div>Pull out node from cluster</div>
+        <i class="fa fa-fw fa-caret-right ml-2"></i>
+      </div>
+    </div>
+  </div>
+  <ng-template #clusterNotSelected>
+    <div *ngIf="!(singleSelection); else singleSelectedEntity">
+      <div *ngIf="selectedNodeIds.length > 0">
+        <ng-template [ngTemplateOutlet]="nodeSelectionGroup"></ng-template>
+      </div>
+      <div *ngIf="selectedEdgeIds.length > 0">
+        <ng-template [ngTemplateOutlet]="edgeSelectionGroup"></ng-template>
+      </div>
+    </div>
+    <ng-template #singleSelectedEntity>
+      <ng-template [ngTemplateOutlet]="getDataGroup"></ng-template>
+      <ng-template [ngTemplateOutlet]="getAssociatedEntitiesGroup"></ng-template>
+      <div *ngIf="exactlyOneSelectedNode; else singleSelectedEdge">
+        <div class="context-menu-group">
+          <div
+            [id]="'select-neighbors-menu-item-' + tooltipId"
+            class="context-menu-item"
+            (mouseenter)="hideAllSubMenus()"
+            (click)="requestNeighborSelection()"
+          >Select Neighbor Node(s)</div>
+          <div *ngIf="selectedNodeEdgeLabelData.size > 0" fxLayout="column">
+              <div
+                [id]="'group-by-rel-menu-item-' + tooltipId"
+                class="context-menu-item d-flex flex-row justify-content-between align-items-center"
+                (mouseenter)="showGroupByRelSubMenu()"
+                (mouseleave)="mouseLeaveNodeRow()">
+                <div>Group neighbors by edge label</div>
+                <i class="fa fa-fw fa-caret-right"></i>
+              </div>
+          </div>
+        </div>
+        <ng-template [ngTemplateOutlet]="nodeSelectionGroup"></ng-template>
+      </div>
+      <ng-template #singleSelectedEdge>
+        <ng-template [ngTemplateOutlet]="edgeSelectionGroup"></ng-template>
+      </ng-template>
+    </ng-template>
+  </ng-template>
+  <div [id]="'settings-group-' + tooltipId" class="context-menu-group">
+    <div class="context-menu-item" (mouseenter)="hideAllSubMenus()">Settings</div>
+  </div>
+</div>
+
+<!-- Templates -->
+<ng-template #nodeSelectionGroup>
+  <div [id]="'node-selection-group-' + tooltipId" class="context-menu-group">
+    <div
+      [id]="'remove-selected-nodes-menu-item-' + tooltipId"
+      class="context-menu-item"
+      (mouseenter)="hideAllSubMenus()"
+      (click)="requestNodeRemoval()"
+    >Remove Selected Node(s)</div>
+  </div>
+</ng-template>
+
+<ng-template #edgeSelectionGroup>
+  <div [id]="'edge-selection-group-' + tooltipId" class="context-menu-group">
+    <div
+      [id]="'remove-selected-edges-menu-item-' + tooltipId"
+      class="context-menu-item"
+      (mouseenter)="hideAllSubMenus()"
+      (click)="requestEdgeRemoval()"
+    >Remove Selected Edge(s)</div>
+  </div>
+</ng-template>
+
+<ng-template #getDataGroup>
+  <div class="context-menu-group">
+    <div
+      class="context-menu-item"
+      (mouseenter)="hideAllSubMenus()"
+      (click)="requestDataSidenav()"
+    >Show Supporting Data</div>
+  </div>
+</ng-template>
+
+<ng-template #getAssociatedEntitiesGroup>
+  <div class="context-menu-group">
+    <div *ngFor="let type of associatedTypeKeys"
+      class="context-menu-item"
+      (mouseenter)="hideAllSubMenus()"
+      (click)="requestTypeSidenav(type)"
+    >Show Associated {{ associatedType[type] }}</div>
+  </div>
+</ng-template>
+
+<!-- Submenus (these are tooltips, so they should be floating around -- invisible -- until their mouseover events are called -->
+<div [id]="'single-node-selection-group-1-submenu-' + tooltipId" [ngClass]="subMenuClass">
+  <div class="context-menu-group">
+    <div *ngFor="let edgeLabelData of selectedNodeEdgeLabelData | keyvalue">
+      <div
+        class="context-menu-item"
+        *ngFor="let direction of edgeLabelData.value"
+        (click)="requestGroupByRelationship(edgeLabelData.key, direction)"
+      >{{ edgeLabelData.key }} -- ({{ direction }})</div>
+    </div>
+  </div>
+</div>
+
+<div [id]="'pull-out-node-from-cluster-submenu-' + tooltipId" [ngClass]="subMenuClass">
+  <div class="context-menu-group">
+    <div *ngFor="let clusteredNode of selectedClusterNodeData">
+      <div class="context-menu-item" (click)="requestPullNodeFromCluster(clusteredNode)">{{clusteredNode.displayName}}</div>
+    </div>
+  </div>
+</div>

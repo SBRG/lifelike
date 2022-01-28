@@ -1,0 +1,81 @@
+@import '~@angular/material/theming';
+
+@include mat-core();
+
+$light-primary-text: white;
+$dark-primary-text: black;
+$light-secondary-text: white;
+$dark-secondary-text: black;
+
+$lifelike-primary-colors: (
+  50 : #e2f1f5,
+  100 : #b6dde6,
+  200 : #86c6d5,
+  300 : #55afc4,
+  400 : #309db7,
+  500 : #0c8caa,
+  600 : #0a84a3,
+  700 : #087999,
+  800 : #066f90,
+  900 : #035c7f,
+  A100 : #ade4ff,
+  A200 : #7ad3ff,
+  A400 : #47c3ff,
+  A700 : #2dbaff,
+  contrast: (
+    50 : $dark-primary-text,
+    100 : $dark-primary-text,
+    200 : $dark-primary-text,
+    300 : $dark-primary-text,
+    400 : $light-primary-text,
+    500 : $light-primary-text,
+    600 : $light-primary-text,
+    700 : $light-primary-text,
+    800 : $light-primary-text,
+    900 : $light-primary-text,
+    A100 : $dark-primary-text,
+    A200 : $dark-primary-text,
+    A400 : $dark-primary-text,
+    A700 : $dark-primary-text,
+  )
+);
+
+$lifelike-secondary-colors: (
+  50 : #e5e9f5,
+  100 : #bfc9e5,
+  200 : #94a5d4,
+  300 : #6980c2,
+  400 : #4965b5,
+  500 : #294aa8,
+  600 : #2443a0,
+  700 : #1f3a97,
+  800 : #19328d,
+  900 : #0f227d,
+  A100 : #afbbff,
+  A200 : #7c8fff,
+  A400 : #4963ff,
+  A700 : #304dff,
+  contrast: (
+    50 : $dark-secondary-text,
+    100 : $dark-secondary-text,
+    200 : $dark-secondary-text,
+    300 : $dark-secondary-text,
+    400 : $light-secondary-text,
+    500 : $light-secondary-text,
+    600 : $light-secondary-text,
+    700 : $light-secondary-text,
+    800 : $light-secondary-text,
+    900 : $light-secondary-text,
+    A100 : $dark-secondary-text,
+    A200 : $dark-secondary-text,
+    A400 : $light-secondary-text,
+    A700 : $light-secondary-text,
+  )
+);
+
+
+$lifelike-primary: mat-palette($lifelike-primary-colors);
+$lifelike-accent: mat-palette($lifelike-secondary-colors, 500, A100, 900, 50);
+$lifelike-theme: mat-light-theme($lifelike-primary, $lifelike-accent);
+
+@include angular-material-theme($lifelike-theme);

@@ -1,0 +1,442 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "data"
+  ],
+  "definitions": {
+    "safeUrl": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 5000,
+      "pattern": "(?i)^(https?://.+|mailto:.+)$",
+      "$comment": "changing this may have defense-in-depth security implications"
+    }
+  },
+  "properties": {
+    "data": {
+      "type": "object",
+      "properties": {
+        "genes": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 100000
+        },
+        "taxId": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 500
+        },
+        "organism": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 1000
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["BioCyc", "GO", "KEGG", "Regulon", "String", "UniProt"]
+          }
+        }
+      }
+    },
+    "result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "domainInfo",
+        "genes"
+      ],
+      "properties": {
+        "domainInfo": {
+          "type": "object",
+          "additionalProperties": false,
+          "patternProperties": {
+            "^GO$": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "labels"
+              ],
+              "properties": {
+                "labels": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  }
+                }
+              }
+            },
+            "^BioCyc$": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "labels"
+              ],
+              "properties": {
+                "labels": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  }
+                }
+              }
+            },
+            "^String$": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "labels"
+              ],
+              "properties": {
+                "labels": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  }
+                }
+              }
+            },
+            "^Regulon$": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "labels"
+              ],
+              "properties": {
+                "labels": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  }
+                }
+              }
+            },
+            "^UniProt$": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "labels"
+              ],
+              "properties": {
+                "labels": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  }
+                }
+              }
+            },
+            "^KEGG$": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "labels"
+              ],
+              "properties": {
+                "labels": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  }
+                }
+              }
+            }
+          }
+        },
+        "genes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "imported"
+            ],
+            "properties": {
+              "imported": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 5000
+              },
+              "annotatedImported": {
+                "type": "string",
+                "minLength": 1
+              },
+              "matched": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 5000
+              },
+              "annotatedMatched": {
+                "type": "string",
+                "minLength": 1
+              },
+              "fullName": {
+                "type": "string",
+                "minLength": 0,
+                "maxLength": 5000
+              },
+              "annotatedFullName": {
+                "type": "string",
+                "minLength": 0
+              },
+              "link": {
+                "$ref": "#/definitions/safeUrl"
+              },
+              "domains": {
+                "type": "object",
+                "additionalProperties": false,
+                "patternProperties": {
+                  "^GO$": {
+                    "type": "object",
+                    "properties": {
+                      "Annotation": {
+                        "type": "object",
+                        "additionalProperties": {
+                          "type": "string",
+                          "additionalProperties": false,
+                          "required": [
+                            "text",
+                            "link"
+                          ],
+                          "properties": {
+                            "text": {
+                              "type": "string",
+                              "minLength": 0,
+                              "maxLength": 512000
+                            },
+                            "annotatedText": {
+                              "type": "string",
+                              "minLength": 0
+                            },
+                            "link": {
+                              "$ref": "#/definitions/safeUrl"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "^BioCyc$": {
+                    "type": "object",
+                    "properties": {
+                      "Pathways": {
+                        "type": "object",
+                        "additionalProperties": {
+                          "type": "string",
+                          "additionalProperties": false,
+                          "required": [
+                            "text",
+                            "link"
+                          ],
+                          "properties": {
+                            "text": {
+                              "type": "string",
+                              "minLength": 0,
+                              "maxLength": 512000
+                            },
+                            "annotatedText": {
+                              "type": "string",
+                              "minLength": 0
+                            },
+                            "link": {
+                              "$ref": "#/definitions/safeUrl"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "^String$": {
+                    "type": "object",
+                    "properties": {
+                      "Annotation": {
+                        "type": "object",
+                        "additionalProperties": {
+                          "type": "string",
+                          "additionalProperties": false,
+                          "required": [
+                            "text",
+                            "link"
+                          ],
+                          "properties": {
+                            "text": {
+                              "type": "string",
+                              "minLength": 0,
+                              "maxLength": 512000
+                            },
+                            "annotatedText": {
+                              "type": "string",
+                              "minLength": 0
+                            },
+                            "link": {
+                              "$ref": "#/definitions/safeUrl"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "^Regulon$": {
+                    "type": "object",
+                    "properties": {
+                      "Activated By": {
+                        "type": "object",
+                        "additionalProperties": {
+                          "type": "string",
+                          "additionalProperties": false,
+                          "required": [
+                            "text",
+                            "link"
+                          ],
+                          "properties": {
+                            "text": {
+                              "type": "string",
+                              "minLength": 0,
+                              "maxLength": 512000
+                            },
+                            "annotatedText": {
+                              "type": "string",
+                              "minLength": 0
+                            },
+                            "link": {
+                              "$ref": "#/definitions/safeUrl"
+                            }
+                          }
+                        }
+                      },
+                      "Repressed By": {
+                        "type": "object",
+                        "additionalProperties": {
+                          "type": "string",
+                          "additionalProperties": false,
+                          "required": [
+                            "text",
+                            "link"
+                          ],
+                          "properties": {
+                            "text": {
+                              "type": "string",
+                              "minLength": 0,
+                              "maxLength": 512000
+                            },
+                            "annotatedText": {
+                              "type": "string",
+                              "minLength": 0
+                            },
+                            "link": {
+                              "$ref": "#/definitions/safeUrl"
+                            }
+                          }
+                        }
+                      },
+                      "Regulator Family": {
+                        "type": "object",
+                        "additionalProperties": {
+                          "type": "string",
+                          "additionalProperties": false,
+                          "required": [
+                            "text",
+                            "link"
+                          ],
+                          "properties": {
+                            "text": {
+                              "type": "string",
+                              "minLength": 0,
+                              "maxLength": 512000
+                            },
+                            "annotatedText": {
+                              "type": "string",
+                              "minLength": 0
+                            },
+                            "link": {
+                              "$ref": "#/definitions/safeUrl"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "^UniProt$": {
+                    "type": "object",
+                    "properties": {
+                      "Function": {
+                        "type": "object",
+                        "additionalProperties": {
+                          "type": "string",
+                          "additionalProperties": false,
+                          "required": [
+                            "text",
+                            "link"
+                          ],
+                          "properties": {
+                            "text": {
+                              "type": "string",
+                              "minLength": 0,
+                              "maxLength": 512000
+                            },
+                            "annotatedText": {
+                              "type": "string",
+                              "minLength": 0
+                            },
+                            "link": {
+                              "$ref": "#/definitions/safeUrl"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "^KEGG$": {
+                    "type": "object",
+                    "properties": {
+                      "Pathways": {
+                        "type": "object",
+                        "additionalProperties": {
+                          "type": "string",
+                          "additionalProperties": false,
+                          "required": [
+                            "text",
+                            "link"
+                          ],
+                          "properties": {
+                            "text": {
+                              "type": "string",
+                              "minLength": 0,
+                              "maxLength": 512000
+                            },
+                            "annotatedText": {
+                              "type": "string",
+                              "minLength": 0
+                            },
+                            "link": {
+                              "$ref": "#/definitions/safeUrl"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,76 @@
+@import "lifelike-theme.scss";
+
+$blue: #3797DB;
+$dark-blue: #3177B8;
+
+@mixin no-select {
+  -webkit-user-select: none;  /* Chrome all / Safari all */
+  -moz-user-select: none;     /* Firefox all */
+  -ms-user-select: none;      /* IE 10+ */
+  user-select: none;
+}
+
+@mixin overlay {
+  position: absolute;
+  z-index: 2;
+  margin: 1rem;
+}
+
+.field-width {
+  width: 100%;
+}
+
+.mat-cell {
+  margin: 0 10px 0 10px;
+}
+
+.mat-header-cell {
+  margin: 0 10px 0 10px;
+}
+
+// Default rules from Angular Material. Do not modify.
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+// Content placed dynamically by the Angular Router (i.e. sibling of
+// <router-outlet>) will be a flex container
+router-outlet + * {
+  box-sizing: border-box;
+  display: flex;
+  flex: 1 1 0%;
+  flex-direction: column;
+}
+
+.tooltip-newlines {
+  white-space: pre-line !important;
+}
+
+.tooltip-collapse-control:after {
+  font-family: Fontawesome;
+  content: '\f077';
+  float: right;
+}
+
+.tooltip-collapse-control.collapsed:after {
+  content: '\f078';
+}
+
+.adaptive-modal {
+  .modal-xl {
+    max-width: 90vw;
+  }
+}
+
+/* Importing Bootstrap SCSS file. */
+@import '~bootstrap/scss/bootstrap';
+
+// Workaround for https://github.com/FortAwesome/Font-Awesome/issues/17469
+.fa.fa-spinner.fa-spin {
+  transform-origin: 50% 0.445em;
+}

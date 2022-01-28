@@ -1,0 +1,39 @@
+## This is an example values files for installing Lifelike Helm chart
+## connecting to external existing database services
+## instead of installing the embedded subcharts (postgres, neo4j and elasticsearch)
+
+
+# Disable the embedded PostgreSQL subchart
+postgresql:
+  enabled: false
+
+# Configure external psostgres database
+postgresqlExternal:
+  host: postgres.local
+  port: 5432
+  user: postgres
+  database: postgres
+  password: password
+
+
+# Disable embedded Elasticsearch subchart
+elasticsearch:
+  enabled: false
+
+elasticsearchExternal:
+  host: elasticsearch.local
+  port: 9200
+  user: "elastic"
+  password: "password"
+
+
+# Disable embedded Neo4j subchart
+neo4j:
+  enabled: false
+
+# Configure external Neo4j database
+neo4jExternal:
+  host: neo4j.local
+  port: 7687
+  user: neo4j
+  password: password

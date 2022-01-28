@@ -1,0 +1,39 @@
+@import '~bootstrap/scss/functions';
+@import '~bootstrap/scss/variables';
+@import '~bootstrap/scss/mixins';
+
+.palette-container {
+  display: flex;
+  flex-wrap: wrap;
+  margin: -0.2rem;
+  overflow: auto;
+}
+
+.palette-item-container {
+  padding: 0.2rem;
+  width: 50%;
+  cursor: grab;
+}
+
+.palette-item {
+  display: flex;
+  border-radius: $border-radius;
+  @include text-truncate();
+  align-items: center;
+}
+
+.palette-item-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  flex-shrink: 0;
+  margin-right: 0.3rem;
+  border-radius: $border-radius;
+}
+
+.palette-item-label {
+  @include text-truncate();
+}
+
+.node-palette-footer {
+  padding: 0.5rem 0.5rem 0;
+}

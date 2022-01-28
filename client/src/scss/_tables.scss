@@ -1,0 +1,26 @@
+.table {
+  thead th {
+    font-size: $font-size-sm;
+    border-top: 0;
+    border-bottom: 0;
+    color: $gray-600;
+  }
+}
+
+.table-selectable {
+  tbody {
+    tr {
+      &.active {
+        background: $table-row-active-bg;
+      }
+
+      &:hover {
+        box-shadow: $table-row-focus-box-shadow;
+      }
+
+      &:focus, &.active:hover {
+        box-shadow: $table-row-focus-box-shadow;
+      }
+    }
+  }
+}

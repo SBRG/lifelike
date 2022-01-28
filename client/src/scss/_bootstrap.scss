@@ -1,0 +1,51 @@
+@import './variables';
+@import '~bootstrap/scss/bootstrap';
+@import './mixins';
+@import './type';
+@import './buttons';
+@import './placeholders';
+@import './modules';
+@import './vertical-menu-base';
+@import './vertical-menu';
+@import './toolbars';
+@import './graph';
+@import './tabs';
+@import './tile';
+@import './search';
+@import './modal';
+@import './tables';
+@import './breadcrumb';
+@import './as_splitter';
+@import './forms';
+@import './dropdown';
+@import './popovers';
+@import './window';
+@import './text';
+@import './progress';
+@import './highlights';
+@import './container_breakpoints';
+@import './utilities';
+
+body {
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-size: $font-size-base;
+  overflow: hidden;
+}
+
+:focus, button:focus {
+  outline: none;
+  box-shadow: $table-row-focus-box-shadow;
+}
+
+canvas:focus {
+  box-shadow: none;
+}
+
+a:focus {
+  outline: 1px solid $primary;
+  box-shadow: none;
+}
+
+.text-icon {
+  color: $gray-500;
+}

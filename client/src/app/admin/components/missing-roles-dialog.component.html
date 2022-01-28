@@ -1,0 +1,37 @@
+<app-modal-header (cancel)="this.close()">
+  <div class="alert alert-info">
+    Some users are missing roles.
+  </div>
+</app-modal-header>
+
+<app-modal-body>
+  <table class="table" style="table-layout: fixed">
+    <colgroup>
+      <col style="width: 50%">
+    </colgroup>
+    <thead>
+    <tr>
+    <tr>
+      <th class="d-none d-md-table-cell">Username</th>
+      <th class="d-none d-lg-table-cell">Add user role</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let user of users">
+      <td class="align-middle d-none d-lg-table-cell text-truncate">
+        {{ user.username }}
+      </td>
+      <td class="align-middle d-none d-md-table-cell text-truncate">
+        <button class="btn btn-secondary ml-2" (click)="fixMissingUserRole(user)">
+          Add user role
+        </button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</app-modal-body>
+
+<app-modal-footer>
+  <button type="button" class="btn btn-secondary mr-2" (click)="this.close()">Cancel</button>
+  <button type="submit" class="btn btn-primary" (click)="this.updateAll()">Update all</button>
+</app-modal-footer>

@@ -1,0 +1,101 @@
+<div class="module">
+    <ng-container *ngIf="(loadTask.status$ | async) as status">
+        <app-module-progress *ngIf="status.running">
+            Loading map...
+        </app-module-progress>
+
+        <app-module-error *ngIf="status.failedErrorShown" [error]="status.error">
+            <a appLink="/projects">Go to Projects <i class="fa fa-fw fa-arrow-right"></i></a>
+        </app-module-error>
+    </ng-container>
+    <app-module-header *ngIf="map" [object]="map" (dragStarted)="dragStarted($event)">
+                <app-module-menu [object]="map" [forEditing]="false"
+                                 [showOpen]="false" [showDelete]="false">
+                </app-module-menu>
+        <div class="btn-group ml-1 mr-auto">
+            <button *ngIf="map?.privileges.writable"
+                    type="button" class="btn btn-secondary"
+                    [appLink]="['/projects', map?.project.name, 'maps', map?.hashId, 'edit']">
+                <i class="fa fa-fw fa-pencil-alt"></i> Edit
+            </button>
+        </div>
+        <div class="ml-auto d-flex">
+            <div class="btn-group mr-2">
+                <button type="button" class="btn btn-secondary" container="body"
+                        ngbTooltip="Fit Map to Window" placement="bottom"
+                        (click)="zoomToFit()">
+                    <i class="fas fa-expand-arrows-alt"></i>
+                </button>
+            </div>
+
+            <app-search-control [(ngModel)]="entitySearchTerm" (ngModelChange)="search()"
+                                [resultIndex]="entitySearchListIdx"
+                                [resultCount]="entitySearchList.length"
+                                (previous)="previous()" (next)="next()">
+            </app-search-control>
+        </div>
+    </app-module-header>
+    <div class="position-relative overflow-hidden flex-fill">
+        <ng-container *ngIf="(loadTask.status$ | async) as status">
+            <div class="detail-overlay">
+                <app-collapsible-window title="Information" class="flex-fill" [sideCollapse]="true">
+                    <div class="window-body">
+                        <div class="detail-overlay-properties text-muted">
+                            <div class="text-truncate">
+                                By {{map?.user.firstName}}
+                            </div>
+                            <div class="text-truncate">
+                                Modified {{map?.modificationDate | friendlyDateStr}}
+                            </div>
+                        </div>
+                        <div class="detail-overlay-description mt-2">
+                            {{map?.description}}
+                        </div>
+                    </div>
+                </app-collapsible-window>
+            </div>
+        </ng-container>
+
+        <as-split unit="pixel"
+                  direction="horizontal"
+                  [gutterSize]="2">
+            <as-split-area [order]="0" class="overflow-hidden">
+                <div class="graph-container">
+                    <canvas #canvas class="graph-view"></canvas>
+                </div>
+            </as-split-area>
+            <as-split-area size="250"
+                           [order]="1">
+                <ng-container
+                        *ngIf="(graphCanvas?.selection.changeObservable | async) as selected; else graphInfo">
+                    <div class="info-panel" *ngIf="selected[0].length === 1; else graphInfo">
+                        <app-info-view-panel [selected]="selected[0][0]">
+                        </app-info-view-panel>
+                    </div>
+                </ng-container>
+
+                <ng-template #graphInfo>
+                    <ng-container *ngIf="graphCanvas">
+                        <div class="module-body">
+                            <h5>Graph</h5>
+
+                            <div class="row align-items-center mb-0">
+                                <div class="col-sm-6">Node Count:</div>
+                                <div class="col-sm-6 text-right">
+                                    {{ graphCanvas.nodes.length | number }}
+                                </div>
+                            </div>
+
+                            <div class="row align-items-center">
+                                <div class="col-sm-6">Edge Count:</div>
+                                <div class="col-sm-6 text-right">
+                                    {{ graphCanvas.edges.length | number }}
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
+                </ng-template>
+            </as-split-area>
+        </as-split>
+    </div>
+</div>

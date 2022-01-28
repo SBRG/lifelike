@@ -1,0 +1,20 @@
+name: Build and push frontend client Docker image
+
+on:
+  push:
+    branches:
+      - 'master'
+    paths:
+      - 'client/**'
+      - '.github/**'
+
+jobs:
+  doker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Docker publish
+        uses: ./.github/actions/docker-publish.yml
+        with:
+          image: lifelike/client
+          dockerfile: ./client/Dockerfile
+          context: ./client

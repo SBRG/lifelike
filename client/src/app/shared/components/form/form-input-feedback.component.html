@@ -1,0 +1,39 @@
+<div class="d-block" *ngIf="dirty && control?.invalid && control.errors"
+     [class.invalid-feedback]="!formLevel" [class.alert]="formLevel"
+     [class.alert-danger]="formLevel">
+  <div *ngIf="formLevel">
+    <strong>There is an error with your input:</strong>
+  </div>
+  <div *ngIf="control.hasError('required')">
+    This field is required.
+  </div>
+  <div *ngIf="control.hasError('minlength')">
+    Enter at least {{ control.getError('minlength').requiredLength }}
+    character{{ control.getError('minlength').requiredLength == 1 ? '' : 's' }}.
+  </div>
+  <div *ngIf="control.hasError('maxlength')">
+     Enter no more than {{control.getError('maxlength').requiredLength}} characters.
+  </div>
+  <div *ngIf="control.hasError('email')">
+    The provided email is not valid.
+  </div>
+  <div *ngIf="control.hasError('whitespace')">
+    This field cannot contain only whitespace characters.
+  </div>
+  <div *ngIf="control.hasError('whitespaceError')">
+    This field cannot contain any whitespace characters.
+  </div>
+  <div *ngIf="control.hasError('filenameError')">
+    The filename contains illegal char(s): {{control.getError('filenameError').value.join(' ')}}
+  </div>
+  <div *ngIf="control.hasError('serverValidated')">
+    <div *ngFor="let error of control.getError('serverValidated')">
+      {{ error }}
+    </div>
+  </div>
+  <ng-container *ngFor="let error of errors | keyvalue">
+    <div *ngIf="control.hasError(error.key)">
+      {{ error.value }}
+    </div>
+  </ng-container>
+</div>

@@ -1,0 +1,16 @@
+$edge-color-map: (
+  activates: #5ea248,
+  inhibits: #fb7137
+);
+
+//Example mapping
+//@mixin data-type() {
+//  @each $type, $color in $edge-color-map {
+//    &[data-type=#{$type}] {
+//      border: $edge-default-width solid darken($color, 25%);
+//      stroke-width: $edge-default-width;
+//      stroke: $color;
+//    }
+//  }
+//}
+

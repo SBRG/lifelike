@@ -1,0 +1,25 @@
+<div class="window d-flex flex-column h-100" [class.d-inline-flex]="!expanded && sideCollapse"
+     [class.border-0]="borderless" [class.rounded-0]="borderless">
+  <div class="window-header window-header-selectable" (appTabSelectable)="toggle()">
+    <h5 class="window-title" *ngIf="expanded || !sideCollapse">
+      {{ title }}
+    </h5>
+    <button type="button" class="window-btn" aria-label="Close" tabindex="-1">
+      <ng-container *ngIf="!sideCollapse; else sideCollapseButton">
+        <i class="fa" [class.fa-caret-down]="reversed && expanded"></i>
+        <i class="fa" [class.fa-caret-up]="!reversed && expanded"></i>
+        <i class="fa" [class.fa-caret-down]="!reversed && !expanded"></i>
+        <i class="fa" [class.fa-caret-up]="reversed && !expanded"></i>
+      </ng-container>
+      <ng-template #sideCollapseButton>
+        <i class="fa" [class.fa-caret-left]="expanded"></i>
+        <i class="fa" [class.fa-caret-right]="!expanded"></i>
+      </ng-template>
+    </button>
+  </div>
+  <ng-container *ngIf="expanded">
+    <div class="overflow-auto">
+      <ng-content></ng-content>
+    </div>
+  </ng-container>
+</div>

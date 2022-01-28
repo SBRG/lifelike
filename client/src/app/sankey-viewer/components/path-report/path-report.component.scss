@@ -1,0 +1,11 @@
+.report {
+  display: grid;
+  width: max-content;
+  white-space: pre;
+}
+
+.report-scroll {
+  max-height: 85vh;
+  max-width: 100%;
+  overflow: auto;
+}

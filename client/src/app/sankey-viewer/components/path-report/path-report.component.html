@@ -1,0 +1,39 @@
+<div class="modal-header">
+    <h4 class="modal-title">Path report </h4>
+    <div class="btn-group d-inline-block ml-auto" ngbDropdown title="Select view">
+        <button class="btn btn-secondary" ngbDropdownToggle>
+            {{ view }}
+        </button>
+        <div ngbDropdownMenu class="dropdown-menu" id="pathReportDropDown">
+            <button ngbDropdownItem (click)="view = 'HTML'">HTML</button>
+            <button ngbDropdownItem (click)="view = 'Text'">Text</button>
+        </div>
+    </div>
+    <button (click)="activeModal.dismiss()" aria-label="Close" class="close ml-1"
+            type="button">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body" [style.whiteSpace]="'pre-line'">
+    <div class="report-scroll">
+        <ng-container *ngIf="view === 'HTML'; else viewAsText">
+            <div *ngFor="let traceNetwork of pathReport | keyvalue">
+                <h5 class="b my-1" [innerHTML]="traceNetwork.key"></h5>
+                <div *ngFor="let path of traceNetwork.value">
+                    <div class="report">
+                        <div *ngFor="let entity of path" [style]="{
+                                            gridColumn:  entity.column,
+                                            gridRow: entity.row
+                                        }"
+                             [innerHTML]="entity.label">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+        <ng-template #viewAsText>
+                <span [style.whiteSpace]="'pre'" [innerHTML]="pathReportText">
+                </span>
+        </ng-template>
+    </div>
+</div>

@@ -1,0 +1,26 @@
+<div *ngIf="error; else notError">
+  <span>Could not load snippet data for this edge. Possible reasons include:</span>
+  <ul>
+    <li>Could not find nodes connected to this edge on the canvas</li>
+    <li>An error occurred on the server</li>
+  </ul>
+</div>
+<ng-template #notError>
+  <div *ngIf="edgeEntity && legend; else loadingSpinner">
+    <app-snippet-display
+      [snippetData]="[edgeEntity.snippetData]"
+      [queryData]="edgeEntity.queryData"
+      [totalResults]="edgeEntity.totalResults"
+      [isNewEntity]="isNewEntity"
+      [legend]="legend"
+      (requestNewPageEmitter)="requestPage($event)"
+    ></app-snippet-display>
+  </div>
+  <ng-template #loadingSpinner>
+    <div id="loading-spinner-container" class="d-flex justify-content-center align-items-center">
+      <div class="spinner-border text-primary" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
+  </ng-template>
+</ng-template>

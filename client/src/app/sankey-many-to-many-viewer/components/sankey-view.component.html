@@ -1,0 +1,260 @@
+<div class="module" *ngIf="(loadTask?.status$ | async) as status">
+    <app-module-progress *ngIf="status.running">
+        Downloading file...
+    </app-module-progress>
+
+    <app-module-error *ngIf="status.failedErrorShown" [error]="status.error">
+        <a appLink="/projects">Go to Projects <i class="fa fa-fw fa-arrow-right"></i></a>
+    </app-module-error>
+
+    <ng-container *ngIf="object">
+        <app-module-header [object]="object"
+                           *ngIf="(allData | async) as data"
+                           (dragStarted)="dragStarted($event)">
+            <app-module-menu (objectRefresh)="requestRefresh()" *ngIf="object" [forEditing]="true"
+                             [object]="object" [showDelete]="false"
+                             [showOpen]="false">
+            </app-module-menu>
+            <app-warning-pill></app-warning-pill>
+            <ng-container moduleMenuAdditions>
+                <div class="dropdown-divider"></div>
+                <button (click)="open(logModal)" *ngIf="data?.graph.log" ngbDropdownItem>
+                    Open logs
+                    <ng-template #logModal let-modal>
+                        <div class="modal-header">
+                            <h4 class="modal-title">Logs</h4>
+                            <button (click)="modal.dismiss()" aria-label="Close" class="close"
+                                    type="button">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body p-0 pb-1">
+                            <ng-container
+                                    *ngIf="isArray(data.graph.log); else justText">
+
+                                <ul class="list-group list-group-flush">
+                                    <li *ngFor="let log of data?.graph.log"
+                                        class="list-group-item"
+                                    >{{ log }}</li>
+                                </ul>
+                            </ng-container>
+                            <ng-template #justText>
+                                {{ data.graph.log }}
+                            </ng-template>
+                        </div>
+                    </ng-template>
+                </button>
+                <button (click)="open(descriptionModal)" ngbDropdownItem>
+                    Open description
+                    <ng-template #descriptionModal let-modal>
+                        <div class="modal-header">
+                            <h4 class="modal-title">Description</h4>
+                            <button (click)="modal.dismiss()" aria-label="Close" class="close"
+                                    type="button">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body" [style.whiteSpace]="'pre-line'">
+                            {{ data.graph.description }}
+                        </div>
+                    </ng-template>
+                </button>
+                <button (click)="openPathReport()" ngbDropdownItem>
+                    Open path report
+                </button>
+                <button (click)="open(fileStructureOverview)" ngbDropdownItem>
+                    Open structure overview
+                    <ng-template #fileStructureOverview let-modal>
+                        <div class="modal-header">
+                            <h4 class="modal-title">Structure Overview</h4>
+                            <button (click)="modal.dismiss()" aria-label="Close" class="close"
+                                    type="button">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <app-object-explorer [dataSource]="data"></app-object-explorer>
+                        </div>
+                    </ng-template>
+                </button>
+                <button (click)="open(warningList)" ngbDropdownItem>
+                    Warning List
+                    <ng-template #warningList let-modal>
+                        <div class="modal-header">
+                            <h4 class="modal-title">Warnings</h4>
+                            <button (click)="modal.dismiss()" aria-label="Close" class="close"
+                                    type="button">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <app-warning-list [showAll]="true" [dismissible]="false"></app-warning-list>
+                        </div>
+                    </ng-template>
+                </button>
+            </ng-container>
+            <button (click)="resetView()" class="btn btn-secondary" container="body"
+                    ngbTooltip="Reset the view" placement="bottom"
+                    type="button">
+                <i class="fas fa-sync"></i>
+            </button>
+            <app-sankey-view-dropdown
+                    [ngClass.gt-sm]="'btn-group mr-auto'" [ngStyle.lt-md]="'display: contents'"
+                    class="d-inline-block"
+                    [object]="object"
+                    *ngIf="data"
+                    [(activeViewName)]="activeViewName"
+                    [preselectedViewBase]="preselectedViewBase"
+                    (viewDataChanged)="saveFile()"
+            ></app-sankey-view-dropdown>
+            <div class="btn-group-toggle" [ngClass.gt-sm]="'btn-group'" [ngStyle.lt-md]="'display: contents'">
+                <button (click)="resetZoom()" class="btn btn-secondary" container="body"
+                        ngbTooltip="Fit Map to Window" placement="bottom"
+                        type="button">
+                    <i class="fas fa-expand-arrows-alt"></i>
+                </button>
+                <button (click)="zoomIn()" class="btn btn-secondary" container="body"
+                        ngbTooltip="Zoom In" placement="bottom"
+                        type="button">
+                    <i class="fas fa-search-plus"></i>
+                </button>
+                <button (click)="zoomOut()" class="btn btn-secondary" container="body"
+                        ngbTooltip="Zoom Out" placement="bottom"
+                        type="button">
+                    <i class="fas fa-search-minus"></i>
+                </button>
+            </div>
+            <div class="btn-group-toggle flex-wrap" [ngClass.gt-sm]="'btn-group ml-auto'"
+                 [ngStyle.lt-md]="'display: contents'">
+                <div class="btn-group d-inline-block" ngbDropdown title="Select Trace Network">
+                    <button class="btn btn-primary" ngbDropdownToggle>
+                        <ng-container
+                                *ngIf="selectedNetworkTrace; else noSelectedTrace">{{ selectedNetworkTrace?.name || selectedNetworkTrace?.description || 'Trace Description Unknown' }}</ng-container>
+                        <ng-template #noSelectedTrace>Select Trace Network</ng-template>
+                    </button>
+                    <!-- add class dropdown-menu to avoid relayout -->
+                    <div ngbDropdownMenu class="dropdown-menu">
+                        <button (click)="selectNetworkTrace(i)" *ngFor="let trace of networkTraces; let i = index"
+                                ngbDropdownItem>{{ trace?.name || trace?.description || 'Trace Description Unknown' }}</button>
+                    </div>
+                </div>
+                <div class="btn-group d-inline-block" ngbDropdown title="Predefined sizing options">
+                    <button class="btn btn-primary" ngbDropdownToggle>
+                        {{ predefinedValueAccessor?.description !== 'None' ?
+                        predefinedValueAccessor.description :
+                        'Select Predefined Value Accessor' }}
+                    </button>
+                    <!-- add class dropdown-menu to avoid relayout -->
+                    <div ngbDropdownMenu class="dropdown-menu">
+                        <button (click)="selectPredefinedValueAccessor(predefinedValueAccessor.key)"
+                                *ngFor="let predefinedValueAccessor of options.predefinedValueAccessors | keyvalue"
+                                ngbDropdownItem>{{predefinedValueAccessor.value.description}}</button>
+                    </div>
+                </div>
+                <label class="btn-primary flex-grow-0" ngbButtonLabel>
+                    <input type="checkbox" ngbButton [(ngModel)]="advancedPanel">Advanced
+                </label>
+                <div class="btn-group btn-group-toggle">
+                    <app-sankey-search-control>
+                    </app-sankey-search-control>
+                </div>
+            </div>
+        </app-module-header>
+        <div class="relative w-100 h-100 overflow-hidden" *ngIf="(dataToRender | async) as renderData">
+            <as-split [gutterSize]="5"
+                      direction="horizontal"
+                      unit="pixel"
+            >
+                <as-split-area [order]="0">
+                    <app-sankey-many-to-many #sankey
+                                             *ngIf="renderData"
+                                             [data]="renderData"
+                                             (linkClicked)="selectLink($event)"
+                                             (nodeClicked)="selectNode($event)"
+                                             (backgroundClicked)="closeDetailsPanel();resetSelection()"
+                                             (resized)="sankeyResized($event)"
+                                             [highlightCircular]="state.highlightCircular"
+                                             [nodeAlign]="nodeAlign"
+                                             [normalizeLinks]="state.normalizeLinks"
+                                             [selected]="selection | async"
+                                             [searchedEntities]="sankeySearch.entitySearchList | async"
+                                             [focusedNode]="sankeySearch.searchFocus | async">
+                    </app-sankey-many-to-many>
+<!--                    <app-warning-list></app-warning-list>-->
+                </as-split-area>
+                <as-split-area [class]="[
+                                'as-split-area',
+                                detailsPanel ? 'border' : 'as-hidden'
+                               ].join(' ')"
+                               [order]="1"
+                               [visible]="detailsPanel"
+                               size="340">
+                    <div class="w-100 h-100 p-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            Selection
+                            <button (click)="closeDetailsPanel()"
+                                    class="btn btn-danger"
+                                    type="button"
+                                    title="Click to close tha panel and clear selection">
+                                <i class="fa fa-close"></i>
+                            </button>
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <div class="border-bottom border-secondary pb-3 mb-3">
+                            <app-sankey-many-to-many-details-panel *ngIf="selectionWithTraces | async"
+                                                                   [details]="selectionWithTraces | async">
+                            </app-sankey-many-to-many-details-panel>
+                        </div>
+                    </div>
+                </as-split-area>
+                <as-split-area [class]="[
+                                'as-split-area',
+                                searchPanel ? 'border' : 'as-hidden'
+                               ].join(' ')"
+                               [order]="1"
+                               [visible]="searchPanel"
+                               size="340">
+                    <div class="w-100 h-100 p-3 d-flex flex-column">
+                        <div class="d-flex justify-content-between align-items-center">
+                            Search results
+                            <button (click)="closeSearchPanel()"
+                                    class="btn btn-danger"
+                                    type="button"
+                                    title="Click to close the panel and clear selection">
+                                <i class="fa fa-close"></i>
+                            </button>
+                        </div>
+                        <div class="flex-grow-1 pb-3">
+                            <app-sankey-search-panel>
+                            </app-sankey-search-panel>
+                        </div>
+                    </div>
+                </as-split-area>
+                <as-split-area [class]="[
+                                    'as-split-area',
+                                    advancedPanel ? 'border' : 'as-hidden'
+                               ].join(' ')"
+                               [order]="2"
+                               [visible]="advancedPanel"
+                               size="340">
+                    <div class="w-100 h-100 p-3">
+                        <div class="d-flex justify-content-between align-items-center pl-3">
+                            Advanced options
+                            <button (click)="closeAdvancedPanel()"
+                                    class="btn btn-danger"
+                                    type="button">
+                                <i class="fa fa-close"></i>
+                            </button>
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <div class="border-bottom border-secondary pb-3 mb-3">
+                            <app-sankey-advanced-panel>
+                                <!-- Interacts with view through Sankey Controller service -->
+                            </app-sankey-advanced-panel>
+                        </div>
+                    </div>
+                </as-split-area>
+            </as-split>
+        </div>
+    </ng-container>
+</div>

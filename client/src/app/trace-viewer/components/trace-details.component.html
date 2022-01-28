@@ -1,0 +1,18 @@
+<app-vis-js-network
+        [config]="config"
+        [data]="data"
+        [legend]="legend"
+        (nodeHover)="nodeHover($event)"
+        (nodeBlur)="nodeBlur($event)"
+>
+    <ng-template #selection let-nodes="nodes" let-edges="edges">
+        <ng-container *ngIf="nodes?.length">
+            Nodes:
+            <app-object-explorer [dataSource]="nodes"></app-object-explorer>
+        </ng-container>
+        <ng-container *ngIf="edges?.length">
+            Edges:
+            <app-object-explorer [dataSource]="edges"></app-object-explorer>
+        </ng-container>
+    </ng-template>
+</app-vis-js-network>

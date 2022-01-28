@@ -1,0 +1,60 @@
+version: "3.9"
+
+services:
+  ## Frontend web server
+  webserver:
+    image: ${IMAGE_REGISTRY:-us.gcr.io/able-goods-221820}/lifelike-webserver:${WEBSERVER_IMAGE_TAG:-latest}
+    restart: unless-stopped
+    container_name: webserver
+    environment:
+      - APPSERVER_URL=http://appserver:5000
+    ports:
+      - 8080:80
+    links:
+      - appserver
+
+  ## Backend application server
+  appserver:
+    image: ${IMAGE_REGISTRY:-us.gcr.io/able-goods-221820}/lifelike-appserver:${APPSERVER_IMAGE_TAG:-latest}
+    restart: unless-stopped
+    container_name: appserver
+    ports:
+      - 5000:5000
+    environment:
+      - APPSERVER_URL=http://appserver:5000
+      - PDFPARSER_URL=http://pdfparser:7600
+      - STATISTICAL_ENRICHMENT_URL=http://statistical-enrichment:5000
+      - INITIAL_ADMIN_EMAIL=admin@example.com
+      - MIGRATE_DB=1
+    links:
+      - statistical-enrichment
+      - pdfparser
+
+  ## PDF parsing service
+  pdfparser:
+    image: ${IMAGE_REGISTRY:-us.gcr.io/able-goods-221820}/lifelike-pdfparser:${PDFPARSER_IMAGE_TAG:-latest}
+    restart: unless-stopped
+    container_name: pdfparser
+    tty: true
+    ports:
+      - 7600
+    healthcheck:
+      test: ["CMD", "curl", "-f", "localhost:7600"]
+
+  ## Statistical enrichment service
+  statistical-enrichment:
+    image: ${IMAGE_REGISTRY:-us.gcr.io/able-goods-221820}/lifelike-statistical-enrichment:${STATISTICAL_ENRICHMENT_IMAGE_TAG:-latest}
+    restart: unless-stopped
+    container_name: statistical-enrichment
+    ports:
+      - 5000
+
+  # Cache invalidator service
+  cache-invalidator:
+    image: ${IMAGE_REGISTRY:-us.gcr.io/able-goods-221820}/lifelike-cache-invalidator:${CACHE_INVALIDATOR_IMAGE_TAG:-latest}
+    restart: unless-stopped
+    container_name: cache-invalidator
+
+networks:
+  default:
+    name: lifelike

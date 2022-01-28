@@ -1,0 +1,81 @@
+<div class="module-section">
+  <div class="module-section-header">
+    <h2 class="module-section-header-title">Your Projects</h2>
+  </div>
+
+  <div class="module-section-body">
+    <div class="mb-3 d-flex align-items-center">
+      <div class="mr-2">
+        <button class="btn btn-primary" (click)="openCreateDialog()">
+          <i class="fa fa-fw fa-plus-circle"></i>
+          New Project
+        </button>
+      </div>
+    </div>
+
+    <ng-container *ngIf="(projectList$ | async) as projectList">
+      <ng-container *ngIf="projectList.error">
+        <app-module-error [error]="projectList.error">
+        </app-module-error>
+      </ng-container>
+
+      <ng-container *ngIf="projectList.loading">
+        <div class="tile-deck">
+          <div *ngFor="let p of [0, 1, 2]" class="tile d-flex flex-column justify-content-center align-items-center">
+            <div class="flex-fill d-flex align-items-center">
+            <span class="placeholder-box">
+              <i class="fas fa-layer-group fa-4x"></i>
+            </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-4">
+          <app-pagination></app-pagination>
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="projectList.value">
+        <ng-container *ngIf="projectList.value.collectionSize; else noProjectResults">
+          <div class="tile-deck">
+            <div *ngFor="let p of projectList.value.results.view" class="tile d-flex flex-column"
+                 draggable="true" (dragstart)="projectDragStart($event, p)">
+              <div class="d-flex tile-toolbar">
+                <div ngbDropdown class="d-inline-block ml-auto" container="body">
+                  <button class="btn btn-sm" ngbDropdownToggle>
+                    <i class="fas fa-cog fa-fw"></i>
+                  </button>
+                  <div ngbDropdownMenu>
+                    <app-project-menu [project]="p"></app-project-menu>
+                  </div>
+                </div>
+              </div>
+              <div class="flex-fill d-flex justify-content-center align-items-center my-2">
+                <a [appLink]="['/folders', p.root.hashId]" class="text-muted">
+                  <app-project-icon [project]="p" size="56px"></app-project-icon>
+                </a>
+              </div>
+              <div class="text-truncate text-center">
+                <a [appLink]="['/folders', p.root.hashId]" class="d-block text-truncate">
+                  <strong>{{ p.name }}</strong>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-4">
+            <app-pagination [paging]="paging$.value" [collectionSize]="projectList.value.collectionSize"
+                            (pageChange)="this.paging$.next($event)"></app-pagination>
+          </div>
+        </ng-container>
+
+        <ng-template #noProjectResults>
+          <div class="my-4">
+            You have no projects. Create projects to store collections of
+            documents and knowledge maps.
+          </div>
+        </ng-template>
+      </ng-container>
+    </ng-container>
+  </div>
+</div>

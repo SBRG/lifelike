@@ -1,0 +1,22 @@
+[
+    {
+        "name": "PseudomonasCyc",
+        "file": "pput160488cyc.tar.gz"
+    },
+    {
+        "name": "YeastCyc",
+        "file": "yeast.tar.gz"
+    },
+    {
+        "name": "EcoCyc",
+        "file": "ecoli.tar.gz"
+    },
+    {
+        "name": "HumanCyc",
+        "file": "human.tar.gz"
+    },
+    {
+        "name": "MetaCyc",
+        "file": "meta.tar.gz"
+    }
+]

@@ -1,0 +1,73 @@
+.input-border {
+  border: $border-width solid $input-border-color !important;
+}
+
+.input-border-top {
+  border-top: $border-width solid $input-border-color !important;
+}
+
+.input-border-right {
+  border-right: $border-width solid $input-border-color !important;
+}
+
+.input-border-bottom {
+  border-bottom: $border-width solid $input-border-color !important;
+}
+
+.input-border-left {
+  border-left: $border-width solid $input-border-color !important;
+}
+
+.border-0 {
+  border: 0 !important;
+}
+
+.border-top-0 {
+  border-top: 0 !important;
+}
+
+.border-right-0 {
+  border-right: 0 !important;
+}
+
+.border-bottom-0 {
+  border-bottom: 0 !important;
+}
+
+.border-left-0 {
+  border-left: 0 !important;
+}
+
+.bg-white {
+  background: $white;
+}
+
+.bg-highlight {
+  background: $highlight;
+}
+
+.flex-spaced-wrap {
+  flex-wrap: wrap;
+  margin-top: $spacer * -0.5;
+
+  & > * {
+    margin-top: $spacer * 0.5;
+  }
+}
+
+.drop-target {
+  outline: 2px solid black;
+  outline-offset: -2px;
+}
+
+.drop-target-outset {
+  outline-offset: 0;
+}
+
+.drop-zone {
+  border: 2px dashed $gray-400;
+  padding: $input-padding-y $input-padding-x;
+  border-radius: $input-border-radius;
+  text-align: center;
+  color: $gray-400;
+}

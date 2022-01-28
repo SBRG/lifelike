@@ -1,0 +1,75 @@
+.legend {
+  display: grid;
+  grid-template-columns: 4ch 1fr;
+  margin: 0;
+}
+
+.hidden-text {
+  display: inline-block;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+@mixin clamp($max-lines) {
+  overflow: hidden;
+  // oddly those prefixes are supported among all modern browsers
+  display: -webkit-box;
+  -webkit-line-clamp: $max-lines;
+  -webkit-box-orient: vertical;
+}
+
+.table {
+  margin-bottom: 0;
+
+  tbody > tr {
+    & > td > * {
+      // clamp by height so no ellipsis is shown
+      max-height: calc(1.5em * 15); // ~15 lines
+      overflow: auto;
+      display: block;
+
+      // auto-scroll within cell to searched term
+      overscroll-behavior-y: contain;
+      scroll-snap-type: y mandatory;
+
+      &::ng-deep > .ngb-highlight {
+        scroll-snap-align: center;
+        display: inline-block;
+        scroll-snap-stop: always;
+      }
+    }
+
+    // allow cell scrolling
+    &:focus > td > *, &:focus-within > td > *, &:hover > td > * {
+      scroll-snap-type: y proximity;
+    }
+  }
+
+  .line-clamp > tr {
+    & > td > * {
+      $max-lines: 3;
+      @include clamp($max-lines);
+    }
+
+    // stop clamping while focussed
+    &:focus > td > *, &:focus-within > td > * {
+      -webkit-line-clamp: unset;
+      overflow: auto;
+    }
+  }
+
+  .gene-list > * {
+    display: inline;
+
+    &:after {
+      content: ', ';
+      cursor: text;
+      pointer-events: none;
+    }
+
+    &:last-child:after {
+      content: '';
+    }
+  }
+}

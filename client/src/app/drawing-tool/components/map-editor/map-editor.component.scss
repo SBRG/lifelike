@@ -1,0 +1,28 @@
+@import 'src/scss/variables';
+
+.palette-panel {
+  display: flex;
+  position: absolute;
+  left: $window-spacer;
+  bottom: $window-spacer;
+  width: 16rem;
+  z-index: 1;
+  max-height: calc(100% - 50px);
+}
+
+.lock-panel {
+  position: absolute;
+  left: $window-spacer;
+  top: 0;
+  z-index: 1;
+  width: 350px;
+  border-top: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  max-height: calc(100% - 50px);
+  overflow: auto;
+}
+
+.info-panel {
+  height: 100%;
+}

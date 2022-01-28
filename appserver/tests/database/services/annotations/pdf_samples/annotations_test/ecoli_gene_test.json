@@ -1,0 +1,185 @@
+{
+  "name": "ecoli_gene_test.pdf",
+  "pages": [
+    {
+      "cropBox": {
+        "height": 540,
+        "lowerLeftPt": {
+          "x": 0,
+          "y": 0
+        },
+        "pivotPt": {
+          "x": 0,
+          "y": 0
+        },
+        "rotation": 0,
+        "width": 960
+      },
+      "mediaBox": {
+        "height": 540,
+        "lowerLeftPt": {
+          "x": 0,
+          "y": 0
+        },
+        "pivotPt": {
+          "x": 0,
+          "y": 0
+        },
+        "rotation": 0,
+        "width": 960
+      },
+      "pageNo": 1,
+      "pageText": "  Escherichia coli purA, purB, purC, purD, purF ",
+      "tokens": [
+        {
+          "pgIdx": 2,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 60,
+              "lowerLeftPt": {
+                "x": 298.05999755859375,
+                "y": 268.010009765625
+              },
+              "pivotPt": {
+                "x": 298.05999755859375,
+                "y": 283.010009765625
+              },
+              "rotation": 0,
+              "width": 268.6199951171875
+            }
+          ],
+          "shapes": [],
+          "text": "Escherichia"
+        },
+        {
+          "pgIdx": 14,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 60,
+              "lowerLeftPt": {
+                "x": 580.5599975585938,
+                "y": 268.010009765625
+              },
+              "pivotPt": {
+                "x": 580.5599975585938,
+                "y": 283.010009765625
+              },
+              "rotation": 0,
+              "width": 81.48004150390625
+            }
+          ],
+          "shapes": [],
+          "text": "coli"
+        },
+        {
+          "pgIdx": 19,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 24,
+              "lowerLeftPt": {
+                "x": 340.8999938964844,
+                "y": 227.16000366210938
+              },
+              "pivotPt": {
+                "x": 340.8999938964844,
+                "y": 233.16000366210938
+              },
+              "rotation": 0,
+              "width": 47.472015380859375
+            }
+          ],
+          "shapes": [],
+          "text": "purA"
+        },
+        {
+          "pgIdx": 25,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 24,
+              "lowerLeftPt": {
+                "x": 399.94000244140625,
+                "y": 227.16000366210938
+              },
+              "pivotPt": {
+                "x": 399.94000244140625,
+                "y": 233.16000366210938
+              },
+              "rotation": 0,
+              "width": 46.63201904296875
+            }
+          ],
+          "shapes": [],
+          "text": "purB"
+        },
+        {
+          "pgIdx": 31,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 24,
+              "lowerLeftPt": {
+                "x": 457.67999267578125,
+                "y": 227.16000366210938
+              },
+              "pivotPt": {
+                "x": 457.67999267578125,
+                "y": 233.16000366210938
+              },
+              "rotation": 0,
+              "width": 46.368011474609375
+            }
+          ],
+          "shapes": [],
+          "text": "purC"
+        },
+        {
+          "pgIdx": 37,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 24,
+              "lowerLeftPt": {
+                "x": 515.280029296875,
+                "y": 227.16000366210938
+              },
+              "pivotPt": {
+                "x": 515.280029296875,
+                "y": 233.16000366210938
+              },
+              "rotation": 0,
+              "width": 48.3359375
+            }
+          ],
+          "shapes": [],
+          "text": "purD"
+        },
+        {
+          "pgIdx": 43,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 24,
+              "lowerLeftPt": {
+                "x": 574.4400024414062,
+                "y": 227.16000366210938
+              },
+              "pivotPt": {
+                "x": 574.4400024414062,
+                "y": 233.16000366210938
+              },
+              "rotation": 0,
+              "width": 44.615966796875
+            }
+          ],
+          "shapes": [],
+          "text": "purF"
+        }
+      ]
+    }
+  ],
+  "processedDate": "2021-01-14 14:48:20"
+}

@@ -1,0 +1,30 @@
+
+{{- if .Values.pdfparser.autoScaling.enabled }}
+apiVersion: autoScaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ include "lifelike.fullname" . }}-pdfparser
+  labels:
+    {{- include "lifelike.labels" . | nindent 4 }}
+    app.kubernetes.io/component: pdfparser
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ include "lifelike.fullname" . }}-pdfparser
+  minReplicas: {{ .Values.pdfparser.autoScaling.minReplicas }}
+  maxReplicas: {{ .Values.pdfparser.autoScaling.maxReplicas }}
+  metrics:
+    {{- if .Values.pdfparser.autoScaling.targetCPUUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: cpu
+        targetAverageUtilization: {{ .Values.pdfparser.autoScaling.targetCPUUtilizationPercentage }}
+    {{- end }}
+    {{- if .Values.pdfparser.autoScaling.targetMemoryUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: memory
+        targetAverageUtilization: {{ .Values.pdfparser.autoScaling.targetMemoryUtilizationPercentage }}
+    {{- end }}
+{{- end }}

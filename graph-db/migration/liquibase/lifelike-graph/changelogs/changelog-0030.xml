@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd">
+
+  <changeSet id="Add index to global inclusion queries" author="Binh Vu">
+    <comment>
+      Add index to properties that are used by global inclusion.
+    </comment>
+    <sql>
+      CREATE CONSTRAINT constraint_lifelike_name IF NOT EXISTS ON (n:db_Lifelike) ASSERT n.name IS UNIQUE;
+      CREATE INDEX index_lifelike_id IF NOT EXISTS FOR (n:db_Lifelike) ON (n.eid)
+    </sql>
+  </changeSet>
+</databaseChangeLog>

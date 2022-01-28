@@ -1,0 +1,13 @@
+<div class="position-relative h-100">
+  <ng-container *ngIf="(loadTask.status$ | async) as status">
+    <app-module-progress *ngIf="status.running">
+      Loading map...
+    </app-module-progress>
+  </ng-container>
+
+  <div class="position-absolute w-100 h-100 d-flex flex-column" style="z-index: 0">
+    <div class="flex-fill position-relative overflow-hidden">
+      <canvas #canvas class="graph-view"></canvas>
+    </div>
+  </div>
+</div>

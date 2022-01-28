@@ -1,0 +1,17 @@
+$tree-row-height: 35px;
+
+.mat-tree-node {
+    min-height: $tree-row-height;
+}
+
+.row-spacer {
+    height: $tree-row-height;
+    width: $tree-row-height;
+}
+.row-spacer:focus {
+    box-shadow: none;
+}
+
+.tree-icon {
+    color: #6c757d;
+}

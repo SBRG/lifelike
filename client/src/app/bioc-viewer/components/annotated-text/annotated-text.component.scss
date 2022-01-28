@@ -1,0 +1,33 @@
+.x-y-z-annotation {
+  background-color: gray;
+  cursor: move;
+
+  &.Disease {
+    color: #ff9800;
+    background-color: #ffe0b2;
+  }
+
+  &.Mutation {
+    color: #5d4037;
+    background-color: #d7ccc8;
+  }
+
+  &.Gene {
+    color: #673ab7;
+    background-color: #e1bee7;
+  }
+
+  &.Chemical {
+    color: #4caf50;
+    background-color: #c8e6c9;
+  }
+
+  &.Species {
+    color: #2196f3;
+    background-color: #dcf1fc;
+  }
+}
+
+.section-title {
+  font-size: medium;
+}

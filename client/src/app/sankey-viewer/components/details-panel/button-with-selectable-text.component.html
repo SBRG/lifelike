@@ -1,0 +1,9 @@
+<button
+        class="btn btn-link btn-presets"
+        [disabled]="disabled"
+>
+    <ng-content select="[title]"></ng-content>
+    <span class="selectable-text">
+    <ng-content></ng-content>
+    </span>
+</button>

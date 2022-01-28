@@ -1,0 +1,125 @@
+<div *ngIf="dataLoaded && snippetData && legend; else loadingSpinner">
+  <div id="num-snippets-container" class="row align-items-center mb-2">
+    <div class="col">
+      <span *ngIf="totalResults === 0; else nonZeroResults">Showing 0 - 0 of 0 snippets</span>
+      <ng-template #nonZeroResults>
+        <span *ngIf="pageLimit * (page) > totalResults; else multiPageResults">Showing {{ pageLimit * (page - 1) + 1 }} - {{ totalResults }} of {{ totalResults }}</span>
+        <ng-template #multiPageResults>
+          <span>Showing {{ pageLimit * (page - 1) + 1 }} - {{ pageLimit * (page) }} of {{ totalResults }}</span>
+        </ng-template>
+      </ng-template>
+    </div>
+
+    <div class="col">
+      <div class="d-flex justify-content-end align-items-center" *ngIf="totalResults !== 0">
+        <label class="mr-1 mb-0">Page Limit</label>
+        <select id="page-limit-select" class="custom-select" [ngModel]="pageLimit" (change)="onLimitChange($event)">
+          <option type="number" *ngFor="let limit of pageLimitList" [value]="limit">{{ limit }}</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <div class="snippet-result" *ngFor="let result of snippetData">
+    <app-node-relationship
+      [leftNodeName]="result.from.displayName"
+      [leftNodeLabel]="result.from.primaryLabel"
+      [leftNodeColor]="legend.get(result.from.primaryLabel)[0]"
+      [leftNodeUrl]="result.from.url"
+      [rightNodeColor]="legend.get(result.to.primaryLabel)[0]"
+      [rightNodeName]="result.to.displayName"
+      [rightNodeLabel]="result.to.primaryLabel"
+      [rightNodeUrl]="result.to.url"
+      [edge]="result.association"
+      [snippets]="result.snippets"
+    ></app-node-relationship>
+
+    <div class="mt-1" *ngIf="result.snippets.length > 0; else noSnippets">
+      <mat-expansion-panel class="association-snippet-panel border shadow-none my-2" *ngFor="let snippet of result.snippets">
+        <!-- Setting the collapsed/expanded height inputs here seems to fix an issue in Safari where the bootstrap h-100 class is not respected. -->
+        <mat-expansion-panel-header
+            class="snippet-panel-header  border-bottom h-100 w-100 px-4 py-3"
+            [collapsedHeight]="'100%'"
+            [expandedHeight]="'100%'"
+            draggable="true" (dragstart)="snippetDragStart($event, snippet)"
+        >
+          <mat-panel-title class="snippet-panel-title d-flex align-items-center text-primary">{{ (snippet.publication.data.title || 'Unknown') | truncate:240 }}</mat-panel-title>
+          <mat-panel-description class="snippet-panel-pub-data d-flex justify-content-end">
+            <i class="text-right">{{ (snippet.publication.data.journal || 'Unknown') | truncate:100 }} ({{ snippet.publication.data.pubYear || 'Unknown' }})</i>
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+
+        <div class="d-flex flex-column justify-content-between align-items-start px-4 py-3">
+          <app-highlight-snippet
+            [snippet]="snippet.reference.data.sentence"
+            [entry1Text]="snippet.reference.data.entry1Text"
+            [entry2Text]="snippet.reference.data.entry2Text"
+            [entry1Type]="snippet.reference.data.entry1Type.slice(0, 1).toUpperCase() + snippet.reference.data.entry1Type.slice(1)"
+            [entry2Type]="snippet.reference.data.entry2Type.slice(0, 1).toUpperCase() + snippet.reference.data.entry2Type.slice(1)"
+            [legend]="legend"
+          ></app-highlight-snippet>
+          <div class="mt-2 w-100">
+            <div class="d-flex justify-content-start w-100">
+              <label class="m-0 mr-1 font-weight-bold">Pubtator PMID:</label>
+              <p *ngIf="snippet.publication.data.pmid; else unknownPmid" class="m-0">
+                <a
+                  class="pubtator-link"
+                  [href]="getSnippetPubtatorLink(snippet.publication.data.pmid)"
+                  target="_blank">{{ snippet.publication.data.pmid }}</a>
+                <i class="fas fa-fw fa-external-link-alt"></i>
+              </p>
+              <ng-template #unknownPmid>Unknown</ng-template>
+            </div>
+          </div>
+        </div>
+      </mat-expansion-panel>
+    </div>
+    <ng-template #noSnippets>No Association Snippets Found!</ng-template>
+  </div>
+
+  <div *ngIf="maxPages > 1" class="py-2 d-flex justify-content-center align-items-center">
+    <div *ngIf="page !== 1">
+      <button
+        type="button"
+        class="btn btn-outline-secondary mx-1"
+        (click)="previousPage()"
+      ><i class="fa fa-fw fa-caret-left"></i> Previous</button>
+    </div>
+
+    <div class="d-flex justify-content-center align-items-center">
+      <button
+        type="button"
+        [class]="(page === 1 ? 'btn btn-outline-primary' : 'btn btn-outline-secondary') + ' mx-1'"
+        (click)="goToPage(1)">1</button>
+      <div *ngIf="page - 2 > 1">...</div>
+    </div>
+
+    <button
+      *ngFor="let button of pageButtons"
+      type="button"
+      [class]="(page === button ? 'btn btn-outline-primary' : 'btn btn-outline-secondary') + ' mx-1'"
+      (click)="goToPage(button)">{{ button }}</button>
+
+    <div *ngIf="maxPages !== 1" class="d-flex justify-content-center align-items-center">
+      <div *ngIf="page + 2 < maxPages">...</div>
+      <button
+        type="button"
+        [class]="(page === maxPages ? 'btn btn-outline-primary' : 'btn btn-outline-secondary') + ' mx-1'"
+        (click)="goToPage(maxPages)">{{ maxPages }}</button>
+    </div>
+
+    <div *ngIf="page !== maxPages">
+      <button
+        type="button"
+        class="btn btn-outline-secondary mx-1"
+        (click)="nextPage()"
+      >Next <i class="fa fa-fw fa-caret-right"></i></button>
+    </div>
+  </div>
+</div>
+<ng-template #loadingSpinner>
+  <div id="loading-spinner-container" class="d-flex justify-content-center align-items-center">
+    <div class="spinner-border text-primary" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>
+</ng-template>

@@ -1,0 +1,206 @@
+{
+  "name": "test_can_find_anatomy_entities.pdf",
+  "pages": [
+    {
+      "cropBox": {
+        "height": 792,
+        "lowerLeftPt": {
+          "x": 0,
+          "y": 0
+        },
+        "pivotPt": {
+          "x": 0,
+          "y": 0
+        },
+        "rotation": 0,
+        "width": 612
+      },
+      "mediaBox": {
+        "height": 792,
+        "lowerLeftPt": {
+          "x": 0,
+          "y": 0
+        },
+        "pivotPt": {
+          "x": 0,
+          "y": 0
+        },
+        "rotation": 0,
+        "width": 612
+      },
+      "pageNo": 1,
+      "pageText": "  280 kDa Actin Binding Protein Claws Capsules, Bacterial ",
+      "tokens": [
+        {
+          "pgIdx": 2,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 12,
+              "lowerLeftPt": {
+                "x": 76.89540100097656,
+                "y": 706.2301025390625
+              },
+              "pivotPt": {
+                "x": 76.89540100097656,
+                "y": 709.2301025390625
+              },
+              "rotation": 0,
+              "width": 21.22095489501953
+            }
+          ],
+          "shapes": [],
+          "text": "280"
+        },
+        {
+          "pgIdx": 6,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 12,
+              "lowerLeftPt": {
+                "x": 105.19158172607422,
+                "y": 706.2301025390625
+              },
+              "pivotPt": {
+                "x": 105.19158172607422,
+                "y": 709.2301025390625
+              },
+              "rotation": 0,
+              "width": 21.22095489501953
+            }
+          ],
+          "shapes": [],
+          "text": "kDa"
+        },
+        {
+          "pgIdx": 10,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 12,
+              "lowerLeftPt": {
+                "x": 133.48776245117188,
+                "y": 706.2301025390625
+              },
+              "pivotPt": {
+                "x": 133.48776245117188,
+                "y": 709.2301025390625
+              },
+              "rotation": 0,
+              "width": 35.369049072265625
+            }
+          ],
+          "shapes": [],
+          "text": "Actin"
+        },
+        {
+          "pgIdx": 16,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 12,
+              "lowerLeftPt": {
+                "x": 175.9320068359375,
+                "y": 706.2301025390625
+              },
+              "pivotPt": {
+                "x": 175.9320068359375,
+                "y": 709.2301025390625
+              },
+              "rotation": 0,
+              "width": 49.51715087890625
+            }
+          ],
+          "shapes": [],
+          "text": "Binding"
+        },
+        {
+          "pgIdx": 24,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 12,
+              "lowerLeftPt": {
+                "x": 232.52438354492188,
+                "y": 706.2301025390625
+              },
+              "pivotPt": {
+                "x": 232.52438354492188,
+                "y": 709.2301025390625
+              },
+              "rotation": 0,
+              "width": 49.517181396484375
+            }
+          ],
+          "shapes": [],
+          "text": "Protein"
+        },
+        {
+          "pgIdx": 32,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 12,
+              "lowerLeftPt": {
+                "x": 76.89540100097656,
+                "y": 692.5230102539062
+              },
+              "pivotPt": {
+                "x": 76.89540100097656,
+                "y": 695.5230102539062
+              },
+              "rotation": 0,
+              "width": 35.369049072265625
+            }
+          ],
+          "shapes": [],
+          "text": "Claws"
+        },
+        {
+          "pgIdx": 38,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 12,
+              "lowerLeftPt": {
+                "x": 76.89540100097656,
+                "y": 678.81591796875
+              },
+              "pivotPt": {
+                "x": 76.89540100097656,
+                "y": 681.81591796875
+              },
+              "rotation": 0,
+              "width": 56.5911865234375
+            }
+          ],
+          "shapes": [],
+          "text": "Capsules"
+        },
+        {
+          "pgIdx": 48,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 12,
+              "lowerLeftPt": {
+                "x": 147.63584899902344,
+                "y": 678.81591796875
+              },
+              "pivotPt": {
+                "x": 147.63584899902344,
+                "y": 681.81591796875
+              },
+              "rotation": 0,
+              "width": 63.66520690917969
+            }
+          ],
+          "shapes": [],
+          "text": "Bacterial"
+        }
+      ]
+    }
+  ],
+  "processedDate": "2021-01-14 14:31:04"
+}

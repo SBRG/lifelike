@@ -1,0 +1,11 @@
+$node-lightness: 60%;
+$node-saturation: 40%;
+$darken-node-stroke: 100%;
+
+$node-color: hsl(0, 0, $node-lightness);
+$node-border-colour: darken($node-color, $darken-node-stroke);
+$node-colors: (
+        left: #0065f4,
+        right: #ffb72e,
+        multi: hsl(180, $node-saturation, $node-lightness),
+)

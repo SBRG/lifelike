@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd">
+
+  <changeSet id="LL-3215 load Stringdb constraints on date 10282021" author="Binh Vu">
+    <comment>Create constraints and indexes for Stringdb data</comment>
+    <sql>
+    CREATE CONSTRAINT constraint_string_id IF NOT EXISTS ON (n:db_STRING) ASSERT n.eid IS UNIQUE;
+    </sql>
+  </changeSet>
+
+  <changeSet id="LL-3215 load Stringdb on date 10282021" author="Binh Vu">
+    <comment>
+        
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.FileQueryHandler"
+      query="
+      UNWIND $rows as row
+MERGE (n:db_STRING {eid: row.eid})
+SET n:Protein,n.name=row.name,n.protein_size=row.protein_size,n.annotation=row.annotation,n.tax_id=row.tax_id,n.refseq=row.refseq,n.data_source='STRING',n.original_entity_types=split('Protein', '|')
+      "
+      fileName="jira-LL-3215-string.zip"
+      startAt="1"
+      fileType="TSV" 
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="LL-3215 load Stringdb synonym rel on date 10282021" author="Binh Vu">
+    <comment>
+        
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.FileQueryHandler"
+      query="
+      UNWIND $rows AS row
+MERGE (a:Synonym {name: row.name}) SET a.lowercase_name=toLower(row.name)
+WITH row, a MATCH (b:db_STRING {eid: row.eid})
+MERGE (b)-[r:HAS_SYNONYM]->(a)
+      "
+      fileName="jira-LL-3215-string.zip"
+      startAt="1"
+      fileType="TSV" 
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="LL-3215 load Stringdb-Gene rel on date 10282021" author="Binh Vu">
+    <comment>
+        
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.FileQueryHandler"
+      query="
+      UNWIND $rows AS row
+MATCH (a:db_STRING {eid: row.eid}), (b:db_GO {eid: row.gene_id})
+MERGE (a)-[r:HAS_GENE]->(b)
+      "
+      fileName="jira-LL-3215-string2gene.zip"
+      startAt="1"
+      fileType="TSV" 
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+</databaseChangeLog>

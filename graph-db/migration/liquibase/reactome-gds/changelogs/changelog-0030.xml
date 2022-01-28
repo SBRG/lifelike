@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd">
+
+  <changeSet id="rename name properties to match with other databases" author="robin cai">
+    <comment>rename name to synonyms, commonName to name</comment>
+    <sql>
+    match(n:PhysicalEntity) where not exists(n.synonyms) set n.synonyms = n.name, n.name=n.commonName remove n.commonName;
+    match(n:Event) where not exists(n.synonyms) and exists(n.name) set n.synonyms = n.name, n.name = n.synonyms[0];
+    match(n:ReferenceEntity) where not exists(n.synonyms) and exists (n.name) set n.synonyms = n.name, n.name = n.synonyms[0];
+    match(n:ReferenceEntity) where not exists(n.name) and exists (n.geneName) set n.synonyms=n.geneName, n.name=n.geneName[0];
+    match(n:ReferenceEntity) where not exists(n.name) set n.name = n.identifier;
+    match(n:PhysicalEntity) where not exists(n.name) and n.displayName starts with n.synonyms set n.name = n.synonyms;
+    </sql>
+  </changeSet>
+</databaseChangeLog>

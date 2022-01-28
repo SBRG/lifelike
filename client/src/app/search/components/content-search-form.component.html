@@ -1,0 +1,12 @@
+<form (ngSubmit)="submit()">
+  <div class="form-group">
+    <div class="input-group">
+      <input class="form-control py-2 border"
+            name="q"
+            [(ngModel)]="queryString"
+            (change)="queryChanged()"
+            placeholder="Search (ex: Human)">
+      <button type="submit" class="btn btn-primary ml-1"><i class="fa fa-search"></i></button>
+    </div>
+  </div>
+</form>

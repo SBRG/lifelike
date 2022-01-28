@@ -1,0 +1,26 @@
+.btn:disabled:hover {
+  text-decoration: none;
+}
+
+.selectable-text {
+  pointer-events: all !important;
+  user-select: text !important;
+  cursor: text;
+}
+
+.mat-sidenav {
+  min-width: 320px;
+
+  .sidenav-title {
+    margin-left: 32px;
+  }
+
+  .drawer-content {
+    padding: 8px;
+  }
+}
+
+.scrollbar-with-value {
+  width: calc(100% - 3ch);
+  vertical-align: middle;
+}

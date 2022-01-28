@@ -1,0 +1,14 @@
+<div class="p-4 h-100 overflow-auto">
+  <ng-container *ngIf="objects.length; else empty">
+    <div class="mb-2 text-muted">
+      Preview of Folder Contents:
+    </div>
+    <app-object-tile-deck [objects]="objects" [newTabObject]="true"
+                          tileDeckSize="xs"></app-object-tile-deck>
+  </ng-container>
+  <ng-template #empty>
+    <div class="text-muted">
+      This folder has no files.
+    </div>
+  </ng-template>
+</div>

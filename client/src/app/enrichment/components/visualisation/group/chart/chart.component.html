@@ -1,0 +1,13 @@
+<div class="chart-container" [ngStyle]="{
+            height: 130+slicedData.length*15+'px'
+        }">
+    <canvas baseChart
+            [data]="slicedData"
+            [labels]="labels"
+            [options]="options"
+            [legend]="legend"
+            [chartType]="chartType"
+            [colors]="[{backgroundColor:'gray'}]"
+    >
+    </canvas>
+</div>

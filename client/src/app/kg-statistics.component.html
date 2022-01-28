@@ -1,0 +1,78 @@
+<ng-container *ngIf="(loadTask.status$ | async) as status">
+  <div class="module" appContainerBreakpoints>
+    <div class="module-header">
+      <div class="module-title-bar">
+        <div class="module-title">
+          Knowledge Graph Statistics
+        </div>
+      </div>
+
+      <div class="module-toolbar mt-2">
+        <button type="button" class="btn btn-secondary" (click)="this.refresh()"
+                ngbTooltip="Refresh the results">
+          <i class="fa fa-sync"></i> Refresh
+        </button>
+      </div>
+    </div>
+    <div class="module-body flex-fill overflow-auto">
+      <app-background-task-progress
+        [status]="status" (refresh)="this.refresh()" childClass="mb-4"></app-background-task-progress>
+
+      <ng-container *ngIf="status.placeholdersShown">
+        <div class="card">
+          <div class="card-header">
+            <span class="placeholder-box">Loading loading</span>
+          </div>
+          <div class="card-body">
+            <div class="chart-container">
+            </div>
+          </div>
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="status.resultsShown">
+        <div class="card">
+          <div class="card-header">
+            Total Number of Nodes <span class="badge badge-pill badge-primary ml-1">{{totalCount | number}}</span>
+          </div>
+          <div class="card-body">
+            <div class="chart-container">
+              <canvas baseChart
+                      [datasets]="chartDataAllDomains"
+                      [labels]="chartLabelsDomains"
+                      [colors]="chartColorsDomains"
+                      [options]="chartOptions"
+                      [plugins]="chartPlugins"
+                      [legend]="false"
+                      chartType="horizontalBar">
+              </canvas>
+            </div>
+          </div>
+        </div>
+
+        <div class="graph-card-deck mt-4">
+          <ng-container *ngFor="let data of chartDataEntitiesByDomain | keyvalue">
+            <div class="card mt-4">
+              <div class="card-header">
+                {{data.key}}
+              </div>
+              <div class="card-body">
+                <div class="chart-container">
+                  <canvas baseChart
+                          [datasets]="data.value"
+                          [labels]="chartLabelsEntitiesByDomain[data.key]"
+                          [options]="chartOptions"
+                          [plugins]="chartPlugins"
+                          [colors]="chartColorsEntitiesByDomain[data.key]"
+                          [legend]="false"
+                          chartType="bar">
+                  </canvas>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</ng-container>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd">
+
+  <changeSet id="LL-3212 create NCBI taxonomy constraints on date 10072021" author="Binh Vu">
+    <comment>Create constraints and indexes for NCBI taxonomy nodes</comment>
+    <sql>
+    CREATE CONSTRAINT constraint_taxonomy_id IF NOT EXISTS ON (n:Taxonomy) ASSERT n.eid IS UNIQUE;
+CREATE CONSTRAINT constraint_synonym_name IF NOT EXISTS ON (n:Synonym) ASSERT n.name IS UNIQUE;
+CREATE INDEX index_taxonomy_name IF NOT EXISTS FOR (n:Taxonomy) ON (n.name);
+CREATE INDEX index_taxonomy_speciesid IF NOT EXISTS FOR (n:Taxonomy) ON (n.species_id);
+    </sql>
+  </changeSet>
+
+  <changeSet id="LL-3212 NCBI taxonomy data on date 10072021" author="Binh Vu">
+    <comment>
+        Load NCBI taxonomy nodes
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.FileQueryHandler"
+      query="
+      UNWIND $rows as row
+MERGE (n:Taxonomy {eid: row.eid})
+SET n:db_NCBI,n.name=row.name,n.rank=row.rank,n.category=row.category,n.parent_id=row.parent_id,n.data_source='NCBI Taxonomy'
+      "
+      fileName="jira-LL-3212-taxonomy.zip"
+      startAt="1"
+      fileType="TSV" 
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+    />
+  </changeSet>
+
+  <changeSet id="LL-3212 load NCBI taxonomy synonym relationship on date 10072021" author="Binh Vu">
+    <comment>
+        Load NCBI synonym taxonomy relationship
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.FileQueryHandler"
+      query="
+      UNWIND $rows AS row
+MERGE (a:Synonym {name: row.name}) SET a.lowercase_name=toLower(row.name)
+WITH row, a MATCH (b:Taxonomy {eid: row.eid})
+MERGE (b)-[r:HAS_SYNONYM]->(a)
+SET r.type=row.type
+      "
+      fileName="jira-LL-3212-taxonomy2synonym.zip"
+      startAt="1"
+      fileType="TSV" 
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+    />
+  </changeSet>
+
+  <changeSet id="LL-3212 create relationship between taxonomy and parent nodes on date 10072021" author="Binh Vu">
+    <comment>Taxonomy relationship with parent</comment>
+    <sql>
+    
+        CALL apoc.periodic.iterate(
+        'MATCH (n:Taxonomy), (m:Taxonomy) WHERE m.eid = n.parent_id RETURN n, m',
+        'MERGE (n)-[:HAS_PARENT]->(m)', {batchSize:5000})
+        
+    </sql>
+  </changeSet>
+
+  <changeSet id="LL-3212 set species_id for taxonomy nodes on date 10072021" author="Binh Vu">
+    <comment>Taxonomy needs species_id</comment>
+    <sql>
+      CALL apoc.periodic.iterate(
+      "MATCH (n:Taxonomy)-[:HAS_PARENT*0..]->(s:Taxonomy {rank: 'species'}) RETURN n, s",
+      "SET n.species_id = s.eid", {batchSize:5000})
+    </sql>
+  </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,18 @@
+<div class="palette-container">
+  <div class="palette-item-container" *ngFor='let template of nodeTemplatesShown' [id]='template.label'
+       draggable="true" (dragstart)="dragStart($event, template)" (click)="click()">
+    <div class="palette-item">
+      <div class="palette-item-icon" [style.background]="template.color">
+      </div>
+      <div class="palette-item-label">
+        {{template.label | titlecase}}
+      </div>
+    </div>
+  </div>
+
+  <div class="w-100 mt-2">
+    <a href="#" (click)="toggleExpansion(); $event.preventDefault()">
+      {{ expanded ? 'Show fewer node types' : 'Show more node types' }}
+    </a>
+  </div>
+</div>

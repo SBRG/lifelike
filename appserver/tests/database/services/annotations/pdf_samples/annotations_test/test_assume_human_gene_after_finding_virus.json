@@ -1,0 +1,458 @@
+{
+  "name": "test_assume_human_gene_after_finding_virus.pdf",
+  "pages": [
+    {
+      "cropBox": {
+        "height": 792,
+        "lowerLeftPt": {
+          "x": 0,
+          "y": 0
+        },
+        "pivotPt": {
+          "x": 0,
+          "y": 0
+        },
+        "rotation": 0,
+        "width": 612
+      },
+      "mediaBox": {
+        "height": 792,
+        "lowerLeftPt": {
+          "x": 0,
+          "y": 0
+        },
+        "pivotPt": {
+          "x": 0,
+          "y": 0
+        },
+        "rotation": 0,
+        "width": 612
+      },
+      "pageNo": 1,
+      "pageText": "  Covid-19 Virus MERS-CoV Looking at SARS-CoV-2. 2019nCoV ACE2 This is a test to find the gene after recognizing a virus. ",
+      "tokens": [
+        {
+          "pgIdx": 2,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 11,
+              "lowerLeftPt": {
+                "x": 72.02400207519531,
+                "y": 706.8099975585938
+              },
+              "pivotPt": {
+                "x": 72.02400207519531,
+                "y": 709.5599975585938
+              },
+              "rotation": 0,
+              "width": 39.553260803222656
+            }
+          ],
+          "shapes": [],
+          "text": "Covid-19"
+        },
+        {
+          "pgIdx": 11,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 11,
+              "lowerLeftPt": {
+                "x": 72.02400207519531,
+                "y": 681.3499755859375
+              },
+              "pivotPt": {
+                "x": 72.02400207519531,
+                "y": 684.0999755859375
+              },
+              "rotation": 0,
+              "width": 22.678558349609375
+            }
+          ],
+          "shapes": [],
+          "text": "Virus"
+        },
+        {
+          "pgIdx": 17,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 11,
+              "lowerLeftPt": {
+                "x": 97.2239990234375,
+                "y": 681.3499755859375
+              },
+              "pivotPt": {
+                "x": 97.2239990234375,
+                "y": 684.0999755859375
+              },
+              "rotation": 0,
+              "width": 47.17567443847656
+            }
+          ],
+          "shapes": [],
+          "text": "MERS-CoV"
+        },
+        {
+          "pgIdx": 26,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 11,
+              "lowerLeftPt": {
+                "x": 72.02400207519531,
+                "y": 630.469970703125
+              },
+              "pivotPt": {
+                "x": 72.02400207519531,
+                "y": 633.219970703125
+              },
+              "rotation": 0,
+              "width": 34.83119201660156
+            }
+          ],
+          "shapes": [],
+          "text": "Looking"
+        },
+        {
+          "pgIdx": 34,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 11,
+              "lowerLeftPt": {
+                "x": 109.30607604980469,
+                "y": 630.469970703125
+              },
+              "pivotPt": {
+                "x": 109.30607604980469,
+                "y": 633.219970703125
+              },
+              "rotation": 0,
+              "width": 8.986564636230469
+            }
+          ],
+          "shapes": [],
+          "text": "at"
+        },
+        {
+          "pgIdx": 37,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 11,
+              "lowerLeftPt": {
+                "x": 120.73999786376953,
+                "y": 630.469970703125
+              },
+              "pivotPt": {
+                "x": 120.73999786376953,
+                "y": 633.219970703125
+              },
+              "rotation": 0,
+              "width": 52.63727569580078
+            }
+          ],
+          "shapes": [],
+          "text": "SARS-CoV-2"
+        },
+        {
+          "pgIdx": 49,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 11,
+              "lowerLeftPt": {
+                "x": 72.02400207519531,
+                "y": 579.5900268554688
+              },
+              "pivotPt": {
+                "x": 72.02400207519531,
+                "y": 582.3400268554688
+              },
+              "rotation": 0,
+              "width": 46.06993103027344
+            }
+          ],
+          "shapes": [],
+          "text": "2019nCoV"
+        },
+        {
+          "pgIdx": 58,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 11,
+              "lowerLeftPt": {
+                "x": 72.02400207519531,
+                "y": 528.6799926757812
+              },
+              "pivotPt": {
+                "x": 72.02400207519531,
+                "y": 531.4299926757812
+              },
+              "rotation": 0,
+              "width": 23.228164672851562
+            }
+          ],
+          "shapes": [],
+          "text": "ACE2"
+        },
+        {
+          "pgIdx": 63,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 11,
+              "lowerLeftPt": {
+                "x": 72.02400207519531,
+                "y": 477.79998779296875
+              },
+              "pivotPt": {
+                "x": 72.02400207519531,
+                "y": 480.54998779296875
+              },
+              "rotation": 0,
+              "width": 18.0283203125
+            }
+          ],
+          "shapes": [],
+          "text": "This"
+        },
+        {
+          "pgIdx": 68,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 11,
+              "lowerLeftPt": {
+                "x": 92.54736328125,
+                "y": 477.79998779296875
+              },
+              "pivotPt": {
+                "x": 92.54736328125,
+                "y": 480.54998779296875
+              },
+              "rotation": 0,
+              "width": 6.855842590332031
+            }
+          ],
+          "shapes": [],
+          "text": "is"
+        },
+        {
+          "pgIdx": 71,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 11,
+              "lowerLeftPt": {
+                "x": 101.89824676513672,
+                "y": 477.79998779296875
+              },
+              "pivotPt": {
+                "x": 101.89824676513672,
+                "y": 480.54998779296875
+              },
+              "rotation": 0,
+              "width": 5.2881622314453125
+            }
+          ],
+          "shapes": [],
+          "text": "a"
+        },
+        {
+          "pgIdx": 73,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 11,
+              "lowerLeftPt": {
+                "x": 109.58209228515625,
+                "y": 477.79998779296875
+              },
+              "pivotPt": {
+                "x": 109.58209228515625,
+                "y": 480.54998779296875
+              },
+              "rotation": 0,
+              "width": 17.244483947753906
+            }
+          ],
+          "shapes": [],
+          "text": "test"
+        },
+        {
+          "pgIdx": 78,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 11,
+              "lowerLeftPt": {
+                "x": 129.22225952148438,
+                "y": 477.79998779296875
+              },
+              "pivotPt": {
+                "x": 129.22225952148438,
+                "y": 480.54998779296875
+              },
+              "rotation": 0,
+              "width": 9.439193725585938
+            }
+          ],
+          "shapes": [],
+          "text": "to"
+        },
+        {
+          "pgIdx": 81,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 11,
+              "lowerLeftPt": {
+                "x": 141.21170043945312,
+                "y": 477.79998779296875
+              },
+              "pivotPt": {
+                "x": 141.21170043945312,
+                "y": 480.54998779296875
+              },
+              "rotation": 0,
+              "width": 17.465286254882812
+            }
+          ],
+          "shapes": [],
+          "text": "find"
+        },
+        {
+          "pgIdx": 86,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 11,
+              "lowerLeftPt": {
+                "x": 161.13890075683594,
+                "y": 477.79998779296875
+              },
+              "pivotPt": {
+                "x": 161.13890075683594,
+                "y": 480.54998779296875
+              },
+              "rotation": 0,
+              "width": 14.992324829101562
+            }
+          ],
+          "shapes": [],
+          "text": "the"
+        },
+        {
+          "pgIdx": 90,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 11,
+              "lowerLeftPt": {
+                "x": 178.5800018310547,
+                "y": 477.79998779296875
+              },
+              "pivotPt": {
+                "x": 178.5800018310547,
+                "y": 480.54998779296875
+              },
+              "rotation": 0,
+              "width": 21.815048217773438
+            }
+          ],
+          "shapes": [],
+          "text": "gene"
+        },
+        {
+          "pgIdx": 95,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 11,
+              "lowerLeftPt": {
+                "x": 202.9232177734375,
+                "y": 477.79998779296875
+              },
+              "pivotPt": {
+                "x": 202.9232177734375,
+                "y": 480.54998779296875
+              },
+              "rotation": 0,
+              "width": 21.70465087890625
+            }
+          ],
+          "shapes": [],
+          "text": "after"
+        },
+        {
+          "pgIdx": 101,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 11,
+              "lowerLeftPt": {
+                "x": 227.02354431152344,
+                "y": 477.79998779296875
+              },
+              "pivotPt": {
+                "x": 227.02354431152344,
+                "y": 480.54998779296875
+              },
+              "rotation": 0,
+              "width": 51.04899597167969
+            }
+          ],
+          "shapes": [],
+          "text": "recognizing"
+        },
+        {
+          "pgIdx": 113,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 11,
+              "lowerLeftPt": {
+                "x": 280.5234069824219,
+                "y": 477.79998779296875
+              },
+              "pivotPt": {
+                "x": 280.5234069824219,
+                "y": 480.54998779296875
+              },
+              "rotation": 0,
+              "width": 5.28814697265625
+            }
+          ],
+          "shapes": [],
+          "text": "a"
+        },
+        {
+          "pgIdx": 115,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 11,
+              "lowerLeftPt": {
+                "x": 288.3396911621094,
+                "y": 477.79998779296875
+              },
+              "pivotPt": {
+                "x": 288.3396911621094,
+                "y": 480.54998779296875
+              },
+              "rotation": 0,
+              "width": 21.472808837890625
+            }
+          ],
+          "shapes": [],
+          "text": "virus"
+        }
+      ]
+    }
+  ],
+  "processedDate": "2021-01-14 14:36:27"
+}

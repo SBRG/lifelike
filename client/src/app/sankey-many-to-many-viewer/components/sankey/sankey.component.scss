@@ -1,0 +1,219 @@
+app-sankey-many-to-many {
+  @import "../../utils/nodeColors";
+
+  $darken-link-stroke: 5%;
+  $link-lightness: 65%;
+  $link-saturation: 30%;
+  $link-color: hsl(0, 0, $link-lightness);
+  $inactive-colour: lighten($link-color, 25%);
+  $link-left-color: rgb(163, 200, 219);
+  $link-right-color: rgb(255, 226, 149);
+  $link-multi-color: hsl(180, $link-saturation, $link-lightness);
+
+  $active-opacity: 1;
+  $inactive-opacity: .1;
+
+  $search-color: red;
+
+  @mixin link-color($color) {
+    fill: $color;
+    stroke: darken($color, $darken-link-stroke);
+  }
+
+  @keyframes searchBlink {
+    50% {
+      fill: red;
+    }
+  }
+
+  @mixin searchBlink {
+    animation-name: searchBlink;
+    animation-duration: 750ms;
+  }
+
+  position: relative;
+  //touch-action: none;
+  //user-select: none;
+  transform-origin: 0 0;
+
+  display: block;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  min-height: 100%;
+
+  svg {
+    width: 100%;
+    height: 100%;
+    background-color: white;
+
+    g {
+      .nodes {
+        shape-rendering: crispEdges;
+        z-index: 1;
+
+        g {
+          &[highlighted=false], &[selected=false] {
+            & > rect {
+              opacity: $inactive-opacity;
+            }
+
+            text {
+              opacity: $inactive-opacity;
+            }
+          }
+
+          &:hover, &[selected=true], &[highlighted=true], &[transitively-selected=true] {
+            & > rect {
+              opacity: 100% !important;
+            }
+
+            text {
+              opacity: $active-opacity;
+            }
+          }
+
+          &:hover, &[selected=true], &[highlighted=true] {
+            & > rect {
+              opacity: 100% !important;
+              stroke: yellow;
+              stroke-width: 3;
+              stroke-opacity: 1;
+            }
+          }
+
+          @each $position, $color in $node-colors {
+            &[graphRelativePosition=#{$position}] {
+              & > rect {
+                fill: $color;
+              }
+            }
+          }
+
+          rect {
+            cursor: move;
+            shape-rendering: crispEdges;
+            fill: $node-color;
+            stroke: $node-border-colour;
+          }
+
+          &[highlighted=left] {
+            & > rect {
+              fill: map-get($node-colors, left);
+            }
+          }
+
+          &[searched=true] .text-shadow {
+            fill: rgba(187, 187, 187, 0.5);
+            stroke: $search-color;
+            transform-origin: 15px 0;
+            transform: scaleY(1.5) scaleX(1.1);
+            filter: none;
+            display: initial;
+            mix-blend-mode: normal;
+          }
+
+          &[focused=true] {
+            .text-shadow {
+              fill: rgba(187, 187, 187, 0.85);
+              @include searchBlink();
+            }
+
+            text {
+              font-size: 1em;
+              fill: black;
+            }
+          }
+
+          .text-shadow {
+            mix-blend-mode: lighten;
+            stroke: none;
+            fill: #bbb;
+            display: none;
+            filter: blur(0.1em);
+            transform: scaleY(1.5);
+          }
+
+          &:hover .text-shadow {
+            display: initial;
+          }
+
+          text {
+            font-size: 0.5em;
+            // todo: reenable when performance improves
+            //transition: font-size 250ms 250ms, fill 250ms 250ms;
+            pointer-events: none;
+          }
+
+          &:hover text {
+            font-size: 1em;
+            fill: black;
+          }
+        }
+      }
+
+      .links path {
+        @include link-color($link-color);
+
+        &.circular {
+          stroke-dasharray: 4 4;
+        }
+
+        &[highlighted=false], &[selected=false], &[transitively-selected=false] {
+          @include link-color($inactive-colour);
+          opacity: $inactive-opacity;
+        }
+
+        &[highlighted=true] {
+          @include link-color($link-color);
+        }
+
+        &:hover, &[transitively-selected=true], &[selected=true], &[highlighted=true] {
+          stroke: yellow;
+          stroke-width: 3;
+          stroke-opacity: 1;
+        }
+
+        &[highlighted=left] {
+          @include link-color($link-left-color);
+        }
+
+        &[highlighted=right] {
+          @include link-color($link-right-color);
+        }
+
+        &[highlighted=multiple] {
+          @include link-color($link-multi-color);
+        }
+
+        &[highlighted=true], &[selectedTrace=true] {
+          &[thickness='0'] {
+            stroke: darken($link-color, $darken-link-stroke);
+            stroke-width: 3px;
+          }
+        }
+
+        &[transitively-selected=left] {
+          @include link-color($link-left-color);
+        }
+
+        &[transitively-selected=right] {
+          @include link-color($link-right-color);
+        }
+
+        &[transitively-selected=multiple] {
+          @include link-color($link-multi-color);
+        }
+
+        &[searched=true] {
+          stroke: $search-color;
+        }
+
+        &[focused=true] {
+          fill: $search-color;
+          @include searchBlink();
+        }
+      }
+    }
+  }
+}

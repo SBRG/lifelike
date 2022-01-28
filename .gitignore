@@ -1,0 +1,30 @@
+# IDEs and editors
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+.vscode/
+
+# Common credential files
+**/credentials.json
+**/client_secrets.json
+**/client_secret.json
+*creds*
+*.dat
+*password*
+*.httr-oauth*
+
+# Dotenv files
+.env*
+!.env.example
+
+# System files
+.DS_Store
+*.log
+Thumbs.db
+.bash_history
+.local/
+.run

@@ -1,0 +1,111 @@
+#!/usr/bin/env bash
+
+# Runs database migration
+# When invoked with `--fresh` option will first drop all tables in the database
+
+set -o errexit                  # exit on command failure; use <cmd> || true to allow for exception
+set -o nounset                  # exit when script tries to use undeclared variables
+set -o pipefail                 # catch failure in piped commands
+#set -o xtrace                   # enable to trace what gets executed when debugging
+
+arg1="${1:-}"
+arg2="${2:-}"
+arg3="${3:-}"
+
+revision=()  # array to hold the revision number
+data_migrate="False"
+
+##########################################
+# USAGE
+#
+# arg1
+# --fresh | --downgrade | --upgrade
+#
+# arg2
+# --data-migrate
+#
+# arg3
+# --version=<revision>
+#
+# arg2 and arg3 can appear in any order,
+# i.e. --data-migrate --version=<revision> OR --version=<revision> --data-migrate.
+# Additionally, both are optional.
+#
+# e.g
+# /migrate-db --fresh
+# /migrate-db --downgrade --data-migrate --version=12345
+# /migrate-db --upgrade --version=12345
+##########################################
+
+if [ ${arg2} ]; then
+    if [ "${arg2}" = "--data-migrate" ]; then
+        data_migrate="True"
+    else
+        # split --version=<revision>
+        IFS='=' read -r -a revision <<< "${arg2}"
+    fi
+fi
+
+if [ ${arg3} ]; then
+    if [ "${arg3}" = "--data-migrate" ]; then
+        data_migrate="True"
+    else
+        # split --version=<revision>
+        IFS='=' read -r -a revision <<< "${arg3}"
+    fi
+fi
+
+# Start in appserver directory
+cd "$(dirname "$0")/.."
+
+if [ "${arg1}" = "--fresh" ]; then
+    if [[ ! -d migrations ]]; then
+        echo "Initializing database"
+        flask db init
+        flask db migrate
+    fi
+    echo "Running database migration ..."
+    if [ "${data_migrate}" = "True" ]; then
+        flask db upgrade --x-arg data_migrate="${data_migrate}"
+    else
+        flask db upgrade
+    fi
+elif [ "${arg1}" = "--downgrade" ]; then
+    echo "Database rollback ..."
+    if [ ${#revision[@]} -gt 0 ] && [ ${revision[1]} ]; then
+        # downgrade to specific revision
+        if [ "${data_migrate}" = "True" ]; then
+            flask db downgrade "${revision[1]}" --x-arg data_migrate="${data_migrate}"
+        else
+            flask db downgrade "${revision[1]}"
+        fi
+    else
+        # downgrade to previous revision
+        if [ "${data_migrate}" = "True" ]; then
+            flask db downgrade --x-arg data_migrate="${data_migrate}"
+        else
+            flask db downgrade
+        fi
+    fi
+elif [ "${arg1}" = "--upgrade" ]; then
+    echo "Database update ..."
+    if [ ${#revision[@]} -gt 0 ] && [ ${revision[1]} ]; then
+        # upgrade to specific revision
+        if [ "${data_migrate}" = "True" ]; then
+            flask db upgrade "${revision[1]}" --x-arg data_migrate="${data_migrate}"
+        else
+            flask db upgrade "${revision[1]}"
+        fi
+    else
+        if [ "${data_migrate}" = "True" ]; then
+            flask db upgrade --x-arg data_migrate="${data_migrate}"
+        else
+            flask db upgrade
+        fi
+    fi
+else
+    # changes in database models
+    # create the migration for them
+    echo "Updating database migration ..."
+    flask db migrate
+fi

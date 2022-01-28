@@ -1,0 +1,26 @@
+<ol class="breadcrumb" style="flex-wrap: nowrap">
+  <li class="breadcrumb-item">
+    <a [appLink]="['/projects']" [newTab]="newTab">
+      File Browser
+    </a>
+  </li>
+  <li class="breadcrumb-item" *ngFor="let item of path" appContextMenu>
+    <a [appLink]="item.getCommands(forEditing)" [newTab]="newTab"
+       [appFSObjectTarget]="item.isDirectory ? item : null" (refreshRequest)="refreshRequest.emit()">
+      <app-project-icon *ngIf="!item.parent"
+                        [project]="item.project" size="16" class="mr-1"></app-project-icon>
+      {{ item.isDirectory && item.parent == null && rootName ? rootName : item.effectiveName }}
+    </a>
+    <div appContextMenuBody>
+      <ng-container *ngIf="item.parent; else noParentMenu">
+        <app-object-menu [object]="item" [forEditing]="false" [showDelete]="false"
+                         (objectOpen)="openObject($event)">
+        </app-object-menu>
+      </ng-container>
+      <ng-template #noParentMenu>
+        <app-project-menu [project]="item.project"
+                          [nameEntity]="true"></app-project-menu>
+      </ng-template>
+    </div>
+  </li>
+</ol>

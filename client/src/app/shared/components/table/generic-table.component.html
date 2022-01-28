@@ -1,0 +1,42 @@
+<table class="table table-hover">
+  <thead *ngIf="HEADER">
+    <ng-container>
+      <tr class="table-secondary" *ngFor="let row of HEADER">
+        <th
+          *ngFor="let col of row"
+          class="border-top text-center text-truncate"
+          style="z-index: 1"
+          [attr.colspan]="col.span"
+        >
+          {{ col.name }}
+        </th>
+      </tr>
+    </ng-container>
+  </thead>
+
+  <tbody *ngIf="entries">
+    <ng-container>
+      <tr *ngFor="let row of entries">
+        <td *ngFor="let entry of row" style="white-space:pre-wrap; word-wrap:break-word" class="overflow-auto resizeable" [ngClass]="{ 'error': entry.highlight}">
+          <div>
+            <span *ngIf="entry.text && entry.text.indexOf('snippet') > -1; else noHighlight">
+              <app-highlight-text [highlight]="entry.text" [object]="object" [eventSubscriptions]="false"></app-highlight-text>
+            </span>
+            <ng-template #noHighlight>{{ entry.text }}</ng-template>
+          </div>
+          <ng-container *ngIf="entry.multiLink">
+            <ul *ngFor="let link of entry.multiLink">
+              <li><a target="_blank" rel="noopener noreferrer" href="{{ link.link }}">{{ link.linkText }}</a></li>
+            </ul>
+          </ng-container>
+          <ng-container *ngIf="entry.singleLink">
+            <a target="_blank" rel="noopener noreferrer" href="{{ entry.singleLink.link }}">{{
+              entry.singleLink.linkText
+            }}</a>
+          </ng-container>
+        </td>
+      </tr>
+    </ng-container>
+    <tr></tr>
+  </tbody>
+</table>

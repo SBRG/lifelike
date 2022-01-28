@@ -1,0 +1,10 @@
+datasets/**
+lmdb/**
+output/**
+pdfs/**
+text/**
+results/**
+annotations/**
+processed/**
+
+!/**.gitkeep

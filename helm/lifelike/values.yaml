@@ -1,0 +1,377 @@
+global: {}
+nameOverride: ""
+fullnameOverride: ""
+
+# -----------------------------------------------------------------------------
+# Expose through Ingress
+# -----------------------------------------------------------------------------
+ingress:
+  enabled: false
+
+  ## -- Configure base domain name for Ingress
+  hostname: lifelike.local
+
+  ## -- Ingress class, leave blank for default ingress controller (usually nginx)
+  className: ""
+
+  ## -- Ingress annotations
+  annotations: {}
+    # cert-manager.io/cluster-issuer: letsencrypt
+    # nginx.ingress.kubernetes.io/proxy-body-size: "0"
+
+  ## -- Ingress TLS
+  tls: []
+  # - secretName: lifelike-tls
+  #   hosts:
+  #   - lifelike.local
+
+
+# ------------------------------------------------------------------------------
+# API (appserver)
+# ------------------------------------------------------------------------------
+api:
+  image:
+    repository: us.gcr.io/able-goods-221820/lifelike-appserver
+    ## -- Overrides the image tag whose default is the chart appVersion.
+    tag: ""
+
+  ## -- JWT secret token
+  ## -- Generate secure value with: openssl rand -hex 16
+  secret: secret
+
+  # -- Extra environment variables to pass to the appserver
+  extraEnv:
+    # Create an initial admin user (initial password is "password")
+    INITIAL_ADMIN_EMAIL: admin@example.com
+    # LOG_LEVEL: debug
+
+  # -- Number of replicas running the appserver
+  replicaCount: 1
+
+  autoScaling:
+    # -- If enabled, value at api.replicaCount will be ignored
+    enabled: false
+    minReplicas: 2
+    maxReplicas: 4
+    targetCPUUtilizationPercentage: 80
+    targetMemoryUtilizationPercentage: 80
+
+  # -- if using some PV that does not support readWriteMany, set this to 'Recreate'
+  strategyType: RollingUpdate
+
+  lmdb:
+    loadEnabled: false
+
+  service:
+    type: ClusterIP
+    port: 5000
+
+  resources: {}
+    # requests:
+    #   cpu: 500m
+    #   memory: 2000Mi
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+
+
+  livenessProbe:
+    # -- Set to false to disable liveness probes
+    enabled: true
+    path: /meta
+    # failureThreshold: 20
+    # initialDelaySeconds: 20
+    # periodSeconds: 10
+    # successThreshold: 1
+    # timeoutSeconds: 10
+
+  readinessProbe:
+    # -- Set to false to disable readiness probes
+    enabled: true
+    path: /meta
+    # failureThreshold: 20
+    # initialDelaySeconds: 20
+    # periodSeconds: 10
+    # successThreshold: 1
+    # timeoutSeconds: 10
+
+  ## -- Optional extra volumes
+  extraVolumes: []
+  # - name: lmdb
+  #   hostPath:
+  #     path: /mnt/data/lmdb
+
+  extraVolumeMounts: []
+  # - name: lmdb
+  #   mountPath: /lmdb
+  #   readOnly: false
+
+  dbWaiter:
+    image:
+      repository: willwill/wait-for-it
+      tag: latest
+      imagePullPolicy: IfNotPresent
+    timeoutSeconds: 30
+
+# ------------------------------------------------------------------------------
+# Frontend (webserver)
+# ------------------------------------------------------------------------------
+frontend:
+  image:
+    repository: us.gcr.io/able-goods-221820/lifelike-frontend
+    ## -- Overrides the image tag whose default is the chart appVersion.
+    tag: ""
+
+  ## -- Number of replicas running frontend web server,
+  replicaCount: 1
+
+  autoScaling:
+    ## -- Enable or disable the API server autoscaling
+    enabled: false
+    minReplicas: 2
+    maxReplicas: 5
+    targetCPUUtilizationPercentage: 80
+    targetMemoryUtilizationPercentage: 80
+
+  service:
+    type: ClusterIP
+    port: 80
+
+  livenessProbe:
+    # -- Set to false to disable liveness probes
+    enabled: true
+    path: /
+
+  readinessProbe:
+    ## -- Set to false to disable readiness probes
+    enabled: true
+    path: /
+
+
+# ------------------------------------------------------------------------------
+# PDF Parser
+# ------------------------------------------------------------------------------
+pdfparser:
+  image:
+    repository: us.gcr.io/able-goods-221820/lifelike-pdfparser
+    tag: latest
+
+  # -- Number of replicas running, ignored if autoScaling is enabled
+  replicaCount: 1
+
+  # -- Horizontal pod autoscaler configuration
+  autoScaling:
+    # -- Set to true to enable autoscaling, ignoring pdfparser.replicaCount
+    enabled: false
+    minReplicas: 2
+    maxReplicas: 4
+    targetCPUUtilizationPercentage: 80
+    targetMemoryUtilizationPercentage: 80
+
+  service:
+    type: ClusterIP
+    port: 7600
+
+  livenessProbe:
+    # -- Set to false to disable liveness probes
+    enabled: true
+    path: /
+
+  readinessProbe:
+    ## -- Set to false to disable readiness probes
+    enabled: true
+    path: /
+
+# ------------------------------------------------------------------------------
+# Statistical enrichment
+# ------------------------------------------------------------------------------
+statisticalEnrichment:
+  image:
+    repository: us.gcr.io/able-goods-221820/lifelike-statistical-enrichment
+    ## -- Overrides the image tag whose default is the chart appVersion.
+    tag: ""
+
+  replicaCount: 1
+
+  service:
+    type: ClusterIP
+    port: 5000
+
+  livenessProbe:
+    # -- Set to false to disable liveness probes
+    enabled: true
+    path: /healthz
+
+  readinessProbe:
+    # -- Set to false to disable readiness probes
+    enabled: true
+    path: /healthz
+
+  resources: {}
+
+
+# ------------------------------------------------------------------------------
+# Worker
+# ------------------------------------------------------------------------------
+worker:
+  image:
+    repository: us.gcr.io/able-goods-221820/lifelike-worker
+    ## -- Overrides the image tag whose default is the chart appVersion.
+    tag: ""
+
+  # -- Number of running replicas, ignored if autoScaling is enabled
+  replicaCount: 1
+
+  # -- Horizontal pod autoscaler configuration
+  autoScaling:
+    # -- Set to true to enable autoscaling, ignoring pdfparser.replicaCount
+    enabled: false
+    minReplicas: 2
+    maxReplicas: 4
+    targetCPUUtilizationPercentage: 80
+    targetMemoryUtilizationPercentage: 80
+
+
+# ------------------------------------------------------------------------------
+# External services
+# ------------------------------------------------------------------------------
+
+## -- External PostgreSQL connection details, ignored if postgresql.enabled is set to true
+postgresqlExternal:
+  host: postgres.local
+  port: 5432
+  user: postgres
+  database: postgres
+  ## -- Ignored if postgresql.existingSecret is set
+  password: password
+  ## -- Read password from an existing secret, must contain key "postgres-password"
+  existingSecret: ""
+
+## -- External Neo4j connection details, ignored if neo4j.enabled is set to true
+neo4jExternal:
+  host: neo4j.local
+  port: 7687
+  user: neo4j
+  password: password
+  database: neo4j
+
+
+## -- External Redis connection details, ignored if redis.enabled is set to true
+redisExternal:
+  host: redis.local
+  port: 6379
+  password: ""
+
+
+## -- External Elasticsearch connection details, ignored if elasticsearch.enabled is set to true
+elasticsearchExternal:
+  host: elasticsearch.local
+  port: 9200
+  user: ""
+  password: ""
+  ssl: false
+
+
+# ---------------------------------------------------------------------------- #
+#                                                                              #
+#                               Subcharts                                      #
+#                                                                              #
+# ---------------------------------------------------------------------------- #
+
+
+# ------------------------------------------------------------------------------
+# PostgreSQL database
+# ------------------------------------------------------------------------------
+
+## -- Embedded PostgreSQL subchart deployment
+## -- See all available values: https://github.com/bitnami/charts/blob/master/bitnami/postgresql/values.yaml
+postgresql:
+  # -- Set to false to disable automatic deployment of PostgreSQL
+  enabled: true
+  postgresqlDatabase: postgres
+  postgresqlPassword: password
+
+
+# ------------------------------------------------------------------------------
+# Neo4j database
+# ------------------------------------------------------------------------------
+
+## -- Embedded Neo4j subchart deployment
+## -- See all available values: https://github.com/neo4j-contrib/neo4j-helm/blob/master/values.yaml
+neo4j:
+  ## -- Set to false to disable automatic deployment of Neo4j
+  enabled: true
+
+  imageTag: 4.4.1-community
+
+  ## -- Neo4j password
+  neo4jPassword: password
+
+  core:
+    ## -- Whether to deploy a standalone server or a replicated cluster
+    ## -- Community Edition only supports standalone
+    standalone: true
+    numberOfServers: 1
+    persistentVolume:
+      ## -- Size of the persistent volume for each server
+      size: 100Gi
+
+
+# ------------------------------------------------------------------------------
+# Elasticsearch
+# ------------------------------------------------------------------------------
+
+## -- Embedded Elasticsearch subchart deployment
+## -- See all available values: https://github.com/elastic/helm-charts/blob/main/elasticsearch/values.yaml
+elasticsearch:
+  ## -- Set to false to disable automatic deployment of Elasticsearch
+  enabled: true
+
+  fullnameOverride: elasticsearch
+
+  ## -- Elasticsearch configuration
+  esConfig:
+    ## -- Virtual memory, see: https://www.elastic.co/guide/en/cloud-on-k8s/master/k8s-virtual-memory.html
+    elasticsearch.yml: |
+      node.store.allow_mmap: false
+
+  ## -- Persistent storage for Elasticsearch nodes
+  volumeClaimTemplate:
+    resources:
+      requests:
+        storage: 30Gi
+
+
+# ------------------------------------------------------------------------------
+# Redis (cache)
+# ------------------------------------------------------------------------------
+
+## -- Embedded Elasticsearch subchart deployment
+## -- See all values: https://github.com/bitnami/charts/blob/master/bitnami/redis/values.yaml
+redis:
+  ## -- Set to false to disable automatic deployment of Redis
+  enabled: true
+
+  auth:
+    password: password
+
+  master:
+    persistence:
+      ## -- As we use Redis as a cache, we don't need persistence
+      enabled: false
+
+    extraFlags:
+      - --maxmemory-policy allkeys-lru
+
+  replica:
+    persistence:
+      enabled: false
+    extraFlags:
+      - --maxmemory-policy allkeys-lru
+
+  ## -- Redis configuration as a fast cache
+  commonConfiguration: |-
+    # Disable persistence to disk
+    save ""
+    # Disable AOF https://redis.io/topics/persistence#append-only-file
+    appendonly no

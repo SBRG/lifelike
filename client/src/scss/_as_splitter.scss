@@ -1,0 +1,11 @@
+.as-split-gutter {
+  background: $gray-200 !important;
+
+  &:hover {
+    background: $link-color !important;
+  }
+
+  &.as-dragged {
+    background: $link-hover-color !important;
+  }
+}

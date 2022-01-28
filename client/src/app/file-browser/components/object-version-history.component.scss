@@ -1,0 +1,16 @@
+@import 'src/scss/variables';
+
+.split-view {
+  height: calc(100vh - 250px);
+  overflow: hidden;
+}
+
+.split-view-left {
+  width: 300px;
+  overflow: auto;
+}
+
+.split-view-right {
+  border: 1px solid $border-color;
+  background: $light;
+}

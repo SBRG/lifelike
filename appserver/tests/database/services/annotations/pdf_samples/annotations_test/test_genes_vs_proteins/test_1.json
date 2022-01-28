@@ -1,0 +1,143 @@
+{
+  "name": "test_1.pdf",
+  "pages": [
+    {
+      "cropBox": {
+        "height": 792,
+        "lowerLeftPt": {
+          "x": 0,
+          "y": 0
+        },
+        "pivotPt": {
+          "x": 0,
+          "y": 0
+        },
+        "rotation": 0,
+        "width": 612
+      },
+      "mediaBox": {
+        "height": 792,
+        "lowerLeftPt": {
+          "x": 0,
+          "y": 0
+        },
+        "pivotPt": {
+          "x": 0,
+          "y": 0
+        },
+        "rotation": 0,
+        "width": 612
+      },
+      "pageNo": 1,
+      "pageText": "  hyp27 Moniliophthora roreri Hyp27 human ",
+      "tokens": [
+        {
+          "pgIdx": 2,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 12,
+              "lowerLeftPt": {
+                "x": 76.89540100097656,
+                "y": 706.2301025390625
+              },
+              "pivotPt": {
+                "x": 76.89540100097656,
+                "y": 709.2301025390625
+              },
+              "rotation": 0,
+              "width": 32.011199951171875
+            }
+          ],
+          "shapes": [],
+          "text": "hyp27"
+        },
+        {
+          "pgIdx": 8,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 12,
+              "lowerLeftPt": {
+                "x": 112.17280578613281,
+                "y": 706.2301025390625
+              },
+              "pivotPt": {
+                "x": 112.17280578613281,
+                "y": 709.2301025390625
+              },
+              "rotation": 0,
+              "width": 77.07080078125
+            }
+          ],
+          "shapes": [],
+          "text": "Moniliophthora"
+        },
+        {
+          "pgIdx": 23,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 12,
+              "lowerLeftPt": {
+                "x": 192.5098114013672,
+                "y": 706.2301025390625
+              },
+              "pivotPt": {
+                "x": 192.5098114013672,
+                "y": 709.2301025390625
+              },
+              "rotation": 0,
+              "width": 27.415008544921875
+            }
+          ],
+          "shapes": [],
+          "text": "roreri"
+        },
+        {
+          "pgIdx": 30,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 12,
+              "lowerLeftPt": {
+                "x": 223.19102478027344,
+                "y": 706.2301025390625
+              },
+              "pivotPt": {
+                "x": 223.19102478027344,
+                "y": 709.2301025390625
+              },
+              "rotation": 0,
+              "width": 33.96150207519531
+            }
+          ],
+          "shapes": [],
+          "text": "Hyp27"
+        },
+        {
+          "pgIdx": 36,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 12,
+              "lowerLeftPt": {
+                "x": 260.4187316894531,
+                "y": 706.2301025390625
+              },
+              "pivotPt": {
+                "x": 260.4187316894531,
+                "y": 709.2301025390625
+              },
+              "rotation": 0,
+              "width": 35.923583984375
+            }
+          ],
+          "shapes": [],
+          "text": "human"
+        }
+      ]
+    }
+  ],
+  "processedDate": "2021-01-14 14:29:09"
+}

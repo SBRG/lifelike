@@ -1,0 +1,62 @@
+<div class="d-flex flex-column h-100">
+  <div class="module-body">
+    <h4 *ngIf="name">
+      "{{ name }}"
+    </h4>
+    <div *ngIf="isNode" class="text-muted">
+      <div class="mb-2">Type: {{ selected.entity.label | titlecase }}</div>
+    </div>
+    <div *ngIf="!isNode" class="text-muted">
+      Type: Connection
+    </div>
+    <div *ngIf="selected.entity.data.subtype" class="text-muted">
+      Type: {{ selected.entity.data.subtype | titlecase }}
+    </div>
+
+    <div *ngIf="selected.entity.data.detail" class="mt-4 card" style="white-space: pre-line">
+      <div class="card-body p-3 bg-light">
+        {{ selected.entity.data.detail }}
+      </div>
+    </div>
+
+    <ng-container *ngIf="(selected.entity.data?.sources && selected.entity.data?.sources.length)
+                        || (selected.entity.data?.hyperlinks && selected.entity.data?.hyperlinks.length)">
+      <fieldset class="fieldset-properties mt-4">
+        <legend>Links</legend>
+        <app-links-panel [ngModel]="selected.entity.data.sources"
+                         [showHeader]="false" [editable]="false"></app-links-panel>
+        <app-links-panel [ngModel]="selected.entity.data.hyperlinks"
+                         [showHeader]="false" [editable]="false"></app-links-panel>
+      </fieldset>
+    </ng-container>
+
+    <div *ngIf="(name || selected.entity.data?.search) && isNode">
+      <fieldset class="fieldset-properties mt-4">
+        <legend>Search Internal <i class="fas fa-external-link-alt ml-1"></i></legend>
+
+        <ul class="list-unstyled m-0">
+          <li class="text-truncate">
+            <div class="btn btn-link p-0" (click)="searchMapNodeInVisualizer(selected.entity)">
+              Knowledge Graph
+            </div>
+          </li>
+          <li class="text-truncate">
+            <div class="btn btn-link p-0" (click)="searchMapNodeInContent(selected.entity, '')">
+              File Content
+            </div>
+          </li>
+          <li class="text-truncate">
+            <div class="btn btn-link p-0" (click)="searchMapNodeInContent(selected.entity, 'map')">
+              Map Content
+            </div>
+          </li>
+        </ul>
+      </fieldset>
+
+      <fieldset class="fieldset-properties mt-4">
+        <legend>Search External <i class="fas fa-external-link-alt ml-1"></i></legend>
+        <app-quick-search [query]="name" [links]="selected.entity.data?.search"></app-quick-search>
+      </fieldset>
+    </div>
+  </div>
+</div>

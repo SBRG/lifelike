@@ -1,0 +1,156 @@
+@import '~bootstrap/scss/functions';
+
+$white: #fff;
+$gray-100: #f8f9fa;
+$gray-200: #e9ecef;
+$gray-300: #dee2e6;
+$gray-400: #ced4da;
+$gray-500: #adb5bd;
+$gray-600: #6c757d;
+$gray-700: #495057;
+$gray-800: #343a40;
+$gray-900: #212529;
+$black: #000;
+
+$blue: #007bff;
+$indigo: #6610f2;
+$purple: #6f42c1;
+$pink: #e83e8c;
+$red: #dc3545;
+$orange: #fd7e14;
+$yellow: #ffc107;
+$green: #28a745;
+$teal: #20c997;
+$cyan: #17a2b8;
+
+$primary: #0c8caa;
+$secondary: $gray-300;
+$success: $green;
+$info: $cyan;
+$warning: $yellow;
+$danger: $red;
+$light: $gray-100;
+$dark: $gray-800;
+$highlight: #FFF7E0;
+
+$theme-colors: ();
+// stylelint-disable-next-line scss/dollar-variable-default
+$theme-colors: map-merge(
+    (
+      "primary": $primary,
+      "secondary": $secondary,
+      "success": $success,
+      "info": $info,
+      "warning": $warning,
+      "danger": $danger,
+      "light": $light,
+      "dark": $dark,
+      "button": $gray-400,
+    ),
+    $theme-colors
+);
+
+$spacer: 0.75rem;
+$spacers: ();
+// stylelint-disable-next-line scss/dollar-variable-default
+$spacers: map-merge(
+    (
+      0: 0,
+      1: ($spacer * .25),
+      2: ($spacer * .5),
+      3: $spacer,
+      4: ($spacer * 1.5),
+      5: ($spacer * 3)
+    ),
+    $spacers
+);
+
+$table-cell-padding: .45rem;
+$table-cell-padding-sm: .2rem;
+
+$input-btn-padding-y:        .325rem;
+$input-btn-padding-x:        .65rem;
+
+$font-family-sans-serif: Roboto, "Helvetica Neue", Arial, Helvetica, sans-serif;
+$font-family-base: $font-family-sans-serif;
+
+$font-size-base: 0.9rem;
+$font-size-lg: $font-size-base * 1.25;
+$font-size-sm: $font-size-base * .875;
+
+$form-group-margin-bottom: 0.5rem;
+
+$modal-md: 600px;
+
+// Add table-column for <col>
+$displays: none, inline, inline-block, block, table, table-row, table-cell, flex, inline-flex, table-column;
+
+@import '~bootstrap/scss/variables';
+
+$active-bg: rgba($component-active-bg, .1);
+$focus-box-shadow: inset 0 0 0 $input-btn-focus-width $input-btn-focus-color;
+
+$table-border-color: $gray-200;
+$table-row-active-bg: $active-bg;
+$table-row-focus-box-shadow: $focus-box-shadow;
+
+$window-spacer: 1.2rem; // Spacing between the edge of container and the window
+$window-background: $white;
+$window-border-color: $gray-300;
+$window-border-radius: $border-radius;
+$window-header-bg: $gray-300;
+$window-header-selectable-hover-bg: $gray-300;
+$window-title-font-size: $font-size-sm;
+$window-title-font-weight: bold;
+
+$module-header-border-width: 1px;
+$module-header-border-color: $gray-300;
+$module-header-box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+$module-header-padding-y: 0.75rem;
+$module-header-padding-x: $window-spacer;
+$module-header-padding-y-lg: 0.75rem * 2;
+$module-header-padding-x-lg: $window-spacer * 2;
+$module-body-padding-x: $window-spacer;
+$module-body-padding-x-lg: $window-spacer * 2;
+$module-title-font-size: $font-size-base * 1.3;
+$module-title-font-size-lg: $module-title-font-size * 1.45;
+$module-title-font-weight: bold;
+$module-title-line-height: 1.5;
+$module-section-margin-bottom: $spacer * 1.5;
+$module-section-margin-bottom-lg: $spacer * 2.5;
+$module-section-header-margin-bottom: $spacer * 1.25;
+$module-section-header-margin-bottom-lg: $spacer * 1.3;
+$module-section-title-font-size: $font-size-base * 1.2;
+$module-section-title-font-size-lg: $font-size-base * 1.5;
+$module-section-title-font-weight: bold;
+$module-section-title-font-weight-lg: bold;
+$module-section-title-color: $gray-700;
+$module-back-button-padding: 0.15rem;
+
+$search-results-padding-y: $spacer;
+$search-results-padding-x: $spacer;
+$search-results-margin-bottom: $spacer;
+$search-results-border-width: 1px;
+$search-results-border-color: $card-border-color;
+$search-results-border-radius: $border-radius;
+
+$toolbar-padding: $window-spacer;
+$toolbar-border-width: 1px;
+$toolbar-border-color: $gray-300;
+$toolbar-bg: $white;
+$toolbar-box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+$toolbar-font-size: $font-size-base;
+
+$floating-toolbar-padding: $spacer / 2;
+$floating-toolbar-border-color: $gray-400;
+$floating-toolbar-bg: $gray-400;
+$floating-toolbar-border-radius: $border-radius;
+
+$dropdown-menu-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+$popover-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+$btn-border-radius-xs:        $border-radius-sm;
+$btn-padding-y-xs:            0.1rem;
+$btn-padding-x-xs:            0.3rem;
+$btn-font-size-xs:            $input-btn-font-size-sm * 0.8;
+$btn-line-height-xs:          $input-btn-line-height-sm;

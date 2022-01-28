@@ -1,0 +1,36 @@
+<div class="module" appContainerBreakpoints>
+  <div class="module-header">
+    <div class="module-title-bar">
+      <div class="module-title">
+        Administration
+      </div>
+    </div>
+  </div>
+
+  <div class="module-body flex-fill overflow-auto">
+    <div>
+      <ul ngbNav #nav="ngbNav" [(activeId)]="activeTab" class="nav-tabs">
+        <li ngbNavItem="users">
+          <a ngbNavLink>Users</a>
+          <ng-template ngbNavContent>
+            <app-users-view></app-users-view>
+          </ng-template>
+        </li>
+        <li ngbNavItem="settings">
+          <a ngbNavLink>Settings</a>
+          <ng-template ngbNavContent>
+            <app-admin-settings-view></app-admin-settings-view>
+          </ng-template>
+        </li>
+        <li ngbNavItem="annotations">
+          <a ngbNavLink>Global Annotations</a>
+          <ng-template ngbNavContent>
+            <app-annotations-table></app-annotations-table>
+          </ng-template>
+        </li>
+      </ul>
+
+      <div [ngbNavOutlet]="nav" class="mt-4"></div>
+    </div>
+  </div>
+</div>

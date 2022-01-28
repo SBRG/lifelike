@@ -1,0 +1,17 @@
+<ng-container *ngFor="let detailView of details">
+    <app-sankey-node-details
+            *ngIf="detailView.node"
+            [entity]="detailView.node"
+    ></app-sankey-node-details>
+    <app-sankey-many-to-many-link-details
+            *ngIf="detailView.link"
+            [entity]="detailView.link"
+    ></app-sankey-many-to-many-link-details>
+    <app-sankey-trace-details
+            *ngIf="detailView.trace"
+            [entity]="detailView.trace"
+    ></app-sankey-trace-details>
+</ng-container>
+
+
+

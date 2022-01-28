@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd">
+  <!--
+    Neo4j does not allow the same transaction for changing the scheme and writes.
+    So group changeSets together by id="some text-#"
+    And separate changeSets grouping by empty new line space
+  -->
+
+  <changeSet id="LL-3198-liquibase-chebi-data-constraints" author="Binh Vu">
+    <comment>Create ChEBI data from scratch; creating constraints.</comment>
+    <sql>
+      CREATE CONSTRAINT constraint_chebi_id IF NOT EXISTS ON (n:db_CHEBI) ASSERT n.eid IS UNIQUE;
+      CREATE INDEX index_chebi_name IF NOT EXISTS FOR (n:db_CHEBI) ON (n.name);
+      CREATE INDEX index_chemical_id IF NOT EXISTS FOR (n:Chemical) ON (n.eid);
+      CREATE INDEX index_chemical_name IF NOT EXISTS FOR (n:Chemical) ON (n.name);
+      CREATE CONSTRAINT constraint_synonym_name IF NOT EXISTS ON (n:Synonym) ASSERT n.name IS UNIQUE
+    </sql>
+  </changeSet>
+
+  <changeSet id="LL-3198-liquibase-chebi-data-load-pathway" author="Binh Vu">
+    <comment>Create ChEBI data from scratch; load chebi data.</comment>
+    <customChange
+      class="edu.ucsd.sbrg.FileQueryHandler"
+      query="
+      UNWIND $rows AS row
+      MERGE (n:db_CHEBI {eid: row.eid})
+      ON CREATE SET n:Chemical, n.name = row.name, n.definition = row.definition,
+        n.inchi = row.inchi, n.inchi_key = row.inchi_key, n.smiles = row.smiles,
+        n.alt_id = row.alt_id, n.data_source = row.data_source
+      "
+      fileName="jira-LL-3198-chebi-data.zip"
+      startAt="1"
+      fileType="TSV"
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"/>
+  </changeSet>
+
+  <changeSet id="LL-3198-liquibase-chebi-data-load-synonyms" author="Binh Vu">
+    <comment>Create ChEBI data from scratch; load chebi synonym data.</comment>
+    <customChange
+      class="edu.ucsd.sbrg.FileQueryHandler"
+      query="
+      UNWIND $rows AS row
+      MERGE (a:Synonym {name: row.name}) SET a.lowercase_name = toLower(row.name)
+      WITH row, a MATCH (b:db_CHEBI {eid: row.eid})
+      MERGE (b)-[r:HAS_SYNONYM]->(a)
+      "
+      fileName="jira-LL-3198-chebi-data.zip"
+      startAt="1"
+      fileType="TSV"
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"/>
+  </changeSet>
+
+  <changeSet id="LL-3198-liquibase-chebi-data-load-relationship-is-a" author="Binh Vu">
+    <comment>Create ChEBI data from scratch; load chebi relationship IS_A.</comment>
+    <customChange
+      class="edu.ucsd.sbrg.FileQueryHandler"
+      query="
+      UNWIND $rows AS row
+      MATCH (a:db_CHEBI {eid: row.from_id}), (b:db_CHEBI {eid: row.to_id})
+      FOREACH (item IN CASE WHEN row.relationship = 'IS_A' THEN [1] ELSE [] END | MERGE (a)-[r:IS_A]->(b))
+      RETURN COUNT(*)
+      "
+      fileName="jira-LL-3198-chebi-relationship-data.zip"
+      startAt="1"
+      fileType="TSV"
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"/>
+  </changeSet>
+
+  <changeSet id="LL-3198-liquibase-chebi-data-load-relationship-conjugate-base" author="Binh Vu">
+    <comment>Create ChEBI data from scratch; load chebi relationship IS_CONJUGATE_BASE_OF.</comment>
+    <customChange
+      class="edu.ucsd.sbrg.FileQueryHandler"
+      query="
+      UNWIND $rows AS row
+      MATCH (a:db_CHEBI {eid: row.from_id}), (b:db_CHEBI {eid: row.to_id})
+      FOREACH (item IN CASE WHEN row.relationship = 'IS_CONJUGATE_BASE_OF' THEN [1] ELSE [] END | MERGE (a)-[r:IS_CONJUGATE_BASE_OF]->(b))
+      RETURN COUNT(*)
+      "
+      fileName="jira-LL-3198-chebi-relationship-data.zip"
+      startAt="1"
+      fileType="TSV"
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"/>
+  </changeSet>
+
+  <changeSet id="LL-3198-liquibase-chebi-data-load-relationship-has-part" author="Binh Vu">
+    <comment>Create ChEBI data from scratch; load chebi relationship HAS_PART.</comment>
+    <customChange
+      class="edu.ucsd.sbrg.FileQueryHandler"
+      query="
+      UNWIND $rows AS row
+      MATCH (a:db_CHEBI {eid: row.from_id}), (b:db_CHEBI {eid: row.to_id})
+      FOREACH (item IN CASE WHEN row.relationship = 'HAS_PART' THEN [1] ELSE [] END | MERGE (a)-[r:HAS_PART]->(b))
+      RETURN COUNT(*)
+      "
+      fileName="jira-LL-3198-chebi-relationship-data.zip"
+      startAt="1"
+      fileType="TSV"
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"/>
+  </changeSet>
+
+  <changeSet id="LL-3198-liquibase-chebi-data-load-relationship-has-role" author="Binh Vu">
+    <comment>Create ChEBI data from scratch; load chebi relationship HAS_ROLE.</comment>
+    <customChange
+      class="edu.ucsd.sbrg.FileQueryHandler"
+      query="
+      UNWIND $rows AS row
+      MATCH (a:db_CHEBI {eid: row.from_id}), (b:db_CHEBI {eid: row.to_id})
+      FOREACH (item IN CASE WHEN row.relationship = 'HAS_ROLE' THEN [1] ELSE [] END | MERGE (a)-[r:HAS_ROLE]->(b))
+      RETURN COUNT(*)
+      "
+      fileName="jira-LL-3198-chebi-relationship-data.zip"
+      startAt="1"
+      fileType="TSV"
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"/>
+  </changeSet>
+
+  <changeSet id="LL-3198-liquibase-chebi-data-load-relationship-has-parent" author="Binh Vu">
+    <comment>Create ChEBI data from scratch; load chebi relationship HAS_PARENT_HYDRIDE.</comment>
+    <customChange
+      class="edu.ucsd.sbrg.FileQueryHandler"
+      query="
+      UNWIND $rows AS row
+      MATCH (a:db_CHEBI {eid: row.from_id}), (b:db_CHEBI {eid: row.to_id})
+      FOREACH (item IN CASE WHEN row.relationship = 'HAS_PARENT_HYDRIDE' THEN [1] ELSE [] END | MERGE (a)-[r:HAS_PARENT_HYDRIDE]->(b))
+      RETURN COUNT(*)
+      "
+      fileName="jira-LL-3198-chebi-relationship-data.zip"
+      startAt="1"
+      fileType="TSV"
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"/>
+  </changeSet>
+
+  <changeSet id="LL-3198-liquibase-chebi-data-load-relationship-enantiomer-of" author="Binh Vu">
+    <comment>Create ChEBI data from scratch; load chebi relationship IS_ENANTIOMER_OF.</comment>
+    <customChange
+      class="edu.ucsd.sbrg.FileQueryHandler"
+      query="
+      UNWIND $rows AS row
+      MATCH (a:db_CHEBI {eid: row.from_id}), (b:db_CHEBI {eid: row.to_id})
+      FOREACH (item IN CASE WHEN row.relationship = 'IS_ENANTIOMER_OF' THEN [1] ELSE [] END | MERGE (a)-[r:IS_ENANTIOMER_OF]->(b))
+      RETURN COUNT(*)
+      "
+      fileName="jira-LL-3198-chebi-relationship-data.zip"
+      startAt="1"
+      fileType="TSV"
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"/>
+  </changeSet>
+
+  <changeSet id="LL-3198-liquibase-chebi-data-load-relationship-has-functional-parent" author="Binh Vu">
+    <comment>Create ChEBI data from scratch; load chebi relationship HAS_FUNCTIONAL_PARENT.</comment>
+    <customChange
+      class="edu.ucsd.sbrg.FileQueryHandler"
+      query="
+      UNWIND $rows AS row
+      MATCH (a:db_CHEBI {eid: row.from_id}), (b:db_CHEBI {eid: row.to_id})
+      FOREACH (item IN CASE WHEN row.relationship = 'HAS_FUNCTIONAL_PARENT' THEN [1] ELSE [] END | MERGE (a)-[r:HAS_FUNCTIONAL_PARENT]->(b))
+      RETURN COUNT(*)
+      "
+      fileName="jira-LL-3198-chebi-relationship-data.zip"
+      startAt="1"
+      fileType="TSV"
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"/>
+  </changeSet>
+
+  <changeSet id="LL-3198-liquibase-chebi-data-load-relationship-conjugate-acid" author="Binh Vu">
+    <comment>Create ChEBI data from scratch; load chebi relationship IS_CONJUGATE_ACID_OF.</comment>
+    <customChange
+      class="edu.ucsd.sbrg.FileQueryHandler"
+      query="
+      UNWIND $rows AS row
+      MATCH (a:db_CHEBI {eid: row.from_id}), (b:db_CHEBI {eid: row.to_id})
+      FOREACH (item IN CASE WHEN row.relationship = 'IS_CONJUGATE_ACID_OF' THEN [1] ELSE [] END | MERGE (a)-[r:IS_CONJUGATE_ACID_OF]->(b))
+      RETURN COUNT(*)
+      "
+      fileName="jira-LL-3198-chebi-relationship-data.zip"
+      startAt="1"
+      fileType="TSV"
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"/>
+  </changeSet>
+
+  <changeSet id="LL-3198-liquibase-chebi-data-load-relationship-tautomer" author="Binh Vu">
+    <comment>Create ChEBI data from scratch; load chebi relationship IS_TAUTOMER_OF.</comment>
+    <customChange
+      class="edu.ucsd.sbrg.FileQueryHandler"
+      query="
+      UNWIND $rows AS row
+      MATCH (a:db_CHEBI {eid: row.from_id}), (b:db_CHEBI {eid: row.to_id})
+      FOREACH (item IN CASE WHEN row.relationship = 'IS_TAUTOMER_OF' THEN [1] ELSE [] END | MERGE (a)-[r:IS_TAUTOMER_OF]->(b))
+      RETURN COUNT(*)
+      "
+      fileName="jira-LL-3198-chebi-relationship-data.zip"
+      startAt="1"
+      fileType="TSV"
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"/>
+  </changeSet>
+
+  <changeSet id="LL-3198-liquibase-chebi-data-load-relationship-substituent-group" author="Binh Vu">
+    <comment>Create ChEBI data from scratch; load chebi relationship IS_SUBSTITUENT_GROUP_FROM.</comment>
+    <customChange
+      class="edu.ucsd.sbrg.FileQueryHandler"
+      query="
+      UNWIND $rows AS row
+      MATCH (a:db_CHEBI {eid: row.from_id}), (b:db_CHEBI {eid: row.to_id})
+      FOREACH (item IN CASE WHEN row.relationship = 'IS_SUBSTITUENT_GROUP_FROM' THEN [1] ELSE [] END | MERGE (a)-[r:IS_SUBSTITUENT_GROUP_FROM]->(b))
+      RETURN COUNT(*)
+      "
+      fileName="jira-LL-3198-chebi-relationship-data.zip"
+      startAt="1"
+      fileType="TSV"
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"/>
+  </changeSet>
+</databaseChangeLog>

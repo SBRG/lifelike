@@ -1,0 +1,10 @@
+<ngb-alert
+        [type]="'warning'"
+        *ngFor="let warning of warnings | async"
+        [dismissible]="dismissible"
+        (close)="close(warning)"
+        class="mb-1"
+>
+    {{ warning }}
+</ngb-alert>
+

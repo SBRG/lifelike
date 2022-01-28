@@ -1,0 +1,14 @@
+@import "src/scss/variables";
+
+/* https://www.chartjs.org/docs/latest/general/responsive.html#important-note */
+.chart-container {
+  position: relative;
+  height: 35vh;
+}
+
+.graph-card-deck {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(600px, 1fr));
+  grid-auto-rows: 1fr;
+  grid-gap: $spacer * 1.5;
+}

@@ -1,0 +1,21 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+neo4j = "==4.3"
+numpy = "==1.21"
+pandas = "==1.3"
+ipython = "==7.19.0"
+Mako = "==1.1.5"
+azure-storage-file-share = "==12.5.0"
+coloredlogs = "==15.0.1"
+argparse = "==1.4.0"
+gitpython = "==3.1.24"
+
+[dev-packages]
+black = "==21.6b0"
+
+[requires]
+python_version = "3.8"

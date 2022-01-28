@@ -1,0 +1,84 @@
+<div class="d-flex w-100 h-100">
+  <!-- Left menu -->
+  <div class="vertical-nav d-flex flex-column flex-wrap overflow-auto flex-shrink-0">
+    <!-- Top buttons -->
+    <div class="d-flex flex-column">
+      <!-- If a file is in standalone mode, workbench button opens it as tab -->
+      <ng-container *ngIf="isStandaloneFileOpen; else goToWorkbench">
+        <a [appLink]="mainUrl" placement="right" ngbTooltip="Workbench" [forceWorkbench]="true" [newTab]="true"
+           [fragment]="fragment" preferPane="left">
+          <i class="far fa-window-restore"></i>
+        </a>
+      </ng-container>
+      <ng-template #goToWorkbench>
+        <a routerLink="/workspaces/local" placement="right" ngbTooltip="Workbench">
+          <i class="far fa-window-restore"></i>
+        </a>
+      </ng-template>
+      <a appLink="/projects" placement="right" ngbTooltip="File Browser" [forceWorkbench]="true" [newTab]="true" preferPane="left">
+        <i class="fa fa-folder"></i>
+      </a>
+      <a appLink="/search/graph" placement="right" ngbTooltip="Knowledge Graph" [forceWorkbench]="true" [newTab]="true" preferPane="left">
+        <i class="fas fa-chart-network"></i>
+      </a>
+      <a appLink="/search/content" placement="right" ngbTooltip="Search" [forceWorkbench]="true" [newTab]="true" preferPane="left">
+        <i class="fa fa-search"></i>
+      </a>
+      <div class="button-divider"></div>
+      <!-- Hiding this for now, we'll re-enable it once we have a view for imported data -->
+      <!-- <a routerLink="/kg-import" placement="right" ngbTooltip="Knowledge Graph Import">
+        <i class="fa fa-cloud-upload"></i>
+      </a> -->
+      <a routerLink="kg-statistics" placement="right" ngbTooltip="Knowledge Graph Statistics">
+        <i class="fas fa-chart-bar"></i>
+      </a>
+    </div>
+    <!-- /Top buttons -->
+
+    <!-- Bottom buttons -->
+    <div class="d-flex flex-column mt-auto">
+      <a [href]="helpDeskUrl" target="_blank" placement="right" triggers="hover" ngbTooltip="Feedback and Questions">
+        <i class="fa fa-comment"></i>
+      </a>
+
+      <ng-container *ngIf="(loggedIn$ | async); else loggedOut">
+        <div ngbDropdown placement="top-left" container="body">
+          <a id="account-dropdown" ngbDropdownToggle ngbTooltip="Options" container="body">
+            <i class="fa fa-user"></i>
+          </a>
+          <div ngbDropdownMenu aria-labelledby="account-dropdown" class="dropdown-menu">
+            <a class="dropdown-item" (click)="buildInfo()" placement="right">
+              Lifelike Info
+            </a>
+            <a class="dropdown-item" *ngIf="(userRoles$ | async)?.includes('admin')" [routerLink]="['/admin']"
+               placement="right">
+              Administration
+            </a>
+            <a class="dropdown-item" (click)="downloadManual()" placement="right">
+              User Guide
+            </a>
+            <a class="dropdown-item" [routerLink]="['/users', (appUser$ | async)?.username]" placement="right">
+              Account
+            </a>
+            <a class="dropdown-item" (click)="logout()" placement="right">
+              Logout
+            </a>
+          </div>
+        </div>
+      </ng-container>
+      <ng-template #loggedOut>
+        <a (click)="login()" placement="right" ngbTooltip="Login">
+          <i class="fas fa-user"></i>
+        </a>
+      </ng-template>
+    </div>
+    <!-- /Bottom buttons -->
+  </div>
+  <!-- /Left menu -->
+
+  <!-- Module content -->
+  <div class="flex-fill overflow-auto">
+    <router-outlet></router-outlet>
+  </div>
+  <!-- /Module content -->
+</div>

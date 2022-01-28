@@ -1,0 +1,24 @@
+<div *ngIf="status.retryInProgressShown" [class]="childClass">
+  <div class="alert alert-warning m-0">
+    <div>
+      This is taking longer than expected.
+    </div>
+  </div>
+</div>
+
+<div *ngIf="status.failedErrorShown" [class]="childClass">
+  <div class="alert alert-danger m-0">
+    <div>
+      The latest data could not be fetched.
+    </div>
+    <div class="mt-1">
+      <button type="button" class="btn btn-sm btn-outline-danger" (click)="this.refresh.emit()">
+        Retry
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="progress {{childClass}}" *ngIf="status.progressShown">
+  <div class="progress-bar progress-bar-striped progress-bar-animated bg-secondary" style="width: 100%"></div>
+</div>

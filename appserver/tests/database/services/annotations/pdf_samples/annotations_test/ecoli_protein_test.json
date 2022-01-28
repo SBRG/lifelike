@@ -1,0 +1,122 @@
+{
+  "name": "ecoli_protein_test.pdf",
+  "pages": [
+    {
+      "cropBox": {
+        "height": 405,
+        "lowerLeftPt": {
+          "x": 0,
+          "y": 0
+        },
+        "pivotPt": {
+          "x": 0,
+          "y": 0
+        },
+        "rotation": 0,
+        "width": 720
+      },
+      "mediaBox": {
+        "height": 405,
+        "lowerLeftPt": {
+          "x": 0,
+          "y": 0
+        },
+        "pivotPt": {
+          "x": 0,
+          "y": 0
+        },
+        "rotation": 0,
+        "width": 720
+      },
+      "pageNo": 1,
+      "pageText": "  Escherichia coli YdhC, ydhB ",
+      "tokens": [
+        {
+          "pgIdx": 2,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 52,
+              "lowerLeftPt": {
+                "x": 179.3852996826172,
+                "y": 190.82998657226562
+              },
+              "pivotPt": {
+                "x": 179.3852996826172,
+                "y": 203.82998657226562
+              },
+              "rotation": 0,
+              "width": 268.6840057373047
+            }
+          ],
+          "shapes": [],
+          "text": "Escherichia"
+        },
+        {
+          "pgIdx": 14,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 52,
+              "lowerLeftPt": {
+                "x": 462.4732971191406,
+                "y": 190.82998657226562
+              },
+              "pivotPt": {
+                "x": 462.4732971191406,
+                "y": 203.82998657226562
+              },
+              "rotation": 0,
+              "width": 78.00003051757812
+            }
+          ],
+          "shapes": [],
+          "text": "coli"
+        },
+        {
+          "pgIdx": 19,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 28,
+              "lowerLeftPt": {
+                "x": 285.3004455566406,
+                "y": 141.21054077148438
+              },
+              "pivotPt": {
+                "x": 285.3004455566406,
+                "y": 148.21054077148438
+              },
+              "rotation": 0,
+              "width": 70
+            }
+          ],
+          "shapes": [],
+          "text": "YdhC"
+        },
+        {
+          "pgIdx": 25,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 28,
+              "lowerLeftPt": {
+                "x": 370.8124694824219,
+                "y": 141.21054077148438
+              },
+              "pivotPt": {
+                "x": 370.8124694824219,
+                "y": 148.21054077148438
+              },
+              "rotation": 0,
+              "width": 63.78399658203125
+            }
+          ],
+          "shapes": [],
+          "text": "ydhB"
+        }
+      ]
+    }
+  ],
+  "processedDate": "2021-01-14 14:46:47"
+}

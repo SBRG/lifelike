@@ -1,0 +1,27 @@
+<app-select-input (choiceListRequest)="processRequest($event)" [loading]="loading"
+                  [choices]="choices" [choiceToKey]="userChoiceToKey" [multiple]="multiple"
+                  [placeholder]="placeholder" [(ngModel)]="value"
+                  (ngModelChange)="onModelChange($event)"
+                  #selectInput>
+  <ng-template #inputChoiceTemplate let-choice>
+    <app-user [user]="choice"></app-user>
+  </ng-template>
+  <ng-template #dropdownChoiceTemplate let-choice let-request="request">
+    <app-user [user]="choice"
+              [highlightTerms]="request.query.length ? [request.query] : []"></app-user>
+  </ng-template>
+  <ng-template #noResultsTemplate let-request="request">
+    <ng-container *ngIf="request.query.trim().length; else noQuery">
+      <div>
+        <em>No users match your search.</em>
+      </div>
+    </ng-container>
+    <ng-template #noQuery>
+      <div>
+        <em>Find existing users by their name, username,
+          or complete email address.</em>
+      </div>
+      <ng-content></ng-content>
+    </ng-template>
+  </ng-template>
+</app-select-input>

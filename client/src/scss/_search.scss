@@ -1,0 +1,36 @@
+.search-results {
+}
+
+.search-results-item {
+  position: relative;
+  padding: $search-results-padding-y $search-results-padding-x;
+  margin-bottom: $search-results-margin-bottom;
+  border: $search-results-border-width solid $search-results-border-color;
+  border-radius: $search-results-border-radius;
+}
+
+.search-results-item-header {
+  h5 {
+    font-size: 140%;
+  }
+}
+
+.search-results-item-body {
+
+}
+
+.search-results-selectable {
+  .search-results-item {
+    &.active {
+      background: $active-bg;
+    }
+
+    &:hover {
+      box-shadow: $focus-box-shadow;
+    }
+
+    &:focus, &.active:hover {
+      box-shadow: $focus-box-shadow;
+    }
+  }
+}

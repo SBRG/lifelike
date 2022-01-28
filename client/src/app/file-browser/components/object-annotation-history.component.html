@@ -1,0 +1,134 @@
+
+<ng-container *ngIf="(log$ | async) as log; else loading">
+  <div *ngIf="!log.results.length" class="p-4 text-center">
+    There is no history to show for this file.
+  </div>
+  <ng-container *ngIf="log.results.length">
+    <table class="table" style="table-layout: fixed">
+      <colgroup>
+        <col style="width: 140px">
+        <col style="width: 145px">
+      </colgroup>
+      <thead>
+      <tr>
+        <th>Date</th>
+        <th>User</th>
+        <th>Changes</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let change of log.results.view">
+        <td class="text-truncate">
+          {{ change.date | date: 'short' }}
+        </td>
+        <td class="text-truncate">
+          <ng-container *ngIf="change.user; else noUser">
+            <app-user [user]="change.user"></app-user>
+          </ng-container>
+          <ng-template #noUser>
+            <em>System</em>
+          </ng-template>
+        </td>
+        <td>
+          <div class="mb-2" *ngIf="change.isReannotation">
+            <span class="badge badge-pill badge-secondary">Re-Annotation</span>
+          </div>
+          <div *ngIf="!change.inclusionChanges.length && !change.exclusionChanges.length" class="text-muted">
+            <em>No changes.</em>
+          </div>
+          <ul class="list-condensed overflow-auto" style="max-height: 200px">
+            <li *ngFor="let item of change.inclusionChanges">
+              <div
+                [class.text-success]="item.action === 'added'"
+                [class.text-danger]="item.action === 'removed'"
+                [ngbTooltip]="'ID: ' + (item.meta.id != null ? item.meta.id : 'N/A')"
+                placement="top-left">
+                {{ item.label }} annotation
+                <strong>'{{ item.meta.allText }}'</strong>
+                as <em>{{ item.meta.type }}</em>
+                <div class="text-muted">
+                  <div *ngIf="item.meta.includeGlobally">
+                    <i class="fa fa-globe"></i> Added to global list
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li *ngFor="let item of change.exclusionChanges">
+              <div
+                [class.text-success]="item.action === 'removed'"
+                [class.text-danger]="item.action === 'added'"
+                [ngbTooltip]="'ID: ' + (item.meta.id != null ? item.meta.id : 'N/A')"
+                placement="top-left">
+                {{ item.label }} exclusion <strong>'{{ item.meta.text }}'</strong>
+                as <em>{{ item.meta.type }}</em>
+              </div>
+              <div class="text-muted">
+                <div *ngIf="item.meta.reason">Reason: {{ item.meta.reason }}</div>
+                <div *ngIf="item.meta.comment">Comment: {{ item.meta.comment }}</div>
+                <div *ngIf="item.meta.excludeGlobally">
+                  <i class="fa fa-globe"></i> Added to global exclusion list
+                </div>
+              </div>
+            </li>
+          </ul>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+
+    <div class="mt-4">
+      <ngb-pagination
+        [page]="page"
+        [pageSize]="limit"
+        [collectionSize]="log.collectionSize"
+        (pageChange)="goToPage($event)"></ngb-pagination>
+    </div>
+  </ng-container>
+</ng-container>
+<ng-template #loading>
+  <table class="table">
+    <colgroup>
+      <col style="width: 1%">
+      <col style="width: 1%">
+    </colgroup>
+    <thead>
+    <tr>
+      <th><span class="placeholder-box">Date</span></th>
+      <th><span class="placeholder-box">User</span></th>
+      <th><span class="placeholder-box">Changes</span></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+      <td class="text-nowrap">
+        <span class="placeholder-box">XX/XX/XX XX:XX XX</span>
+      </td>
+      <td class="text-nowrap">
+        <span class="placeholder-box">Loading loading</span>
+      </td>
+      <td>
+        <ul class="list-condensed m-0">
+          <li>
+            <span class="placeholder-box">Loading loading loading loading</span>
+          </li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td class="text-nowrap">
+        <span class="placeholder-box">XX/XX/XX XX:XX XX</span>
+      </td>
+      <td class="text-nowrap">
+        <span class="placeholder-box">Loading loading</span>
+      </td>
+      <td>
+        <ul class="list-condensed m-0">
+          <li>
+            <span class="placeholder-box">Loading loading</span>
+          </li>
+        </ul>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</ng-template>

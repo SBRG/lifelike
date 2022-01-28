@@ -1,0 +1,49 @@
+<div [class.drop-target]="dropTargeted" [class.drop-target-outset]="dropTargeted">
+  <div class="d-flex align-items-start mb-2" *ngIf="showHeader">
+    <label class="m-0 mr-4">{{ title }}:</label>
+    <button type="button" *ngIf="editable" class="btn btn-primary btn-xs ml-auto"
+            (click)="openCreateDialog()" [disabled]="limit !== null && value?.length > limit - 1"><i
+      class="fa fa-plus"></i></button>
+  </div>
+
+  <div *ngIf="editable && draggable" class="drop-zone">
+    Drag links or snippets here
+  </div>
+
+  <div *ngFor="let link of value; index as index" class="card link-item" [class.mt-2]="editable"
+       [class.active]="activeLinkIndex === index" tabindex="0" (focus)="linkFocus($event, link, index)">
+    <div class="card-body bg-light p-2"
+         (click)="activeLinkIndex = index">
+      <div [ngClass]="editable ? 'link-item-text' : 'link-item-text-readonly'"
+           *ngIf="link.domain != '' && link.domain != null">
+        <ng-container *ngTemplateOutlet="linkText"></ng-container>
+      </div>
+      <ng-template #linkText>
+        <div style="white-space: pre-line">
+          {{ getText(link.domain) }}
+        </div>
+      </ng-template>
+
+      <div class="d-flex align-items-center">
+        <div class="text-truncate mr-2" placement="top" container="body"
+             [ngbTooltip]="link.url">
+          <a [href]="toValidUrl(link.url)" target="_blank" class="text-muted"
+             (click)="linkClick($event, link)">
+            <small><i class="{{ fontAwesomeIcon }} fa-fw"></i> {{ getUrlText(link.url) }}</small>
+          </a>
+        </div>
+
+        <div *ngIf="editable" class="mt-1 ml-auto link-item-controls text-nowrap">
+          <button type="button" class="btn btn-xs btn-secondary ml-auto"
+                  (click)="openEditDialog(link); $event.stopPropagation()">
+            <i class="fa fa-pencil"></i>
+          </button>
+          <button type="button" class="btn btn-xs btn-outline-danger ml-1"
+                  (click)="delete(index); $event.stopPropagation()">
+            <i class="fa fa-trash"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

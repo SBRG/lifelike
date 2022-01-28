@@ -1,0 +1,19 @@
+<div class="h-100 d-flex bg-white align-items-center justify-content-center"
+     *ngIf="status.running || status.failedErrorShown">
+  <div class="d-flex flex-column align-items-center" *ngIf="status.running">
+    <div>
+      <app-loading-indicator></app-loading-indicator>
+    </div>
+    <div class="mt-1">
+      {{ loadingText }}
+    </div>
+  </div>
+  <div class="d-flex flex-column align-items-center text-muted" *ngIf="status.failedErrorShown">
+    <div>
+      <i class="fa fa-exclamation-circle fa-4x"></i>
+    </div>
+    <div class="mt-4">
+      {{ errorText }}
+    </div>
+  </div>
+</div>

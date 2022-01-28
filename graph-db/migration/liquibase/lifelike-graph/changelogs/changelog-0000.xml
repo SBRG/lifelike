@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd">
+  <!--
+    Neo4j does not allow the same transaction for changing the scheme and writes.
+    So group changeSets together by id="some text-#"
+    And separate changeSets grouping by empty new line space
+  -->
+
+  <changeSet id="LL-3625-create-index-on-original-entity-types" author="Binh Vu">
+    <comment>Create an temp index to to speed things up.</comment>
+    <sql>
+      CREATE INDEX index_anatomy_original_entity_types IF NOT EXISTS FOR (n:Anatomy) ON (n.original_entity_types);
+      CREATE INDEX index_chemical_original_entity_types IF NOT EXISTS FOR (n:Chemical) ON (n.original_entity_types);
+      CREATE INDEX index_compound_original_entity_types IF NOT EXISTS FOR (n:Compound) ON (n.original_entity_types);
+      CREATE INDEX index_disease_original_entity_types IF NOT EXISTS FOR (n:Disease) ON (n.original_entity_types);
+      CREATE INDEX index_food_original_entity_types IF NOT EXISTS FOR (n:Food) ON (n.original_entity_types);
+      CREATE INDEX index_gene_original_entity_types IF NOT EXISTS FOR (n:Gene) ON (n.original_entity_types);
+      CREATE INDEX index_phenomena_original_entity_types IF NOT EXISTS FOR (n:Phenomena) ON (n.original_entity_types);
+      CREATE INDEX index_phenotype_original_entity_types IF NOT EXISTS FOR (n:Phenotype) ON (n.original_entity_types);
+      CREATE INDEX index_protein_original_entity_types IF NOT EXISTS FOR (n:Protein) ON (n.original_entity_types);
+      CREATE INDEX index_tax_original_entity_types IF NOT EXISTS FOR (n:Taxonomy) ON (n.original_entity_types);
+    </sql>
+  </changeSet>
+
+  <changeSet id="LL-3625-add-original-entity-types-mesh" author="Binh Vu">
+    <comment>
+      Add new property original_entity_types to entity nodes.
+      This is to help with deleting global inclusion, to avoid deleting a real relationship.
+      The reason for this was because during testing, a global inclusion was mistakenly added as
+      a certain type, resulting in a node with two type, one real and one fake. This means that node
+      now returns back as a synonym for both types.
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.FileQueryHandler"
+      query="
+      CALL apoc.periodic.iterate(
+        &quot;UNWIND $rows AS row MATCH (n:db_MESH) WHERE n.eid = row.entity_id RETURN n, row&quot;,
+        &quot;SET n.original_entity_types = split(row.entity_type, '|')&quot;,
+        {batchSize:5000, params: {rows: $rows}}
+      )
+      "
+      fileName="jira-LL-3625-add-entity-type-array-mesh.zip"
+      startAt="1"
+      fileType="TSV"
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"/>
+  </changeSet>
+
+  <changeSet id="LL-3625-add-original-entity-types-compound" author="Binh Vu">
+    <comment>
+      Add new property original_entity_types to entity nodes.
+      This is to help with deleting global inclusion, to avoid deleting a real relationship.
+      The reason for this was because during testing, a global inclusion was mistakenly added as
+      a certain type, resulting in a node with two type, one real and one fake. This means that node
+      now returns back as a synonym for both types.
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.FileQueryHandler"
+      query="
+      CALL apoc.periodic.iterate(
+        &quot;UNWIND $rows AS row MATCH (n:Compound) WHERE n.eid = row.entity_id RETURN n, row&quot;,
+        &quot;SET n.original_entity_types = split(row.entity_type, '|')&quot;,
+        {batchSize:5000, params: {rows: $rows}}
+      )
+      "
+      fileName="jira-LL-3625-add-entity-type-array-compound.zip"
+      startAt="1"
+      fileType="TSV"
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"/>
+  </changeSet>
+
+  <changeSet id="LL-3625-add-original-entity-types-chemical" author="Binh Vu">
+    <comment>
+      Add new property original_entity_types to entity nodes.
+      This is to help with deleting global inclusion, to avoid deleting a real relationship.
+      The reason for this was because during testing, a global inclusion was mistakenly added as
+      a certain type, resulting in a node with two type, one real and one fake. This means that node
+      now returns back as a synonym for both types.
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.FileQueryHandler"
+      query="
+      CALL apoc.periodic.iterate(
+        &quot;UNWIND $rows AS row MATCH (n:Chemical) WHERE n.eid = row.entity_id RETURN n, row&quot;,
+        &quot;SET n.original_entity_types = split(row.entity_type, '|')&quot;,
+        {batchSize:5000, params: {rows: $rows}}
+      )
+      "
+      fileName="jira-LL-3625-add-entity-type-array-chemical.zip"
+      startAt="1"
+      fileType="TSV"
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"/>
+  </changeSet>
+
+  <changeSet id="LL-3625-add-original-entity-types-taxonomy" author="Binh Vu">
+    <comment>
+      Add new property original_entity_types to entity nodes.
+      This is to help with deleting global inclusion, to avoid deleting a real relationship.
+      The reason for this was because during testing, a global inclusion was mistakenly added as
+      a certain type, resulting in a node with two type, one real and one fake. This means that node
+      now returns back as a synonym for both types.
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.ConditionQueryHandler"
+      query="
+      
+        CALL apoc.periodic.iterate(
+        'MATCH (n:Taxonomy) WHERE NOT n:GlobalInclusion AND NOT exists(n.original_entity_types) RETURN n LIMIT 500000',
+        'SET n.original_entity_types = [&quot;Taxonomy&quot;]', {batchSize:50000})
+        
+      "
+      conditionQuery="MATCH (n:Taxonomy) WHERE NOT n:GlobalInclusion AND NOT exists(n.original_entity_types) RETURN COUNT(n)"
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+    />
+  </changeSet>
+
+  <changeSet id="LL-3625-add-original-entity-types-protein" author="Binh Vu">
+    <comment>
+      Add new property original_entity_types to entity nodes.
+      This is to help with deleting global inclusion, to avoid deleting a real relationship.
+      The reason for this was because during testing, a global inclusion was mistakenly added as
+      a certain type, resulting in a node with two type, one real and one fake. This means that node
+      now returns back as a synonym for both types.
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.FileQueryHandler"
+      query="
+      CALL apoc.periodic.iterate(
+        &quot;UNWIND $rows AS row MATCH (n:Protein) WHERE n.eid = row.entity_id RETURN n, row&quot;,
+        &quot;SET n.original_entity_types = split(row.entity_type, '|')&quot;,
+        {batchSize:5000, params: {rows: $rows}}
+      )
+      "
+      fileName="jira-LL-3625-add-entity-type-array-protein.zip"
+      startAt="1"
+      fileType="TSV"
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"/>
+  </changeSet>
+
+  <changeSet id="LL-3625-add-original-entity-types-gene" author="Binh Vu">
+    <comment>
+      Add new property original_entity_types to entity nodes.
+      This is to help with deleting global inclusion, to avoid deleting a real relationship.
+      The reason for this was because during testing, a global inclusion was mistakenly added as
+      a certain type, resulting in a node with two type, one real and one fake. This means that node
+      now returns back as a synonym for both types.
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.ConditionQueryHandler"
+      query="
+      
+        CALL apoc.periodic.iterate(
+        'MATCH (n:Gene) WHERE NOT n:GlobalInclusion AND NOT exists(n.original_entity_types) RETURN n LIMIT 500000',
+        'SET n.original_entity_types = [&quot;Gene&quot;]', {batchSize:50000})
+        
+      "
+      conditionQuery="MATCH (n:Gene) WHERE NOT n:GlobalInclusion AND NOT exists(n.original_entity_types) RETURN COUNT(n)"
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+    />
+  </changeSet>
+</databaseChangeLog>

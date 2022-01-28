@@ -1,0 +1,143 @@
+{
+  "name": "test_can_find_food_entities.pdf",
+  "pages": [
+    {
+      "cropBox": {
+        "height": 792,
+        "lowerLeftPt": {
+          "x": 0,
+          "y": 0
+        },
+        "pivotPt": {
+          "x": 0,
+          "y": 0
+        },
+        "rotation": 0,
+        "width": 612
+      },
+      "mediaBox": {
+        "height": 792,
+        "lowerLeftPt": {
+          "x": 0,
+          "y": 0
+        },
+        "pivotPt": {
+          "x": 0,
+          "y": 0
+        },
+        "rotation": 0,
+        "width": 612
+      },
+      "pageNo": 1,
+      "pageText": "  FOODS artificial sweeteners and bacon ",
+      "tokens": [
+        {
+          "pgIdx": 2,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 12,
+              "lowerLeftPt": {
+                "x": 76.89540100097656,
+                "y": 706.2301025390625
+              },
+              "pivotPt": {
+                "x": 76.89540100097656,
+                "y": 709.2301025390625
+              },
+              "rotation": 0,
+              "width": 41.769874572753906
+            }
+          ],
+          "shapes": [],
+          "text": "FOODS"
+        },
+        {
+          "pgIdx": 8,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 12,
+              "lowerLeftPt": {
+                "x": 76.89540100097656,
+                "y": 678.81591796875
+              },
+              "pivotPt": {
+                "x": 76.89540100097656,
+                "y": 681.81591796875
+              },
+              "rotation": 0,
+              "width": 39.824256896972656
+            }
+          ],
+          "shapes": [],
+          "text": "artificial"
+        },
+        {
+          "pgIdx": 19,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 12,
+              "lowerLeftPt": {
+                "x": 119.9858627319336,
+                "y": 678.81591796875
+              },
+              "pivotPt": {
+                "x": 119.9858627319336,
+                "y": 681.81591796875
+              },
+              "rotation": 0,
+              "width": 60.084144592285156
+            }
+          ],
+          "shapes": [],
+          "text": "sweeteners"
+        },
+        {
+          "pgIdx": 30,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 12,
+              "lowerLeftPt": {
+                "x": 183.3338623046875,
+                "y": 678.81591796875
+              },
+              "pivotPt": {
+                "x": 183.3338623046875,
+                "y": 681.81591796875
+              },
+              "rotation": 0,
+              "width": 19.601959228515625
+            }
+          ],
+          "shapes": [],
+          "text": "and"
+        },
+        {
+          "pgIdx": 34,
+          "possibleAbbrev": false,
+          "rects": [
+            {
+              "height": 12,
+              "lowerLeftPt": {
+                "x": 206.2020263671875,
+                "y": 678.81591796875
+              },
+              "pivotPt": {
+                "x": 206.2020263671875,
+                "y": 681.81591796875
+              },
+              "rotation": 0,
+              "width": 32.01118469238281
+            }
+          ],
+          "shapes": [],
+          "text": "bacon"
+        }
+      ]
+    }
+  ],
+  "processedDate": "2021-01-14 14:35:05"
+}

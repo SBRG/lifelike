@@ -1,0 +1,31 @@
+<div class="alert alert-info">
+  We're working on letting you change your email.
+</div>
+<form [formGroup]="form" >
+  <app-modal-header (cancel)="reset()">
+    Update User
+  </app-modal-header>
+
+  <app-modal-body>
+    <app-form-row for="username" label="Username" [control]="form.get('username')">
+      <input type="text" formControlName="username" id="username" [appFormInput]="form.get('username')" appAutoFocus>
+    </app-form-row>
+
+    <app-form-row for="email" label="Email" ngbTooltip="Not yet implemented." [control]="form.get('email')">
+      <input type="email" formControlName="email" id="email" [appFormInput]="form.get('email')">
+    </app-form-row>
+
+    <app-form-row for="first-name" label="First Name" [control]="form.get('firstName')">
+      <input type="text" formControlName="firstName" id="first-name" [appFormInput]="form.get('firstName')">
+    </app-form-row>
+
+    <app-form-row for="last-name" label="Last Name" [control]="form.get('lastName')">
+      <input type="text" formControlName="lastName" id="last-name" [appFormInput]="form.get('lastName')">
+    </app-form-row>
+  </app-modal-body>
+
+  <app-modal-footer>
+    <button type="button" class="btn btn-secondary mr-2" (click)="reset()">Cancel</button>
+    <button type="submit" class="btn btn-primary" [disabled]="!form.dirty" (click)="submit()" >Submit</button>
+  </app-modal-footer>
+</form>

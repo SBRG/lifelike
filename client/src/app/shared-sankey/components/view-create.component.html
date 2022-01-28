@@ -1,0 +1,19 @@
+<form [formGroup]="form" (ngSubmit)="submit()">
+    <app-modal-header (cancel)="cancel()">
+        Create view
+    </app-modal-header>
+
+    <app-modal-body>
+        <app-form-input-feedback [control]="form" [formLevel]="true"></app-form-input-feedback>
+
+        <app-form-row for="viewName" label="View name" [control]="form.get('viewName')">
+            <input type="text" formControlName="viewName" id="viewName" [appFormInput]="form.get('viewName')"
+                   appAutoFocus [autoSelect]="true" placeholder="Custom view name">
+        </app-form-row>
+    </app-modal-body>
+
+    <app-modal-footer>
+        <button type="button" class="btn btn-secondary mr-2" (click)="cancel()">Cancel</button>
+        <button type="submit" class="btn btn-primary" [disabled]="form.invalid">Save</button>
+    </app-modal-footer>
+</form>

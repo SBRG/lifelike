@@ -1,0 +1,11 @@
+@import '~bootstrap/scss/functions';
+@import '~bootstrap/scss/variables';
+@import 'src/scss/variables';
+
+.sankey-legend-wrapper {
+    margin-left: $spacer;
+    margin-top: $spacer;
+    min-width: 6rem;
+    position: absolute;
+    z-index: 1;
+}

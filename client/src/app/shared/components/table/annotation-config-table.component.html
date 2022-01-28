@@ -1,0 +1,49 @@
+<div class="custom-control custom-checkbox" *ngIf="fileType !== 'vnd.lifelike.document/enrichment-table'">
+  <input
+    id="exclude-references-checkbox"
+    class="custom-control-input"
+    type="checkbox"
+    [checked]="form.get('excludeReferences').value"
+    (change)="excludeReferences($event)">
+  <label class="custom-control-label" for="exclude-references-checkbox">Exclude reference section from annotation</label>
+</div><br>
+
+<div>
+  <i class="fa fa-exclamation-circle"></i>
+  Below are the current entity types that have an NLP model. Other entity types will default to Rules Based.
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Model</th>
+        <th *ngFor="let header of headers" scope="col">{{header}}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let model of models">
+        <th scope="row">{{model}}</th>
+        <td>
+          <div class="custom-control custom-checkbox">
+            <input
+              id="{{model}}-nlp-checkbox"
+              class="custom-control-input"
+              type="checkbox"
+              [checked]="form.get('annotationMethods').get(model).get('nlp').value"
+              (change)="checkboxChange(model, 'nlp', 'rulesBased', $event)">
+            <label class="custom-control-label" for="{{model}}-nlp-checkbox"></label>
+          </div>
+        </td>
+        <td>
+          <div class="custom-control custom-checkbox">
+            <input
+              id="{{model}}-rules-based-checkbox"
+              class="custom-control-input"
+              type="checkbox"
+              [checked]="form.get('annotationMethods').get(model).get('rulesBased').value"
+              (change)="checkboxChange(model, 'rulesBased', 'nlp', $event)">
+            <label class="custom-control-label" for="{{model}}-rules-based-checkbox"></label>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

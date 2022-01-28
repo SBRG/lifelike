@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd">
+  <!--
+    Create reactome-gds from reactome database download reactome.graph.tgz, then change the database by running the cyphers
+  -->
+  <changeSet id="1. Remove un-needed nodes and labels" author="robin cai">
+    <comment>
+      Remove DatabaseObject, InstanceEdit, Affilication, Person, Publication, Taxon
+    </comment>
+    <sql>
+    call apoc.periodic.iterate(
+    "match(n:DatabaseObject) return n",
+    'remove n:DatabaseObject',
+    {batchSize: 5000, parallel:True}
+    );
+    call apoc.periodic.iterate(
+    "match(n:InstanceEdit) return n",
+    'detach delete n',
+    {batchSize: 1000}
+    );
+    match(n:Affiliation) detach delete n;
+    match(n:Person) detach delete n;
+    match(n:Publication) detach delete n;
+    match(n:Taxon) detach delete n;
+    </sql>
+  </changeSet>
+
+  <changeSet id="2. Remove all non-human PhysicalEntity and Event" author="robin cai">
+    <comment>The GDS is currently for human data analysis only</comment>
+    <sql>
+    match(n:Event) where n.speciesName &lt;&gt; 'Homo sapiens' detach delete n;
+    match(n:PhysicalEntity) where  exists (n.speciesName) and n.speciesName &lt;&gt; 'Homo sapiens' detach delete n;
+    </sql>
+  </changeSet>
+
+  <changeSet id="3. Set commonName and compartment properties" author="robin cai">
+    <comment></comment>
+    <sql>
+    match(n:PhysicalEntity) set n.commonName = n.name[0];
+
+    match(n:PhysicalEntity)-[r:compartment]-(x)
+    with n, collect(x.name) as gos set n.compartment = gos;
+    match(n:PhysicalEntity)-[r:compartment]-(x) delete r;
+
+    match(n:Event)-[r:compartment]-(x)
+    with n, collect(x.name) as gos set n.compartment = gos;
+    match(n:Event)-[r:compartment]-(:GO_Term) delete r;
+    </sql>
+  </changeSet>
+
+  <changeSet id="4. Reverse and rename relationshps for better traversal" author="robin cai">
+    <comment> Change the following relationships:
+      - Change hasComponent to componentOf, reverse
+      - Change hasMember to memberOf, reverse
+      - Change catalystActivity to catalyzes, reverse
+      - Change physicalEntity to catalystOf, reverse
+      - Change regulatedBy to regulates, reverse
+      - Change activeUnit to activeUnitOf reverse
+      - Change regulatedBy to regulates, reverse
+      - Change hasCandidate to candidateOf, reverse
+      - Change requiredInputComponent to requiredInput, reverse
+      - Change repeatedUnit to repeatedUnitOf, reverse
+    </comment>
+    <sql>
+    match(n:Complex)-[r:hasComponent]->(x) merge (x)-[:componentOf]->(n) delete r;
+    match(n:EntitySet)-[r:hasMember]->(x) merge (x)-[:memberOf]->(n) delete r;
+    match(n:ReactionLikeEvent)-[r:catalystActivity]->(x) merge (x)-[:catalyzes]->(n) delete r;
+    match (n:CatalystActivity)-[r:physicalEntity]->(x) merge (x)-[:catalystOf]->(n) delete r;
+    match (n:CatalystActivity)-[r:activeUnit]->(x) merge (x)-[:activeUnitOf]->(n) delete r;
+    match (n)-[r:regulatedBy]->(x:Regulation) merge (x)-[:regulates]->(n) delete r;
+    match(n:Regulation)-[r:regulator]->(x) merge (x)-[:regulatorOf]->(n) delete r;
+    match(n:Regulation)-[r:activeUnit]->(x) merge (x)-[:activeUnitOf]->(n) delete r;
+    match(n)-[r:hasCandidate]->(x) merge (x)-[:candidateOf]->(n) delete r;
+    match(n)-[r:requiredInputComponent]->(x) merge (x)-[:requiredInput]->(n) delete r;
+    match(n)-[r:repeatedUnit]->(x) merge (x)-[:repeatedUnitOf]->(n) delete r;
+    </sql>
+  </changeSet>
+
+  <changeSet id="5. Remove all non-human PhysicalEntity and Event" author="robin cai">
+    <comment>The GDS is currently for human data analysis only</comment>
+    <sql>
+    match(n:Event) where n.speciesName &lt;&gt; 'Homo sapiens' detach delete n;
+    match(n:PhysicalEntity) where  exists (n.speciesName) and n.speciesName &lt;&gt; 'Homo sapiens' detach delete n;
+    </sql>
+  </changeSet>
+
+</databaseChangeLog>

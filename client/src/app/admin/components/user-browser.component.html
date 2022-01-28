@@ -1,0 +1,116 @@
+<ng-container *ngIf="(loadTask.status$ | async) as status">
+  <div class="mb-4 d-flex">
+    <div>
+      <button class="btn btn-primary" (click)="displayCreateDialog()">
+        <i class="fa fa-fw fa-plus"></i>
+        Create User
+      </button>
+      <div class="d-inline-block">
+        <button class="btn btn-secondary ml-2" [disabled]="!isOneSelected()" (click)="displayUpdateDialog()" >
+          <i class="fa fa-fw fa-pencil"></i> Edit
+        </button>
+        <button class="btn btn-secondary ml-2" [disabled]="true" ngbTooltip="Not yet implemented.">
+          <i class="fa fa-fw fa-trash"></i>
+        </button>
+      </div>
+      <button type="button" class="btn btn-warning ml-2" (click)="this.displayMissingRolesDialog()" [disabled]="!this.getRolelessUsers().length">
+        Missing roles
+      </button>
+      <button type="button" class="btn btn-secondary ml-2" (click)="this.refresh()"
+              ngbTooltip="Refresh the results">
+        <i class="fa fa-sync"></i>
+      </button>
+    </div>
+  </div>
+
+  <app-background-task-progress
+          [status]="status" (refresh)="this.refresh()" childClass="mb-2"></app-background-task-progress>
+
+  <table class="table" [class.table-selectable]="status.resultsShown" style="table-layout: fixed">
+    <colgroup>
+      <col style="width: 50%">
+    </colgroup>
+    <thead>
+    <tr>
+    <tr>
+      <th>
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="select-all"
+                 [checked]="isAllSelected()" (change)="toggleAllSelected()">
+          <label class="custom-control-label" for="select-all">
+            Username
+          </label>
+        </div>
+      </th>
+      <th class="d-none d-md-table-cell">Type</th>
+      <th class="d-none d-lg-table-cell">Email</th>
+    </tr>
+    </thead>
+
+    <tbody *ngIf="status.placeholdersShown">
+    <tr>
+      <td>
+        <span class="placeholder-box">Loading loading</span>
+      </td>
+      <td>
+        <span class="placeholder-box">Loading loading</span>
+      </td>
+      <td>
+        <span class="placeholder-box">Loading loading</span>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <span class="placeholder-box">Loading loading loading</span>
+      </td>
+      <td>
+        <span class="placeholder-box">Loading loading</span>
+      </td>
+      <td>
+        <span class="placeholder-box">Loading loading loading</span>
+      </td>
+    </tr>
+    </tbody>
+
+    <tbody *ngIf="status.resultsShown">
+    <tr *ngFor="let user of shownUsers"
+        (appTabSelectable)="selection.toggle(user)"
+        [class.active]="selection.isSelected(user)">
+      <td class="align-middle text-truncate mw-100">
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="user-{{ user.id }}"
+                 (change)="selection.toggle(user)"
+                 [checked]="selection.isSelected(user)">
+          <label class="custom-control-label d-flex align-items-center" for="user-{{ user.id }}">
+            {{ user.username }}
+          </label>
+        </div>
+      </td>
+      <td class="align-middle d-none d-md-table-cell text-truncate">
+        <ng-container *ngIf="user.roles.length; then roleCheck; else noRoleText">
+        </ng-container>
+        <ng-template #roleCheck>
+          <span *ngIf="!user.roles.includes('admin'); else adminText">User</span>
+          <ng-template #adminText>
+            Administrator
+          </ng-template>
+        </ng-template>
+        <ng-template #noRoleText>
+          <span class="badge badge-danger">
+            No role
+          </span>
+        </ng-template>
+
+      </td>
+      <td class="align-middle d-none d-lg-table-cell text-truncate">
+        {{ user.email }}
+      </td>
+      <td class="align-middle d-none d-md-table-cell text-truncate">
+        <button class="btn btn-secondary ml-2" [disabled]="!user.locked" (click)="displayUnlockUserDialog(user)">
+          Unlock user
+        </button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</ng-container>

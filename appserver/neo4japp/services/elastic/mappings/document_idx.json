@@ -1,0 +1,111 @@
+{
+    "settings": {
+        "analysis": {
+            "analyzer": {
+              "filename_analyzer": {
+                "tokenizer": "standard",
+                "filter": ["lowercase"],
+                "char_filter": [
+                  "replace_dot"
+                ]
+              },
+              "filepath_analyzer": {
+                  "tokenizer": "filepath_tokenizer"
+              },
+              "custom_path_tree": {
+                "tokenizer": "custom_hierarchy"
+              },
+              "custom_path_tree_reversed": {
+                "tokenizer": "custom_hierarchy_reversed"
+              },
+              "default": {
+                  "type": "standard"
+              }
+            },
+            "tokenizer": {
+                "filepath_tokenizer": {
+                    "type": "path_hierarchy"
+                },
+                "custom_hierarchy": {
+                    "type": "path_hierarchy",
+                    "delimiter": "/"
+                },
+                "custom_hierarchy_reversed": {
+                    "type": "path_hierarchy",
+                    "delimiter": "/",
+                    "reverse": "true"
+                }
+            },
+            "char_filter": {
+              "replace_dot": {
+                "type": "pattern_replace",
+                "pattern": "\\.",
+                "replacement": " "
+              }
+            }
+        },
+        "highlight": {
+            "max_analyzed_offset": "100000000"
+        }
+    },
+    "mappings": {
+        "properties": {
+            "filename": {
+                "type": "text",
+                "analyzer": "filename_analyzer"
+            },
+            "file_path": {
+                "type": "text",
+                "fields": {
+                    "tree": {
+                        "type": "text",
+                        "analyzer": "custom_path_tree"
+                    },
+                    "tree_reversed": {
+                        "type": "text",
+                        "analyzer": "custom_path_tree_reversed"
+                    }
+                }
+            },
+            "description": {
+                "type": "text"
+            },
+            "uploaded_date": {
+                "type": "date"
+            },
+            "user_id": {
+                "type": "integer"
+            },
+            "username": {
+                "type": "keyword"
+            },
+            "project_id": {
+                "type": "integer"
+            },
+            "project_hash_id": {
+                "type": "keyword"
+            },
+            "project_name": {
+                "type": "text"
+            },
+            "doi": {
+                "type": "keyword"
+            },
+            "public": {
+                "type": "boolean"
+            },
+            "id": {
+                "type": "integer"
+            },
+            "hash_id": {
+                "type": "keyword"
+            },
+            "mime_type": {
+                "type": "keyword"
+            },
+            "data_ok": {
+                "type": "boolean"
+            }
+        }
+    }
+}

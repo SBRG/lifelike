@@ -1,0 +1,14 @@
+<div class="floating-toolbar">
+  <div class="form-group d-flex align-items-center mb-2">
+    <button class="btn btn-secondary" type="button" (click)="fileInput.click()">Browse...</button>
+    <input
+      #fileInput
+      type="file"
+      name="file"
+      hidden
+      [accept]="accept"
+      (change)="onFileChange($event)">
+    <div class="ml-3 text-truncate" *ngIf="fileName">{{ fileName }}</div>
+  </div>
+  <div>Select the excel file to upload; allowed file extensions (.xlsx). Large files may take a minute or two to parse.</div>
+</div>

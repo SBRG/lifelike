@@ -1,0 +1,74 @@
+.mat-sidenav {
+  min-width: 320px;
+
+  .sidenav-title {
+    margin-left: 32px;
+  }
+
+  .drawer-content {
+    padding: 8px;
+  }
+}
+
+.document {
+  display: flex;
+  flex-direction: column;
+
+  & > * {
+    margin-bottom: 10px;
+
+    &:empty {
+      margin: 0;
+    }
+  }
+
+  .title {
+    margin-bottom: 15px;
+    font-size: 25px;
+    line-height: 40px;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-weight: 600;
+    display: block;
+    order: -1;
+  }
+
+  .meta {
+    order: -1;
+    margin-bottom: 10px;
+
+    & > * {
+      &:after {
+        content: " - ";
+      }
+
+      &:last-child:after {
+        content: "";
+      }
+    }
+
+    .authors {
+      & > * {
+        &:after {
+          content: ", ";
+        }
+
+        &:last-child:after {
+          content: "";
+        }
+      }
+    }
+  }
+}
+
+.filled-card .card-body {
+  padding: 0 !important;
+}
+
+.cancel-out-card-padding {
+  margin: -1.25rem;
+}
+
+.scrollbar-with-value {
+  width: calc(100% - 3ch);
+  vertical-align: middle;
+}

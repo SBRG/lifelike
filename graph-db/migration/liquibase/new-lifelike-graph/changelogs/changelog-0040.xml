@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd">
+  <!--
+    Neo4j does not allow the same transaction for changing the scheme and writes.
+    So group changeSets together by id="some text-#"
+    And separate changeSets grouping by empty new line space
+  -->
+
+  <changeSet id="LL-3216-liquibase-kegg-data-constraints" author="Binh Vu">
+    <comment>Create KEGG data from scratch; creating constraints.</comment>
+    <sql>
+      CREATE CONSTRAINT constraint_kegg_id IF NOT EXISTS ON (n:db_KEGG) ASSERT n.eid IS UNIQUE;
+      CREATE CONSTRAINT constraint_ko_id IF NOT EXISTS ON (n:KO) ASSERT n.eid IS UNIQUE;
+      CREATE CONSTRAINT constraint_pathway_id IF NOT EXISTS ON (n:Pathway) ASSERT n.eid IS UNIQUE;
+      CREATE CONSTRAINT constraint_gene_id IF NOT EXISTS ON (n:Gene) ASSERT n.eid IS UNIQUE;
+      CREATE CONSTRAINT constraint_genome_id IF NOT EXISTS ON (n:Genome) ASSERT n.eid IS UNIQUE;
+      CREATE CONSTRAINT constraint_synonym_name IF NOT EXISTS ON (n:Synonym) ASSERT n.name IS UNIQUE;
+      CREATE INDEX index_pathway_name IF NOT EXISTS FOR (n:Pathway) ON (n.name);
+    </sql>
+  </changeSet>
+
+  <changeSet id="LL-3216-liquibase-kegg-data-load-pathway" author="Binh Vu">
+    <comment>Create KEGG data from scratch; loading pathway data.</comment>
+    <customChange
+      class="edu.ucsd.sbrg.FileQueryHandler"
+      query="
+      UNWIND $rows AS row
+      MERGE (n:db_KEGG {eid: row.eid})
+      ON CREATE SET n:Pathway, n.name = row.name, n.data_source = 'KEGG'
+      "
+      fileName="jira-LL-3216-pathway_data.zip"
+      startAt="1"
+      fileType="TSV"
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"/>
+  </changeSet>
+
+  <changeSet id="LL-3216-liquibase-kegg-data-load-kegg-orthology" author="Binh Vu">
+    <comment>Create KEGG data from scratch; loading kegg orthology data.</comment>
+    <customChange
+      class="edu.ucsd.sbrg.FileQueryHandler"
+      query="
+      UNWIND $rows AS row
+      MERGE (n:db_KEGG {eid: row.eid})
+      ON CREATE SET n:KO, n.name = row.name, n.definition = row.definition, n.data_source = 'KEGG'
+      "
+      fileName="jira-LL-3216-ko_data.zip"
+      startAt="1"
+      fileType="TSV"
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"/>
+  </changeSet>
+
+  <changeSet id="LL-3216-liquibase-kegg-data-load-genes" author="Binh Vu">
+    <comment>Create KEGG data from scratch; loading gene-kegg data.</comment>
+    <customChange
+      class="edu.ucsd.sbrg.FileQueryHandler"
+      query="
+      UNWIND $rows AS row
+      MERGE (n:db_KEGG {eid: row.eid})
+      ON CREATE SET n:Gene, n.genome = row.genome, n.data_source = 'KEGG'
+      "
+      fileName="jira-LL-3216-gene_data.zip"
+      startAt="1"
+      fileType="TSV"
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"/>
+  </changeSet>
+
+  <changeSet id="LL-3216-liquibase-kegg-data-load-gene-ncbi-gene-kegg-relationship" author="Binh Vu">
+    <comment>Create KEGG data from scratch; loading gene-ncbi gene-kegg relationship data. Uses the same data as LL-3216-liquibase-kegg-data-load-genes.</comment>
+    <customChange
+      class="edu.ucsd.sbrg.FileQueryHandler"
+      query="
+      UNWIND $rows AS row
+      MATCH (a:db_KEGG {eid: row.eid}), (b:Gene {eid: row.gene_id})
+      MERGE (a)-[r:IS]->(b)
+      "
+      fileName="jira-LL-3216-gene_data.zip"
+      startAt="1"
+      fileType="TSV"
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"/>
+  </changeSet>
+
+  <changeSet id="LL-3216-liquibase-kegg-data-load-gene-kegg-orthology-relationship" author="Binh Vu">
+    <comment>Create KEGG data from scratch; loading gene kegg orthology relationship data.</comment>
+    <customChange
+      class="edu.ucsd.sbrg.FileQueryHandler"
+      query="
+      UNWIND $rows AS row
+      MATCH (a:db_KEGG {eid: row.gene}), (b:KO {eid: row.ko})
+      MERGE (a)-[r:HAS_KO]->(b)
+      "
+      fileName="jira-LL-3216-gene2ko_data.zip"
+      startAt="1"
+      fileType="TSV"
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"/>
+  </changeSet>
+
+  <changeSet id="LL-3216-liquibase-kegg-data-load-kegg-orthology-pathway-relationship" author="Binh Vu">
+    <comment>Create KEGG data from scratch; loading kegg orthology pathway relationship data.</comment>
+    <customChange
+      class="edu.ucsd.sbrg.FileQueryHandler"
+      query="
+      UNWIND $rows AS row
+      MATCH (a:KO {eid: row.ko}), (b:Pathway {eid: row.pathway})
+      MERGE (a)-[r:IN_PATHWAY]->(b)
+      "
+      fileName="jira-LL-3216-ko2pathway_data.zip"
+      startAt="1"
+      fileType="TSV"
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"/>
+  </changeSet>
+
+  <changeSet id="LL-3216-liquibase-kegg-data-load-genome-pathway" author="Binh Vu">
+    <comment>Create KEGG data from scratch; loading genome pathway data.</comment>
+    <customChange
+      class="edu.ucsd.sbrg.FileQueryHandler"
+      query="
+      UNWIND $rows AS row
+      WITH collect(DISTINCT row.genome) AS genomes
+      UNWIND genomes AS genome
+      MERGE (n:Genome {eid: genome})
+      ON CREATE SET n:db_KEGG, n.data_source = 'KEGG'
+      "
+      fileName="jira-LL-3216-genome2pathway_data.zip"
+      startAt="1"
+      fileType="TSV"
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"/>
+  </changeSet>
+
+  <changeSet id="LL-3216-liquibase-kegg-data-load-genome-pathway-relationship" author="Binh Vu">
+    <comment>Create KEGG data from scratch; loading genome pathway relationship data. Uses the same data as LL-3216-liquibase-kegg-data-load-genome-pathway.</comment>
+    <customChange
+      class="edu.ucsd.sbrg.FileQueryHandler"
+      query="
+      UNWIND $rows AS row
+      MATCH (a:Genome {eid: row.genome}), (b:Pathway {eid: row.pathway})
+      MERGE (a)-[r:HAS_PATHWAY]->(b)
+      "
+      fileName="jira-LL-3216-genome2pathway_data.zip"
+      startAt="1"
+      fileType="TSV"
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"/>
+  </changeSet>
+</databaseChangeLog>
