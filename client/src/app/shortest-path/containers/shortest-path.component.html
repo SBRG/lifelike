@@ -1,0 +1,20 @@
+<div *ngIf="(loadTask?.status$ | async) as status" class="h-100 w-100">
+  <app-route-builder
+    (loadNewQuery)="loadNewQuery($event)"
+    (changeDisplayType)="changeDisplayType($event)"
+  ></app-route-builder>
+  <div *ngIf="graphData; else loading" class="h-100 w-100">
+    <app-route-display
+      [displayType]="displayType"
+      [graphData]="graphData"
+    ></app-route-display>
+  </div>
+  <ng-template #loading>
+    <app-module-error *ngIf="status.failedErrorShown" class="position-absolute w-100 h-100 bg-white p-4"
+      [error]="status.error">
+    </app-module-error>
+    <div *ngIf="status.placeholdersShown" class="h-100 w-100 d-flex justify-content-center align-items-center">
+      <i class="fa fa-spinner fa-spin fa-3x text-primary"></i>
+    </div>
+  </ng-template>
+</div>

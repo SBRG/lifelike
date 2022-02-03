@@ -1,0 +1,16 @@
+@import 'src/scss/variables';
+
+::ng-deep .mat-horizontal-content-container {
+  margin-top: 1rem;
+  padding: 0 !important;
+}
+
+::ng-deep .mat-horizontal-stepper-content:focus {
+  box-shadow: none !important;
+}
+
+#gene-import-body {
+  margin: 2rem auto;
+  padding: 0 2rem;
+  max-width: 960px;
+}

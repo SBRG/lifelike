@@ -1,0 +1,18 @@
+<div class="w-100 h-100">
+  <div [ngSwitch]="currentDisplay" class="h-100 w-100">
+    <div *ngSwitchCase="'network'" class="h-100 w-100">
+      <app-vis-js-network
+        [config]="networkConfig"
+        [data]="networkData"
+        [legend]="legend"
+      ></app-vis-js-network>
+    </div>
+    <div *ngSwitchCase="'sankey'" class="h-100 w-100">
+      <app-plotly-sankey-diagram
+        [config]="sankeyConfig"
+        [data]="sankeyData"
+        [legend]="legend"
+      ></app-plotly-sankey-diagram>
+    </div>
+  </div>
+</div>

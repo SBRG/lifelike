@@ -114,7 +114,7 @@
                                  popoverTitle="Description" container="body" triggers="mouseenter:mouseleave"
                                  placement="right"
                                  [popoverClass]="'tooltip-newlines'"
-                                 [ngbPopover]="object.description  | truncate: MAX_TOOLTIP_LENGTH"
+                                 [ngbPopover]="object.description"
                                  [disablePopover]="object.description == null || object.description.length === 0">
                                 <div class="d-inline-block mr-1">
                                     <i [class]="'fa-fw text-icon ' + object.fontAwesomeIcon"></i>

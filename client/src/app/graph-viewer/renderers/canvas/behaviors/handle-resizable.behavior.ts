@@ -41,9 +41,10 @@ export class HandleResizableBehavior extends AbstractCanvasBehavior {
  * Holds the state of an active resize.
  */
 export class ActiveResize extends AbstractNodeHandleBehavior<DragHandle> {
-  private originalData: { width: number, height: number, x: number, y: number } | undefined;
+  private originalSize: { width: number, height: number } | undefined;
   private dragStartPosition: { x: number, y: number } = {x: 0, y: 0};
   private originalTarget: UniversalGraphNode;
+  private readonly RATIO_FACTOR = 300;
 
 
   constructor(graphView: CanvasGraphView,
@@ -59,12 +60,12 @@ export class ActiveResize extends AbstractNodeHandleBehavior<DragHandle> {
   }
 
   protected activeDragStart(event: MouseEvent, graphX: number, graphY: number, subject: GraphEntity | undefined) {
-    this.originalData = {x: this.target.data.x, y: this.target.data.y, ...this.getCurrentNodeSize()};
+    this.originalSize = this.getCurrentNodeSize();
     this.dragStartPosition = {x: graphX, y: graphY};
   }
 
   protected activeDrag(event: MouseEvent, graphX: number, graphY: number) {
-    this.handle.execute(this.target, this.originalData, this.dragStartPosition, {x: graphX, y: graphY});
+    this.handle.execute(this.target, this.originalSize, this.dragStartPosition, {x: graphX, y: graphY});
     this.graphView.invalidateNode(this.target);
     this.graphView.requestRender();
   }
@@ -99,7 +100,7 @@ export class ActiveResize extends AbstractNodeHandleBehavior<DragHandle> {
     // const [x, y] = [placedNode.x, placedNode.y];
     // or
     const [x, y] = [(bbox.maxX + bbox.minX) / 2, (bbox.maxY + bbox.minY) / 2];
-    // There is no handle on top: edge creation button is there.
+    // There is no handle on top = edge creation button is there.
     const sideMaker = (posX, posY, execute) => ({
       execute,
       minX: posX - halfSize,
@@ -113,35 +114,29 @@ export class ActiveResize extends AbstractNodeHandleBehavior<DragHandle> {
       sideMaker(
         bbox.maxX,
         bbox.minY + (bbox.maxY - bbox.minY) / 2,
-        (target, originalData, dragStartPosition, graphPosition) => {
-          const distance = (graphPosition.x - this.dragStartPosition.x) * noZoomScale;
-          target.data.width = Math.abs(this.originalData.width + distance);
-          target.data.x = this.originalData.x + distance / 2.0;
+        (target, originalSize, dragStartPosition, graphPosition) => {
+          target.data.width = Math.abs(this.originalSize.width + (graphPosition.x - this.dragStartPosition.x) * noZoomScale);
         }),
       // Left - one-dim scaling
       sideMaker(
         bbox.minX,
         bbox.minY + (bbox.maxY - bbox.minY) / 2,
         (target, originalSize, dragStartPosition, graphPosition) => {
-          const distance = (graphPosition.x - this.dragStartPosition.x) * noZoomScale;
-          target.data.width = Math.abs(this.originalData.width - distance);
-          target.data.x = this.originalData.x + distance / 2.0;
+          target.data.width = Math.abs(this.originalSize.width - (graphPosition.x - this.dragStartPosition.x) * noZoomScale);
         }),
       // Bottom - one-dim scaling
       sideMaker(
         bbox.minX + (bbox.maxX - bbox.minX) / 2,
         bbox.maxY,
         (target, originalSize, dragStartPosition, graphPosition) => {
-          const distance = (graphPosition.y - this.dragStartPosition.y) * noZoomScale;
-          target.data.height = Math.abs(this.originalData.height + distance);
-          target.data.y = this.originalData.y + distance / 2.0;
+          target.data.height = Math.abs(this.originalSize.height + (graphPosition.y - this.dragStartPosition.y) * noZoomScale);
         }),
       // Top left
     ];
     // If node (currently: images) can be scaled uniformly, add those handles.
     if (placedNode.uniformlyResizable) {
       const execute = (target, originalSize, dragStartPosition, graphPosition) => {
-        const ratio = this.originalData.width / this.originalData.height;
+        const ratio = this.originalSize.width / this.originalSize.height;
         const sizingVecLen = Math.hypot(graphPosition.x - x, graphPosition.y - y) - handleDiagonal / 2;
         const normY = Math.abs(sizingVecLen / Math.sqrt(ratio ** 2 + 1));
         target.data.width = 2 * normY * ratio;
@@ -168,7 +163,7 @@ export class ActiveResize extends AbstractNodeHandleBehavior<DragHandle> {
 
 interface DragHandle extends Handle {
   execute: (target: UniversalGraphNode,
-            originalData: { width: number, height: number, x: number, y: number },
+            originalSize: { width: number, height: number },
             dragStartPosition: { x: number, y: number },
             graphPosition: { x: number, y: number }) => void;
 }
