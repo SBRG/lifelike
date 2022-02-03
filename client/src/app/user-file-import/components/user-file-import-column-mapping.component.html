@@ -1,0 +1,109 @@
+<div
+  fxLayout="column"
+  fxLayoutGap="30px"
+>
+  <div>
+    <div>Preview of Uploaded Worksheet</div>
+    <mat-table [dataSource]="chosenSheetToMap?.sheetPreview">
+      <mat-header-row *matHeaderRowDef="columnsForFilePreview"></mat-header-row>
+      <mat-row *matRowDef="let row; let i=index; columns: columnsForFilePreview;" [attr.id]="'file-preview-row-'+i"></mat-row>
+
+      <ng-container *ngFor="let col of columnsForFilePreview" [matColumnDef]="col">
+        <mat-header-cell *matHeaderCellDef>{{ col }}</mat-header-cell>
+        <mat-cell *matCellDef="let i=index;">{{ chosenSheetToMap?.sheetPreview[i][col] }}</mat-cell>
+      </ng-container>
+    </mat-table>
+  </div>
+
+  <div>
+    <div>Add New Column Mapping</div>
+    <div>
+      <button
+        mat-stroked-button
+        type="button"
+        color="accent"
+        (click)="addNewColumnMappingRow()"
+      >Add New Mapping Row</button>
+    </div>
+  </div>
+
+  <div [formGroup]="columnMappingForm">
+    <div formArrayName="newColumnMapping">
+      <div *ngFor="let row of columnMappingForm.get('newColumnMapping')['controls']; let i=index">
+        <div [formGroupName]="i">
+          <app-user-file-import-new-column-mapping-row
+            [columnHeaders]="chosenSheetToMap?.sheetColumnNames"
+            [columnMappingForm]="columnMappingForm.get('newColumnMapping')['controls'][i]"
+            [relationshipTypes]="dbRelationshipTypes$ | async"
+            [existingNodeLabels]="dbNodeTypes$ | async"
+            [existingNodeProperties]="dbNodeProperties$ | async"
+            (deleteMapping)="deleteNewColumnMappingRow(i)"
+          ></app-user-file-import-new-column-mapping-row>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <div>Add Existing Column Mapping</div>
+    <div>
+      <button
+        mat-stroked-button
+        type="button"
+        color="accent"
+        (click)="addExistingColumnMappingRow()"
+      >Add Existing Mapping Row</button>
+    </div>
+  </div>
+
+  <div [formGroup]="columnMappingForm">
+    <div formArrayName="existingColumnMapping">
+      <div *ngFor="let row of columnMappingForm.get('existingColumnMapping')['controls']; let i=index">
+        <div [formGroupName]="i">
+          <app-user-file-import-existing-column-mapping-row
+            [columnHeaders]="chosenSheetToMap?.sheetColumnNames"
+            [columnMappingForm]="columnMappingForm.get('existingColumnMapping')['controls'][i]"
+            [existingNodeLabels]="dbNodeTypes$ | async"
+            [existingNodeProperties]="dbNodeProperties$ | async"
+            (deleteMapping)="deleteExistingColumnMappingRow(i)"
+          ></app-user-file-import-existing-column-mapping-row>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <div>Add Node Property Mapping</div>
+    <div>Add node property mapping for the new column mapping.</div>
+    <div>
+      <button
+        mat-stroked-button
+        type="button"
+        color="accent"
+        (click)="addNodePropertyMappingRow()"
+      >Add Node Property Mapping Row</button>
+    </div>
+  </div>
+
+  <div [formGroup]="nodePropertyMappingForm">
+    <div formArrayName="nodePropertyMapping">
+      <div *ngFor="let row of nodePropertyMappingForm.get('nodePropertyMapping')['controls']; let i=index">
+        <div [formGroupName]="i">
+          <app-user-file-import-column-node-property-mapping-row
+            [columnHeaders]="chosenSheetToMap?.sheetColumnNames"
+            [nodePropertyMappingForm]="nodePropertyMappingForm.get('nodePropertyMapping')['controls'][i]"
+            (deleteMapping)="deleteColumnNodePropertyMappingRow(i)"
+          ></app-user-file-import-column-node-property-mapping-row>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <button
+      mat-stroked-button
+      type="button"
+      (click)="createNodeMappings()"
+    >Next</button>
+  </div>
+</div>

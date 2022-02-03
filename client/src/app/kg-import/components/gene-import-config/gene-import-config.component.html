@@ -1,0 +1,247 @@
+<div>
+  <div *ngIf="relationshipFormGroupArray.length === 0; else pendingRelationships" class="text-center">Add an import relationship by clicking the button below!</div>
+  <ng-template #pendingRelationships>
+    <h3>Pending Relationships to Import:</h3>
+  </ng-template>
+  <div *ngFor="let relationshipGroup of relationshipFormGroupArray; let i = index" class="row align-items-center no-gutters mb-2">
+    <div class="col">
+      <button
+        *ngIf="relationshipGroup.get('relationshipDirection').value === relationshipDirectionEnum.TO; else fromRelationship"
+        class="btn btn-outline-primary w-100"
+        disabled>
+        <app-node-relationship
+          [leftNodeLabel]="indexToColumn.get(relationshipGroup.get('columnIndex1').value)"
+          [leftNodeName]="relationshipGroup.get('nodeLabel1').value"
+          [leftNodeColor]="labelColors.get(relationshipGroup.get('nodeLabel1').value)"
+          [rightNodeLabel]="indexToColumn.get(relationshipGroup.get('columnIndex2').value)"
+          [rightNodeName]="relationshipGroup.get('nodeLabel2').value"
+          [rightNodeColor]="labelColors.get(relationshipGroup.get('nodeLabel2').value)"
+          [edge]="relationshipGroup.get('relationshipLabel').value"
+        ></app-node-relationship>
+      </button>
+      <ng-template #fromRelationship>
+        <button class="btn btn-outline-primary w-100" disabled>
+          <app-node-relationship
+            [leftNodeLabel]="indexToColumn.get(relationshipGroup.get('columnIndex2').value)"
+            [leftNodeName]="relationshipGroup.get('nodeLabel2').value"
+            [leftNodeColor]="labelColors.get(relationshipGroup.get('nodeLabel2').value)"
+            [rightNodeLabel]="indexToColumn.get(relationshipGroup.get('columnIndex1').value)"
+            [rightNodeName]="relationshipGroup.get('nodeLabel1').value"
+            [rightNodeColor]="labelColors.get(relationshipGroup.get('nodeLabel1').value)"
+            [edge]="relationshipGroup.get('relationshipLabel').value"
+          ></app-node-relationship>
+        </button>
+      </ng-template>
+    </div>
+    <div class="col">
+      <button class="btn btn-primary ml-2" [disabled]="editingRelationship" (click)="editRelationship(i)"><i class="fa fa-pencil"></i></button>
+      <button class="btn btn-danger ml-2" (click)="removeRelationship(i)"><i class="fa fa-trash-o"></i></button>
+    </div>
+  </div>
+</div>
+<div>
+  <button
+    class="btn btn-primary mb-4"
+    [disabled]="editingRelationship"
+    (click)="addRelationship()"
+  >Add Relationship<i class="fa fa-plus ml-1"></i></button>
+</div>
+<form *ngIf="editingRelationship" [formGroup]="activeFormGroup">
+  <div class="form-group">
+    <label>Please choose a column to represent one side of the new relationship:</label>
+    <div class="row">
+      <div class="col-md-4">
+        <select class="custom-select" formControlName="columnIndex1" (change)="columnSelection1Changed()">
+          <option value="" disabled selected hidden>Worksheet column</option>
+          <option *ngFor="let col of columns.slice(0, columns.length - 1); let i = index" [value]="i">{{ col }}</option>
+        </select>
+        <small id="column-1-help-block" class="form-text text-muted">
+          Each unique cell of this column will be imported into the KG as a new node.
+        </small>
+      </div>
+      <div class="col-md-6">
+        <!-- TODO: Need to add a validation regex to this so we can prevent weird labels from being added -->
+        <input type="text" class="form-control" formControlName="nodeLabel1" placeholder="Node label">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col">
+        <button class="btn btn-primary btn-sm mt-2"
+          (click)="addProperty('nodeProperties1')"
+        >Add Node Property<i class="fa fa-plus ml-1"></i></button>
+      </div>
+    </div>
+    <div *ngFor="let propertyGroup of nodeProperties1; let i = index" class="row mt-2" [formGroup]="propertyGroup">
+      <div class="col-md-4">
+        <select class="custom-select" formControlName="column">
+          <option value="" disabled selected hidden>Worksheet column</option>
+          <option *ngFor="let col of columns.slice(0, columns.length - 1); let i = index" [value]="i">{{ col }}</option>
+        </select>
+      </div>
+      <div class="col-md-6">
+        <input class="form-control" type="text" formControlName="propertyName" placeholder="Property name">
+      </div>
+      <div class="col pl-0">
+        <button class="btn btn-danger" (click)="removeProperty(i, 'nodeProperties1')"><i class="fa fa-trash-o"></i></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label>Please choose another column to represent the second side of the new relationship:</label>
+    <div class="row">
+      <div class="col-md-4">
+        <select class="custom-select" formControlName="columnIndex2" (change)="columnSelection2Changed()">
+          <option value="" disabled selected hidden>Worksheet column</option>
+          <option *ngFor="let col of columns; let i = index" [value]="i">{{ col }}</option>
+        </select>
+        <small id="column-2-help-block" class="form-text text-muted">
+          Each unique cell of this column will be imported into the KG as a new node, UNLESS you choose 'KG Gene', in which case we use existing Gene nodes.
+        </small>
+      </div>
+      <div class="col-md-6">
+        <!-- TODO: Need to add a validation regex to this so we can prevent weird labels from being added -->
+        <input
+          class="form-control"
+          type="text"
+          formControlName="nodeLabel2"
+          placeholder="Node label">
+      </div>
+    </div>
+
+    <div *ngIf="indexToColumn.get(columnIndex2.value) !== kgGeneLabel" class="row">
+      <div class="col">
+        <button class="btn btn-primary btn-sm mt-2"
+          (click)="addProperty('nodeProperties2')"
+        >Add Node Property<i class="fa fa-plus ml-1"></i></button>
+      </div>
+    </div>
+    <div *ngFor="let propertyGroup of nodeProperties2; let i = index" class="row mt-2" [formGroup]="propertyGroup">
+      <div class="col-md-4">
+        <select class="custom-select" formControlName="column">
+          <option value="" disabled selected hidden>Worksheet column</option>
+          <option *ngFor="let col of columns.slice(0, columns.length - 1); let i = index" [value]="i">{{ col }}</option>
+        </select>
+      </div>
+      <div class="col-md-6">
+        <input class="form-control" type="text" formControlName="propertyName" placeholder="Property name">
+      </div>
+      <div class="col pl-0">
+        <button class="btn btn-danger" (click)="removeProperty(i, 'nodeProperties2')"><i class="fa fa-trash-o"></i></button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="indexToColumn.get(columnIndex2.value) === kgGeneLabel">
+    <div class="form-group">
+      <label>Does your first chosen column represent gene name, or ID?</label>
+      <div class="custom-control custom-radio">
+        <input
+          type="radio"
+          id="gene-match-selection-radio-id"
+          [value]="geneMatchingPropertyEnum.ID"
+          formControlName="geneMatchingProperty"
+          class="custom-control-input">
+        <label class="custom-control-label" for="gene-match-selection-radio-id">{{ geneMatchingPropertyEnum.ID }}</label>
+      </div>
+      <div class="custom-control custom-radio">
+        <input
+          type="radio"
+          id="gene-match-selection-radio-name"
+          [value]="geneMatchingPropertyEnum.NAME"
+          formControlName="geneMatchingProperty"
+          class="custom-control-input">
+        <label class="custom-control-label" for="gene-match-selection-radio-name">{{geneMatchingPropertyEnum.NAME }}</label>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>To what species do these genes belong?</label>
+      <select class="custom-select" formControlName="speciesSelection">
+        <option value="" disabled selected hidden>Species</option>
+        <option *ngFor="let keyvalue of organisms | keyvalue" [value]="organisms.get(keyvalue.key)">{{ keyvalue.key }}</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label>Please select a name for the new relationship:</label>
+    <div class="row">
+      <div class="col">
+        <!-- TODO: Need to get some list of relationship types from the backend -->
+        <select *ngIf="useExistingRel.value; else customRelNameInput" class="custom-select" formControlName="relationshipLabel">
+          <option value="" disabled selected hidden>Relationship name</option>
+          <!-- TEMP -->
+          <option>MAPPED_TO</option>
+          <option>IS_A</option>
+          <option>HAS_A</option>
+        </select>
+        <ng-template #customRelNameInput>
+          <input class="form-control" type="text" placeholder="Relationship label" formControlName="relationshipLabel">
+        </ng-template>
+      </div>
+      <div class="col">
+        <div class="custom-control custom-checkbox">
+          <input
+            id="existingRelCheckbox"
+            class="custom-control-input"
+            type="checkbox"
+            formControlName="useExistingRel"
+            checked
+            (change)="existingRelCheckboxChanged()">
+          <label class="custom-control-label" for="existingRelCheckbox">Use existing relationship name?</label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label>In which direction does the new relationship travel?</label>
+    <div class="row">
+      <div class="col">
+        <input class="form-control" type="text" [value]="nodeLabel1.value" disabled>
+      </div>
+      <div class="col">
+        <select class="custom-select" formControlName="relationshipDirection">
+          <option value="" disabled selected hidden>Direction</option>
+          <option>{{ relationshipDirectionEnum.TO }}</option>
+          <option>{{ relationshipDirectionEnum.FROM }}</option>
+        </select>
+      </div>
+      <div class="col">
+        <input class="form-control" type="text" [value]="nodeLabel2.value" disabled>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label>Please add any properties the new relationship should have:</label>
+    <div class="row">
+      <div class="col">
+        <button class="btn btn-primary btn-sm"
+          (click)="addProperty('relationshipProperties')"
+        >Add Relationship Property<i class="fa fa-plus ml-1"></i></button>
+      </div>
+    </div>
+    <div *ngFor="let propertyGroup of relationshipProperties; let i = index" class="row mt-2" [formGroup]="propertyGroup">
+      <div class="col-md-4">
+        <select class="custom-select" formControlName="column">
+          <option value="" disabled selected hidden>Worksheet column</option>
+          <option *ngFor="let col of columns.slice(0, columns.length - 1); let i = index" [value]="i">{{ col }}</option>
+        </select>
+      </div>
+      <div class="col-md-6">
+        <input class="form-control" type="text" formControlName="propertyName" placeholder="Property name">
+      </div>
+      <div class="col pl-0">
+        <button class="btn btn-danger" (click)="removeProperty(i, 'relationshipProperties')"><i class="fa fa-trash-o"></i></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="d-flex justify-content-end">
+    <button class="btn btn-outline-danger mr-2" (click)="discardRelationship()">Discard Relationship</button>
+    <button class="btn btn-primary" [disabled]="!activeFormGroup.valid" (click)="submitRelationship()">Submit Relationship</button>
+  </div>
+</form>

@@ -549,6 +549,11 @@ def create_detail_node(node, params):
     params['style'] += ',filled'
     detail_text = node['data'].get('detail', '')
     if detail_text:
+        if node['data'].get('sources'):
+            # Check if the node was dragged from the pdf - if so, it will have a source link
+            if any(DOCUMENT_RE.match(src.get('url')) for src in node['data'].get('sources')):
+                detail_text = detail_text[:DETAIL_TEXT_LIMIT]
+                detail_text = detail_text.rstrip('\\')
         # Split lines to inspect their length and replace them with '\l' later
         # Use regex to split, otherwise \n (text, not new lines) are matched as well
         lines = re.split("\n", detail_text)
@@ -558,40 +563,15 @@ def create_detail_node(node, params):
         # '\l' is graphviz special new line, which placed at the end of the line will align it
         # to the left - we use that instead of \n (and add one at the end to align last line)
         detail_text = r"\l".join(lines) + r'\l'
-        if node['data'].get('sources'):
-            # Check if the node was dragged from the pdf - if so, it will have a source link
-            if any(DOCUMENT_RE.match(src.get('url')) for src in node['data'].get('sources')):
-                detail_text = detail_text[:DETAIL_TEXT_LIMIT]
+
     params['label'] = detail_text
     params['fillcolor'] = ANNOTATION_STYLES_DICT.get(node['label'],
                                                      {'bgcolor': 'black'}
                                                      ).get('bgcolor')
-
-    doi_src = look_for_doi_link(node)
-    if doi_src:
-        node['link'] = doi_src
-
     if not node.get('style', {}).get('strokeColor'):
         # No border by default
         params['penwidth'] = '0.0'
     return params
-
-
-def look_for_doi_link(node):
-    """
-    Get DOI from links if available, and tests whether it is valid.
-    :params:
-    :param node: node data which links are tested
-    return: doi if present and valid, None if not
-    """
-    doi_src = next(
-        (src for src in node['data'].get('sources') if src.get(
-            'domain') == "DOI"), None)
-    # NOTE: As is_valid_doi sends a request, this increases export time for each doi that we have
-    # If this is too costly, we can remove this
-    if doi_src and is_valid_doi(doi_src['url']):
-        return doi_src['url']
-    return None
 
 
 def get_link_icon_type(node):
@@ -611,9 +591,12 @@ def get_link_icon_type(node):
         elif SANKEY_RE.match(link['url']):
             return 'sankey', link['url']
         elif DOCUMENT_RE.match(link['url']):
-            doi_src = look_for_doi_link(node)
-            if doi_src:
-                return 'document', doi_src
+            doi_src = next(
+                (src for src in node['data'].get('sources') if src.get(
+                    'domain') == "DOI"), None)
+            # If there is a valid doi, link to DOI
+            if doi_src and is_valid_doi(doi_src['url']):
+                return 'document', doi_src['url']
             # If the links point to internal document, remove it from the node data so it would
             # not became exported as node url - as that might violate copyrights
             if link in node['data'].get('sources', []):
@@ -691,8 +674,9 @@ def create_icon_node(node, params):
         if label in custom_icons.keys():
             default_icon_color = custom_icons.get(label, default_icon_color)
 
-    icon_params['image'] = os.path.join(ASSETS_PATH, f'{label}.png')
-
+    icon_params['image'] = (
+        os.path.join(ASSETS_PATH, f'{label}.png')
+    )
     if label not in custom_icons.keys():
         # We are setting the icon color by using 'inverse' icon images and colorful background
         # But not for microsoft icons, as those are always in the same color
@@ -1082,7 +1066,6 @@ class MapTypeProvider(BaseFileTypeProvider):
             graph.edge(**edge_params)
 
         ext = f".{format}"
-
         content = io.BytesIO(graph.pipe())
 
         if format == 'svg':
@@ -1251,6 +1234,12 @@ class GraphTypeProvider(BaseFileTypeProvider):
         content.write(' '.join(list(string_list)))
         return typing.cast(BufferedIOBase, io.BytesIO(content.getvalue().encode(BYTE_ENCODING)))
 
+    def extract_metadata_from_content(self, file: Files, buffer: BufferedIOBase):
+        if not file.description:
+            data = json.loads(buffer.read())
+            description = data['graph']['description']
+            file.description = description
+
 
 class EnrichmentTableTypeProvider(BaseFileTypeProvider):
     MIME_TYPE = FILE_MIME_TYPE_ENRICHMENT_TABLE
@@ -1327,7 +1316,11 @@ def get_content_offsets(file):
         calculated) in pixels.
     """
     x_values, y_values = [], []
-    json_graph = json.loads(file.content.raw_file)
+    zip_file = zipfile.ZipFile(io.BytesIO(file.content.raw_file))
+    try:
+        json_graph = json.loads(zip_file.read('graph.json'))
+    except KeyError:
+        raise ValidationError
     for node in json_graph['nodes']:
         x_values.append(node['data']['x'])
         y_values.append(-node['data']['y'])

@@ -1,0 +1,53 @@
+<div
+  fxLayout="column"
+  fxLayoutGap="30px"
+>
+  <div>
+    <div>Preview of Uploaded Worksheet</div>
+    <mat-table [dataSource]="chosenSheetToMap?.sheetPreview">
+      <mat-header-row *matHeaderRowDef="columnsForFilePreview"></mat-header-row>
+      <mat-row *matRowDef="let row; let i=index; columns: columnsForFilePreview;" [attr.id]="'file-preview-row-'+i"></mat-row>
+
+      <ng-container *ngFor="let col of columnsForFilePreview" [matColumnDef]="col">
+        <mat-header-cell *matHeaderCellDef>{{ col }}</mat-header-cell>
+        <mat-cell *matCellDef="let i=index;">{{ chosenSheetToMap?.sheetPreview[i][col] }}</mat-cell>
+      </ng-container>
+    </mat-table>
+  </div>
+
+  <div>
+    <div>Add Relationship Mapping</div>
+    <div>
+      <button
+        mat-stroked-button
+        type="button"
+        color="accent"
+        (click)="addRelationshipMappingRow()"
+      >Add Relationship Mapping Row</button>
+    </div>
+  </div>
+
+  <div [formGroup]="relationshipMappingForm">
+    <div formArrayName="relationshipMapping">
+      <div *ngFor="let row of relationshipMappingForm.get('relationshipMapping')['controls']; let i=index">
+        <div [formGroupName]="i">
+          <app-user-file-import-column-relationship-mapping-row
+            [columnHeaders]="chosenSheetToMap.sheetColumnNames"
+            [dbNodeTypes]="dbNodeTypes$ | async"
+            [existingNodeProperties]="dbNodeProperties$ | async"
+            [relationshipMappingForm]="relationshipMappingForm.get('relationshipMapping')['controls'][i]"
+            (deleteMapping)="deleteRelationshipMappingRow(i)"
+          ></app-user-file-import-column-relationship-mapping-row>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <button
+      mat-stroked-button
+      type="button"
+      (click)="createRelationshipMapping()"
+    >Upload</button>
+  </div>
+</div>

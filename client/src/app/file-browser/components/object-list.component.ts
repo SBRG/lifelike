@@ -37,7 +37,6 @@ export class ObjectListComponent {
   @Input() emptyDirectoryMessage = 'There are no items in this folder.';
   @Output() refreshRequest = new EventEmitter<string>();
   @Output() objectOpen = new EventEmitter<FilesystemObject>();
-  MAX_TOOLTIP_LENGTH = 800;
 
   constructor(protected readonly router: Router,
               protected readonly snackBar: MatSnackBar,

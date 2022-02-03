@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { AdminPanelComponent } from 'app/admin/components/admin-panel.component';
+import { UserFileImportComponent } from 'app/user-file-import/components/user-file-import.component';
 import { VisualizationComponent } from 'app/visualization/containers/visualization/visualization.component';
 import { GraphSearchComponent } from 'app/search/components/graph-search.component';
 import { ObjectBrowserComponent } from 'app/file-browser/components/object-browser.component';
@@ -22,8 +23,9 @@ import { CommunityBrowserComponent } from 'app/file-browser/components/community
 import { BrowserComponent } from 'app/file-browser/components/browser/browser.component';
 import { ContentSearchComponent } from 'app/search/components/content-search.component';
 import { ObjectNavigatorComponent } from 'app/file-navigator/components/object-navigator.component';
-import { EnrichmentTableViewerComponent } from 'app/enrichment/components/table/enrichment-table-viewer.component';
-import { EnrichmentVisualisationViewerComponent } from 'app/enrichment/components/visualisation/enrichment-visualisation-viewer.component';
+import { ShortestPathComponent } from 'app/shortest-path/containers/shortest-path.component';
+import {EnrichmentTableViewerComponent} from 'app/enrichment/components/table/enrichment-table-viewer.component';
+import {EnrichmentVisualisationViewerComponent} from 'app/enrichment/components/visualisation/enrichment-visualisation-viewer.component';
 import { BiocViewComponent } from 'app/bioc-viewer/components/bioc-view.component';
 import { ObjectViewerComponent } from 'app/file-browser/components/object-viewer.component';
 import { SankeyViewComponent } from 'app/sankey-viewer/components/sankey-view.component';
@@ -103,6 +105,11 @@ const routes: Routes = [
     },
   },
   {
+    path: 'pathway-browser-prototype',
+    canActivate: [AuthGuard],
+    component: ShortestPathComponent,
+  },
+  {
     path: 'projects/:project_name/enrichment-table/:file_id',
     canActivate: [AuthGuard],
     component: EnrichmentTableViewerComponent,
@@ -163,6 +170,15 @@ const routes: Routes = [
         canActivate: [AuthGuard],
         data: {
           title: 'Knowledge Graph',
+          fontAwesomeIcon: 'fas fa-chart-network',
+        },
+      },
+      {
+        path: 'upload',
+        component: UserFileImportComponent,
+        canActivate: [AuthGuard],
+        data: {
+          title: 'Knowledge Graph Upload',
           fontAwesomeIcon: 'fas fa-chart-network',
         },
       },
@@ -269,6 +285,16 @@ const routes: Routes = [
       fontAwesomeIcon: 'project-diagram',
     },
   },
+  /* TODO Refactor import
+  {
+    path: 'kg-import',
+    canActivate: [AuthGuard],
+    children: [
+      {path: '', component: KgImportWizardComponent},
+      {path: 'genes', component: GeneImportWizardComponent},
+    ],
+  },
+  */
   {
     path: 'kg-statistics',
     component: KgStatisticsComponent,
