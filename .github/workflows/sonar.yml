@@ -25,15 +25,13 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - name: Appserver
+          - name: appserver
             path: appserver
-            key: lifelike-appserver
             extraArgs: >
               -Dsonar.tests=tests/
               -Dsonar.exclusions=tests/**
-          - name: Frontend
+          - name: frontend
             path: client
-            key: lifelike-frontend
 
     runs-on: ubuntu-latest
     steps:
@@ -60,6 +58,6 @@ jobs:
           projectBaseDir: ${{ matrix.path }}
           args: >
             -Dsonar.organization=${{ env.SONAR_ORGANIZATION }}
-            -Dsonar.projectKey=${{ matrix.key }}
+            -Dsonar.projectKey=${{ env.SONAR_ORGANIZATION }}-${{ matrix.name }}
             -Dsonar.projectName=${{ matrix.name }}
             ${{ matrix.extraArgs }}
