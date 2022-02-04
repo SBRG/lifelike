@@ -7,6 +7,16 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
   workflow_dispatch:
+    inputs:
+      application:
+        required: false
+        type: choice
+        default: ""
+        description: Specific application to analyze
+        options:
+          - ""
+          - Appserver
+          - Frontend
 
 jobs:
   sonarqube:
@@ -15,15 +25,13 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - name: Appserver
+          - name: appserver
             path: appserver
-            key: lifelike-appserver
             extraArgs: >
               -Dsonar.tests=tests/
               -Dsonar.exclusions=tests/**
-          - name: Frontend
+          - name: frontend
             path: client
-            key: lifelike-frontend
 
     runs-on: ubuntu-latest
     steps:
@@ -41,7 +49,7 @@ jobs:
       # Scan if code was changed or if workflow was triggered manually
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
-        if: github.event_name == 'workflow_dispatch' || steps.changed.outputs.changed == 'true'
+        if: steps.changed.outputs.changed == 'true' || github.event.inputs.application == matrix.name || github.event.inputs.application == ''
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -50,6 +58,6 @@ jobs:
           projectBaseDir: ${{ matrix.path }}
           args: >
             -Dsonar.organization=${{ env.SONAR_ORGANIZATION }}
-            -Dsonar.projectKey=${{ matrix.key }}
+            -Dsonar.projectKey=${{ env.SONAR_ORGANIZATION }}-${{ matrix.name }}
             -Dsonar.projectName=${{ matrix.name }}
             ${{ matrix.extraArgs }}
