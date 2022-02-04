@@ -1,21 +1,55 @@
 name: Sonarqube code analysis
-on: [push, workflow_dispatch]
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [opened, synchronize, reopened]
+  workflow_dispatch:
 
 jobs:
-  build:
-    name: Sonarqube scan
+  sonarqube:
+    name: Quality of ${{ matrix.name }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Appserver
+            path: appserver
+            key: lifelike-appserver
+            extraArgs: >
+              -Dsonar.tests=tests/
+              -Dsonar.exclusions=tests/**
+          - name: Frontend
+            path: client
+            key: lifelike-frontend
+
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-      - uses: sonarsource/sonarqube-scan-action@master
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-      ## Fail job if quality gate is not met
-      # - uses: sonarsource/sonarqube-quality-gate-action@master
-      #   timeout-minutes: 5
-      #   env:
-      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      # Check if code was changed in project path
+      - name: Check code changes
+        uses: marceloprado/has-changed-path@v1
+        if: github.event_name != 'workflow_dispatch'
+        id: changed
+        with:
+          paths: ${{ matrix.path }}
+
+      # Scan if code was changed or if workflow was triggered manually
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        if: github.event_name == 'workflow_dispatch' || steps.changed.outputs.changed == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_ORGANIZATION: lifelike
+        with:
+          projectBaseDir: ${{ matrix.path }}
+          args: >
+            -Dsonar.organization=${{ env.SONAR_ORGANIZATION }}
+            -Dsonar.projectKey=${{ matrix.key }}
+            -Dsonar.projectName=${{ matrix.name }}
+            ${{ matrix.extraArgs }}
