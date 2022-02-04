@@ -7,6 +7,16 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
   workflow_dispatch:
+    inputs:
+      application:
+        required: false
+        type: choice
+        default: ""
+        description: Specific application to analyze
+        options:
+          - ""
+          - Appserver
+          - Frontend
 
 jobs:
   sonarqube:
@@ -41,7 +51,7 @@ jobs:
       # Scan if code was changed or if workflow was triggered manually
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
-        if: github.event_name == 'workflow_dispatch' || steps.changed.outputs.changed == 'true'
+        if: steps.changed.outputs.changed == 'true' || github.event.inputs.application == matrix.name || github.event.inputs.application == ''
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
