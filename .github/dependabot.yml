@@ -9,7 +9,7 @@ updates:
     schedule:
       interval: "daily"
     commit-message:
-      prefix: "[ci]"
+      prefix: actions
 
   # Maintain dependencies for Python
   - package-ecosystem: pip
@@ -17,21 +17,21 @@ updates:
     schedule:
       interval: weekly
     commit-message:
-      prefix: "[appserver]"
+      prefix: pipenv
 
   - package-ecosystem: pip
     directory: /statistical-enrichment
     schedule:
       interval: weekly
     commit-message:
-      prefix: "[statistical-enrichment]"
+      prefix: pipenv
 
   - package-ecosystem: pip
     directory: /cache-invalidator
     schedule:
       interval: weekly
     commit-message:
-      prefix: "[cache-invalidator]"
+      prefix: pipenv
 
   # Maintain dependencies for Node.js
   - package-ecosystem: npm
@@ -39,7 +39,7 @@ updates:
     schedule:
       interval: weekly
     commit-message:
-      prefix: "[client]"
+      prefix: npm
     ignore:
       # Fix angular version until refactor is done
       - dependency-name: '@angular/*'
@@ -50,4 +50,4 @@ updates:
     schedule:
       interval: weekly
     commit-message:
-      prefix: "[graph-db]"
+      prefix: maven
