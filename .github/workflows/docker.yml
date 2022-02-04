@@ -12,6 +12,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
+  REPOSITORY: ${{ github.repository }}
 
 jobs:
   publish-images:
@@ -22,13 +23,11 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - name: Appserver
+          - name: appserver
             path: appserver
-            image: lifelike-appserver
-          - name: Frontend
+          - name: frontend
             path: client
-            image: lifelike-frontend
-          # - name: Graph data migrator
+          # - name: Grap data migrator
           #   path: graph-db
           #   image: lifelike-graph-db
 
@@ -51,14 +50,14 @@ jobs:
         id: meta
         uses: docker/metadata-action@v3
         with:
-          images: ${{ env.REGISTRY }}/${{ matrix.image }}
+          images: ${{ env.REGISTRY }}/${{ env.REPOSITORY }}-${{ matrix.name }}
           tags: |
             type=ref,event=branch
             type=ref,event=pr
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor
 
-      - name: Build and push ${{ env.REGISTRY }}/${{ matrix.image }} image
+      - name: Build and push ${{ env.REGISTRY }}/${{ env.REPOSITORY }}-${{ matrix.name }} image
         uses: docker/build-push-action@v2
         with:
           context: ${{ matrix.path }}
