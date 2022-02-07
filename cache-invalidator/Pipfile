@@ -6,7 +6,7 @@ verify_ssl = true
 [dev-packages]
 mypy = "==0.920"
 pycodestyle = "==2.8.0"
-pytest = "==6.2.5"
+pytest = "==7.0.0"
 
 [packages]
 neo4j = "==4.4.1"
