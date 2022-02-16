@@ -1,6 +1,6 @@
 # Overrides base docker-compose.yml file
 # to add stateful backing services (e.g. databases)
-version: "3.9"
+version: "3.8"
 
 services:
   # PostgreSQL database
@@ -37,7 +37,9 @@ services:
 
   ## Ekasticsearch search engine
   elasticsearch:
-    build: ./elasticsearch
+    build:
+      context: .
+      dockerfile: elasticsearch.Dockerfile
     restart: unless-stopped
     container_name: elasticsearch
     environment:
@@ -73,14 +75,9 @@ services:
       - ELASTICSEARCH_URL=http://elasticsearch:9200
       - REDIS_HOST=redis
     depends_on:
-      postgres:
-        condition: service_healthy
-      neo4j:
-        condition: service_healthy
-      elasticsearch:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
+      - postgres
+      - neo4j
+      - elasticsearch
 
   statistical-enrichment:
     environment:
@@ -88,10 +85,8 @@ services:
       - NEO4J_AUTH=neo4j/password
       - REDIS_HOST=redis
     depends_on:
-      neo4j:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
+      - neo4j
+      - redis
 
   cache-invalidator:
     environment:
@@ -99,10 +94,8 @@ services:
       - NEO4J_AUTH=neo4j/password
       - REDIS_HOST=redis
     depends_on:
-      neo4j:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
+      - neo4j
+      - redis
 
 volumes:
   postgres:

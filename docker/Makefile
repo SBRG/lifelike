@@ -5,15 +5,15 @@ DOCKER_REGISTRY:=us.gcr.io/able-goods-221820
 #  docker-compose.yml           -> Base services containers
 #  docker-compose.services.yml  -> Third party services (PostgreSQL, Neo4j, Elasticsearch, Redis)
 #  docker-compose.dev.yml       -> Override base services for local development
-COMPOSE_COMMAND=docker compose -p lifelike \
+COMPOSE_COMMAND=docker-compose -p lifelike \
   -f ${DOCKER_DIR}/docker-compose.yml \
   -f ${DOCKER_DIR}/docker-compose.services.yml
 # ------------------------------------------------------------------------------
 
 .PHONY: up up-dev images status logs restart stop exec test down diagram
 
-up: images ##@docker Build and run container(s). [c=<names>]
-	@${COMPOSE_COMMAND} ${args} up -d --wait ${c}
+up: ##@docker Build and run container(s). [c=<names>]
+	${COMPOSE_COMMAND} ${args} up -d --wait ${c}
 	@echo "\nTo access Lifelike, point your browser at: http://localhost:8080\n"
 
 up-dev: ##@docker Build and run container(s) for development. [c=<names>]
@@ -25,9 +25,10 @@ tag ?= latest
 images: ##@docker Build container(s) for distribution.
 	@echo "\nBuilding Docker images...\n"
 	@cd ${DOCKER_DIR}/../appserver && docker build -t ${DOCKER_REGISTRY}/lifelike-appserver:${tag} .
-	@cd ${DOCKER_DIR}/../client && docker build -t ${DOCKER_REGISTRY}/lifelike-webserver:${tag} .
+	@cd ${DOCKER_DIR}/../client && docker build -t ${DOCKER_REGISTRY}/lifelike-frontend:${tag} .
 	@cd ${DOCKER_DIR}/../statistical-enrichment && docker build -t ${DOCKER_REGISTRY}/lifelike-statistical-enrichment:${tag} .
 	@cd ${DOCKER_DIR}/../cache-invalidator && docker build -t ${DOCKER_REGISTRY}/lifelike-cache-invalidator:${tag} .
+	@cd ${DOCKER_DIR} && docker build -t ${DOCKER_REGISTRY}/lifelike-elasticsearch:${tag} -f elasticsearch.Dockerfile .
 
 status: ##@docker Show container(s) status. [c=<names>]
 	@${COMPOSE_COMMAND} ${args} ps ${c}
