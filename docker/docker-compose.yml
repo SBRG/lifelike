@@ -1,9 +1,9 @@
-version: "3.9"
+version: "3.8"
 
 services:
   ## Frontend web server
   webserver:
-    image: ${IMAGE_REGISTRY:-us.gcr.io/able-goods-221820}/lifelike-webserver:${WEBSERVER_IMAGE_TAG:-latest}
+    image: ${IMAGE_REGISTRY:-us.gcr.io/able-goods-221820}/lifelike-frontend:${WEBSERVER_IMAGE_TAG:-latest}
     restart: unless-stopped
     container_name: webserver
     environment:
