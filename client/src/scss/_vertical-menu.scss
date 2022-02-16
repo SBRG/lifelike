@@ -1,4 +1,22 @@
 .vertical-nav {
-  @extend .vertical-nav-base;
   background-color: $primary;
+
+  a {
+    display: flex;
+    width: 55px;
+    height: 55px;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+
+    &, &:link, &:visited {
+      color: $white;
+      text-decoration: none;
+    }
+
+    &:hover {
+      color: $white;
+      background: rgba(0, 0, 0, 0.16);
+    }
+  }
 }

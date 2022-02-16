@@ -1,8 +1,8 @@
 ARG NODE_IMAGE_TAG=node:14
 
-# ========================================
-# Angular app dependencies
-# ========================================
+# ==================================================================
+# Angular app dependencies by default used for local development
+# ==================================================================
 FROM $NODE_IMAGE_TAG as angular-deps
 WORKDIR /app
 
@@ -10,6 +10,8 @@ WORKDIR /app
 COPY package.json yarn.lock ./
 ARG YARN_INSTALL_OPTS
 RUN yarn install ${YARN_INSTALL_OPTS}
+
+ENV ENVIRONMENT_CONFIG development
 
 
 # ========================================
@@ -54,6 +56,9 @@ ENV APPSERVER_URL http://appserver:5000
 # List of space delimited list of non-stantdard MIME types
 # which are known to benefit from gzip compression (text based content)
 ENV GZIP_EXTRA_TYPES text/tsv vnd.lifelike.document/bioc vnd.lifelike.document/enrichment-table vnd.lifelike.document/graph vnd.lifelike.document/map
+
+# Runtime environment configuration preset
+ENV ENVIRONMENT_CONFIG production
 
 # Listen port
 ENV PORT 80
