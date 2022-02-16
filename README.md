@@ -6,6 +6,8 @@
 
 Lifelike is an open-source project that aims to provide a simple, yet powerful platform for turning structured and unstructured data from a variety of sources into a single, coherent and explorable knowledge graph.
 
+[![DOI](https://zenodo.org/badge/437040913.svg)](https://zenodo.org/badge/latestdoi/437040913)
+
 ## Quick start
 
 The easiest way to get started and run a fully functional development environment of Lifelike is to clone this repository and run the `make up` command:
