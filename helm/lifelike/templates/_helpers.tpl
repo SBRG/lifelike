@@ -385,7 +385,7 @@ Common image spec
 
 {{- define "lifelike.image" -}}
 image: {{ .image.repository }}:{{ .image.tag | default (printf "%s" .Chart.AppVersion) }}
-imagePullPolicy: {{ .image.imagePullPolicy | default "Always" }}
+imagePullPolicy: {{ .image.imagePullPolicy | default "IfNotPresent" }}
 {{- if .image.pullSecrets }}
 imagePullSecrets: {{ toYaml .image.pullSecrets | nindent 2 }}
 {{- end }}

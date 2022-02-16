@@ -91,6 +91,17 @@
                         }
                     }
                 },
+                "podSecurityContext": {
+                    "type": "object",
+                    "properties": {
+                        "fsGroup": {
+                            "type": "integer"
+                        },
+                        "runAsUser": {
+                            "type": "integer"
+                        }
+                    }
+                },
                 "readinessProbe": {
                     "type": "object",
                     "properties": {
@@ -142,6 +153,12 @@
                     }
                 },
                 "fullnameOverride": {
+                    "type": "string"
+                },
+                "image": {
+                    "type": "string"
+                },
+                "imageTag": {
                     "type": "string"
                 },
                 "volumeClaimTemplate": {

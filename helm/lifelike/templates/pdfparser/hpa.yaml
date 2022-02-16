@@ -1,6 +1,5 @@
-
 {{- if .Values.pdfparser.autoScaling.enabled }}
-apiVersion: autoScaling/v2beta1
+apiVersion: autoscaling/v2beta2
 kind: HorizontalPodAutoscaler
 metadata:
   name: {{ include "lifelike.fullname" . }}-pdfparser
@@ -19,12 +18,16 @@ spec:
     - type: Resource
       resource:
         name: cpu
-        targetAverageUtilization: {{ .Values.pdfparser.autoScaling.targetCPUUtilizationPercentage }}
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.pdfparser.autoScaling.targetCPUUtilizationPercentage }}
     {{- end }}
     {{- if .Values.pdfparser.autoScaling.targetMemoryUtilizationPercentage }}
     - type: Resource
       resource:
         name: memory
-        targetAverageUtilization: {{ .Values.pdfparser.autoScaling.targetMemoryUtilizationPercentage }}
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.pdfparser.autoScaling.targetMemoryUtilizationPercentage }}
     {{- end }}
 {{- end }}
