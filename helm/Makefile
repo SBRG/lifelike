@@ -18,6 +18,11 @@ helm-docs: ##@helm Generate Helm chart README docs
 helm-package: ##@helm Generate Lifelike helm chart package
 	helm package ${HELM_DIR}/lifelike --dependency-update --destination ${HELM_DIR} ${args}
 
+registry:=https://helm.apps.lifelike.cloud
+u:=lifelike
+helm-publish: helm-lint helm-schema-gen helm-docs ##@helm Publish a new version of Lifelike helm chart to the ChartMuseum registry
+	helm cm-push ${HELM_DIR}/lifelike ${registry} -u ${u} -p ${p} ${args}
+
 namespace:=lifelike
 helm-install: ##@helm Install or upgrade Lifelike chart <n=namespace>
 	@echo "Executing helm command (copy and modify if needed):\n"

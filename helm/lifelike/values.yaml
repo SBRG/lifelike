@@ -74,6 +74,9 @@ api:
     #   cpu: 100m
     #   memory: 128Mi
 
+  podSecurityContext:
+    runAsUser: 1000
+    fsGroup: 1000
 
   livenessProbe:
     # -- Set to false to disable liveness probes
@@ -302,7 +305,7 @@ neo4j:
   ## -- Set to false to disable automatic deployment of Neo4j
   enabled: true
 
-  imageTag: 4.4.1-community
+  imageTag: 4.4.3-community
 
   ## -- Neo4j password
   neo4jPassword: password
@@ -326,8 +329,9 @@ neo4j:
 elasticsearch:
   ## -- Set to false to disable automatic deployment of Elasticsearch
   enabled: true
-
   fullnameOverride: elasticsearch
+  image: us.gcr.io/able-goods-221820/lifelike-elasticsearch
+  imageTag: 7.16.3
 
   ## -- Elasticsearch configuration
   esConfig:
