@@ -34,13 +34,12 @@ This may take a while if running for the first time.
  ⠿ Container lifelike-statistical-enrichment-1  Started
  ⠿ Container lifelike-cache-invalidator-1       Started
  ⠿ Container lifelike-appserver-1               Started
- ⠿ Container lifelike-webserver-1               Started
+ ⠿ Container lifelike-frontend-1                Started
 
 To access Lifelike, point your browser at: http://localhost:8080
 ```
 
 ## Architecture diagram
-
 
 ![Architecture diagram](diagram.svg)
 
@@ -64,8 +63,8 @@ You can run `make help` to see other available common operation:
 usage: make [target]
 
 docker:
-  up                              Build and run container(s). [c=<names>]
-  up-dev                          Build and run container(s) for development. [c=<names>]
+  up                              Run all container(s). [c=<names>]
+  up-dev                          Build and run all container(s) for development. [c=<names>]
   images                          Build container(s) for distribution.
   status                          Show container(s) status. [c=<names>]
   logs                            Show container(s) logs. [c=<names>]

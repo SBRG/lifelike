@@ -13,7 +13,7 @@ else
     ## If $MIGRATE_DB is set, wait for PostgreSQL and run any required migrations.
     while ! curl $POSTGRES_HOST:$POSTGRES_PORT 2>&1 | grep '52'; do
       echo "Waiting for PostgreSQL to be available in $POSTGRES_HOST:$POSTGRES_PORT"
-      sleep 1;
+      sleep 5;
     done
     echo "PostreSQL is ready. Executing DB migrations now"
     flask db upgrade --x-arg data_migrate="True"

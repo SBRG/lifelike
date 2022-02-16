@@ -2,10 +2,10 @@ version: "3.8"
 
 services:
   ## Frontend web server
-  webserver:
-    image: ${IMAGE_REGISTRY:-us.gcr.io/able-goods-221820}/lifelike-frontend:${WEBSERVER_IMAGE_TAG:-latest}
+  frontend:
+    image: ghcr.io/sbrg/lifelike-frontend:${FRONTEND_IMAGE_TAG:-latest}
     restart: unless-stopped
-    container_name: webserver
+    container_name: frontend
     environment:
       - APPSERVER_URL=http://appserver:5000
     ports:
@@ -15,7 +15,7 @@ services:
 
   ## Backend application server
   appserver:
-    image: ${IMAGE_REGISTRY:-us.gcr.io/able-goods-221820}/lifelike-appserver:${APPSERVER_IMAGE_TAG:-latest}
+    image: ghcr.io/sbrg/lifelike-appserver:${APPSERVER_IMAGE_TAG:-latest}
     restart: unless-stopped
     container_name: appserver
     ports:
@@ -32,7 +32,7 @@ services:
 
   ## PDF parsing service
   pdfparser:
-    image: ${IMAGE_REGISTRY:-us.gcr.io/able-goods-221820}/lifelike-pdfparser:${PDFPARSER_IMAGE_TAG:-latest}
+    image: ghcr.io/sbrg/lifelike-pdfparser:${PDFPARSER_IMAGE_TAG:-latest}
     restart: unless-stopped
     container_name: pdfparser
     tty: true
@@ -43,7 +43,7 @@ services:
 
   ## Statistical enrichment service
   statistical-enrichment:
-    image: ${IMAGE_REGISTRY:-us.gcr.io/able-goods-221820}/lifelike-statistical-enrichment:${STATISTICAL_ENRICHMENT_IMAGE_TAG:-latest}
+    image: ghcr.io/sbrg/lifelike-statistical-enrichment:${STATISTICAL_ENRICHMENT_IMAGE_TAG:-latest}
     restart: unless-stopped
     container_name: statistical-enrichment
     ports:
@@ -51,7 +51,7 @@ services:
 
   # Cache invalidator service
   cache-invalidator:
-    image: ${IMAGE_REGISTRY:-us.gcr.io/able-goods-221820}/lifelike-cache-invalidator:${CACHE_INVALIDATOR_IMAGE_TAG:-latest}
+    image: ghcr.io/sbrg/lifelike-cache-invalidator:${CACHE_INVALIDATOR_IMAGE_TAG:-latest}
     restart: unless-stopped
     container_name: cache-invalidator
 

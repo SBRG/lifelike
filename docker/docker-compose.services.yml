@@ -5,7 +5,7 @@ version: "3.8"
 services:
   # PostgreSQL database
   postgres:
-    image: postgres:11
+    image: postgres:13
     restart: unless-stopped
     container_name: postgres
     environment:
@@ -37,9 +37,7 @@ services:
 
   ## Ekasticsearch search engine
   elasticsearch:
-    build:
-      context: .
-      dockerfile: elasticsearch.Dockerfile
+    image: ghcr.io/sbrg/lifelike-elasticsearch:7.16.3
     restart: unless-stopped
     container_name: elasticsearch
     environment:
