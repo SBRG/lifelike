@@ -16,6 +16,7 @@ import {
   ContentSearchResponseData,
   SynonymSearchResponse,
 } from '../schema';
+import { ContentSearchParameters, ContentSearchQueryParameters } from '../utils/search';
 
 
 @Injectable()
@@ -34,7 +35,7 @@ export class ContentSearchService {
     );
   }
 
-  search(request: Record<keyof ContentSearchRequest, string>): Observable<ContentSearchResponse> {
+  search(request: ContentSearchQueryParameters): Observable<ContentSearchResponse> {
     return this.http.get<ContentSearchResponseData>(
       `/api/search/content`,
       {

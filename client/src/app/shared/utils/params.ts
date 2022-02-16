@@ -19,13 +19,14 @@ export function getChoicesFromQuery<T>(params: { [key: string]: string }, key: s
   }
 }
 
-export function deserializePaginatedParams(params: { [key: string]: string }, defaultLimit): Required<PaginatedRequestOptions> {
-  return {
-    page: params.hasOwnProperty('page') ? parseInt(params.page, 10) : 1,
-    limit: params.hasOwnProperty('limit') ? parseInt(params.limit, 10) : defaultLimit,
-    sort: params.hasOwnProperty('sort') ? params.sort : '',
-  };
-}
+export const deserializePaginatedParams = (
+  {page, limit, sort = ''}: { [key in keyof PaginatedRequestOptions]?: string },
+  defaultLimit: number
+): Required<PaginatedRequestOptions> => ({
+  page: page ? parseInt(page, 10) : 1,
+  limit: limit ? parseInt(limit, 10) : defaultLimit,
+  sort
+});
 
 export function serializePaginatedParams<O extends PaginatedRequestOptions>(
   params: O, restartPagination: boolean): Record<keyof PaginatedRequestOptions, string> {

@@ -36,6 +36,12 @@ import { ContentSearchOptions } from '../content-search';
 import { ContentSearchService } from '../services/content-search.service';
 import { SearchType } from '../shared';
 import { ContentSearchResponse } from '../schema';
+import {
+  ContentSearchQueryParameters,
+  ContentSearchParameters,
+  createContentSearchParamsFromQuery,
+  getContentSearchQueryParams
+} from '../utils/search';
 
 
 @Component({
@@ -43,7 +49,7 @@ import { ContentSearchResponse } from '../schema';
   templateUrl: './content-search.component.html',
   styleUrls: ['./content-search.component.scss'],
 })
-export class ContentSearchComponent extends PaginatedResultListComponent<ContentSearchOptions,
+export class ContentSearchComponent extends PaginatedResultListComponent<ContentSearchParameters,
   RankedItem<FilesystemObject>> implements OnInit, OnDestroy {
   @Input() snippetAnnotations = false; // false due to LL-2052 - Remove annotation highlighting
   @Output() modulePropertiesChange = new EventEmitter<ModuleProperties>();
@@ -92,7 +98,7 @@ export class ContentSearchComponent extends PaginatedResultListComponent<Content
     super.ngOnInit();
 
     this.subscriptions.add(this.route.queryParams.pipe(
-      mergeMap(params => this.deserializeParams(params))
+      mergeMap(params => this.deserializeParams(params as ContentSearchQueryParameters))
     ).subscribe(params => {
       this.queryString = this.getQueryStringFromParams(params);
     }));
@@ -150,50 +156,15 @@ export class ContentSearchComponent extends PaginatedResultListComponent<Content
     return q.join(' ');
   }
 
-  deserializeAdvancedParams(params) {
-    const advancedParams: any = {};
-
-    if (params.hasOwnProperty('types')) {
-      advancedParams.types = getChoicesFromQuery(params, 'types', this.searchTypesMap);
-    }
-    if (params.hasOwnProperty('folders')) {
-      advancedParams.folders = params.folders === '' ? [] : params.folders.split(';');
-    }
-    if (params.hasOwnProperty('phrase')) {
-      advancedParams.phrase = params.phrase;
-    }
-    if (params.hasOwnProperty('wildcards')) {
-      advancedParams.wildcards = params.wildcards;
-    }
-    return advancedParams;
+  deserializeParams(params: ContentSearchQueryParameters): Observable<ContentSearchParameters> {
+    return of(createContentSearchParamsFromQuery(params, {
+      defaultLimit: this.defaultLimit,
+      searchTypesMap: this.searchTypesMap,
+    }));
   }
 
-  deserializeParams(params) {
-    return of({
-      ...deserializePaginatedParams(params, this.defaultLimit),
-      ...this.deserializeAdvancedParams(params),
-      q: params.hasOwnProperty('q') ? params.q : '',
-    });
-  }
-
-  serializeAdvancedParams(params: ContentSearchOptions) {
-    const advancedParams: any = {};
-
-    if (params.hasOwnProperty('types')) {
-      advancedParams.types = params.types.map(value => value.shorthand).join(';');
-    }
-    if (params.hasOwnProperty('folders')) {
-      advancedParams.folders = params.folders.join(';');
-    }
-    return advancedParams;
-  }
-
-  serializeParams(params: ContentSearchOptions, restartPagination = false) {
-    return {
-      ...serializePaginatedParams(params, restartPagination),
-      ...this.serializeAdvancedParams(params),
-      q: params.hasOwnProperty('q') ? params.q : '',
-    };
+  serializeParams(params: ContentSearchParameters, restartPagination = false): ContentSearchQueryParameters {
+    return getContentSearchQueryParams(params, restartPagination);
   }
 
   search(form: SearchableRequestOptions) {

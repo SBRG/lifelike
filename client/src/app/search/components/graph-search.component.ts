@@ -11,7 +11,7 @@ import { BackgroundTask } from 'app/shared/rxjs/background-task';
 import { ModuleProperties } from 'app/shared/modules';
 
 import { GraphSearchService } from '../services/graph-search.service';
-import { createSearchParamsFromQuery, getQueryParams } from '../utils/search';
+import { createGraphSearchParamsFromQuery, getGraphQueryParams, GraphQueryParameters } from '../utils/search';
 import { GraphSearchParameters } from '../graph-search';
 
 @Component({
@@ -78,7 +78,7 @@ export class GraphSearchComponent implements OnInit, OnDestroy {
     this.routerParamSubscription = this.route.queryParams.pipe(
       tap((params) => {
         if (params.q != null) {
-          this.params = createSearchParamsFromQuery(params);
+          this.params = createGraphSearchParamsFromQuery(params as GraphQueryParameters);
           this.loadTask.update(this.params);
         } else {
           this.params = null;
@@ -105,7 +105,7 @@ export class GraphSearchComponent implements OnInit, OnDestroy {
   search(params: GraphSearchParameters) {
     this.workspaceManager.navigate(['/search'], {
       queryParams: {
-        ...getQueryParams(params),
+        ...getGraphQueryParams(params),
         t: new Date().getTime(), // Hack so if the person press search without changing anything, we still refresh
       },
     });

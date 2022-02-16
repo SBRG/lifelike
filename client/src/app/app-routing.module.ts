@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { AdminPanelComponent } from 'app/admin/components/admin-panel.component';
-import { UserFileImportComponent } from 'app/user-file-import/components/user-file-import.component';
 import { VisualizationComponent } from 'app/visualization/containers/visualization/visualization.component';
 import { GraphSearchComponent } from 'app/search/components/graph-search.component';
 import { ObjectBrowserComponent } from 'app/file-browser/components/object-browser.component';
@@ -173,15 +172,6 @@ const routes: Routes = [
           fontAwesomeIcon: 'fas fa-chart-network',
         },
       },
-      {
-        path: 'upload',
-        component: UserFileImportComponent,
-        canActivate: [AuthGuard],
-        data: {
-          title: 'Knowledge Graph Upload',
-          fontAwesomeIcon: 'fas fa-chart-network',
-        },
-      },
     ],
   },
   {
@@ -285,16 +275,6 @@ const routes: Routes = [
       fontAwesomeIcon: 'project-diagram',
     },
   },
-  /* TODO Refactor import
-  {
-    path: 'kg-import',
-    canActivate: [AuthGuard],
-    children: [
-      {path: '', component: KgImportWizardComponent},
-      {path: 'genes', component: GeneImportWizardComponent},
-    ],
-  },
-  */
   {
     path: 'kg-statistics',
     component: KgStatisticsComponent,

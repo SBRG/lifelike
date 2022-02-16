@@ -375,9 +375,11 @@ export class VisualizationCanvasComponent implements OnInit, AfterViewInit {
         // If a previously connected node has no remaining edges (i.e. it is not connected
         // to any other neighbor), remove it.
         const nodesToRemove = connectedNodes.map((connectedNodeId: number) => {
-            const connectedEdges = this.networkGraph.getConnectedEdges(connectedNodeId);
-            if (connectedEdges.length === 0) {
-                return connectedNodeId;
+            if (this.networkGraph.findNode(connectedNodeId).length !== 0) {
+                const connectedEdges = this.networkGraph.getConnectedEdges(connectedNodeId);
+                if (connectedEdges.length === 0) {
+                    return connectedNodeId;
+                }
             }
         });
         this.nodes.remove(nodesToRemove);
@@ -794,20 +796,23 @@ export class VisualizationCanvasComponent implements OnInit, AfterViewInit {
         duplicateNodeEdgePairs.forEach(pair => {
             const duplicateNode = pair.node;
             const duplicateEdge = pair.edge;
-            const edges = this.networkGraph.getConnectedEdges(duplicateNode.duplicateOf);
 
             duplicateNodesToAdd.push(duplicateNode);
             duplicateEdgesToAdd.push(duplicateEdge);
 
-            if (edges.length === 1) {
-                // If the original node is being clustered on its last unclustered edge,
-                // remove it entirely from the canvas.
-                nodesToRemove.push(duplicateNode.duplicateOf);
-                edgesToRemove.push(duplicateEdge.duplicateOf);
-            } else if (this.networkGraph.getConnectedNodes(duplicateNode.duplicateOf).length === 1) {
-                // Otherwise, don't remove the original node, and only remove the original edge if the
-                // candidate node is not connected to any other node.
-                edgesToRemove.push(duplicateEdge.duplicateOf);
+            if (this.networkGraph.findNode(duplicateNode.duplicateOf).length !== 0) {
+                const edges = this.networkGraph.getConnectedEdges(duplicateNode.duplicateOf);
+
+                if (edges.length === 1) {
+                    // If the original node is being clustered on its last unclustered edge,
+                    // remove it entirely from the canvas.
+                    nodesToRemove.push(duplicateNode.duplicateOf);
+                    edgesToRemove.push(duplicateEdge.duplicateOf);
+                } else if (this.networkGraph.getConnectedNodes(duplicateNode.duplicateOf).length === 1) {
+                    // Otherwise, don't remove the original node, and only remove the original edge if the
+                    // candidate node is not connected to any other node.
+                    edgesToRemove.push(duplicateEdge.duplicateOf);
+                }
             }
         });
 

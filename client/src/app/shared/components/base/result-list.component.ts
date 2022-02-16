@@ -80,5 +80,5 @@ export abstract class ResultListComponent<O, R, RL extends ResultList<R> = Resul
 
   abstract deserializeParams(params: { [key: string]: string }): Observable<O>;
 
-  abstract serializeParams(params: O, restartPagination: boolean): Record<keyof O, string>;
+  abstract serializeParams(params: O, restartPagination: boolean): Partial<Record<keyof O, string>>;
 }

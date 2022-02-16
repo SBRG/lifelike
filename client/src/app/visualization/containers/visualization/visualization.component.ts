@@ -23,7 +23,7 @@ import {
 } from 'app/interfaces';
 import { LegendService } from 'app/shared/services/legend.service';
 import { WorkspaceManager } from 'app/shared/workspace-manager';
-import { createSearchParamsFromQuery, getQueryParams } from 'app/search/utils/search';
+import { createGraphSearchParamsFromQuery, getGraphQueryParams, GraphQueryParameters } from 'app/search/utils/search';
 import { ProgressDialog } from 'app/shared/services/progress-dialog.service';
 import { MessageArguments, MessageDialog } from 'app/shared/services/message-dialog.service';
 import { MessageType } from 'app/interfaces/message-dialog.interface';
@@ -138,7 +138,7 @@ export class VisualizationComponent implements OnInit, OnDestroy {
     this.route.queryParams.pipe(
       tap(params => {
         if (params.q != null) {
-          this.params = createSearchParamsFromQuery(params);
+          this.params = createGraphSearchParamsFromQuery(params as GraphQueryParameters);
         }
       }),
       filter(params => params.data),
@@ -375,7 +375,7 @@ export class VisualizationComponent implements OnInit, OnDestroy {
 
   goToResults() {
     this.workspaceManager.navigate(['/search'], {
-      queryParams: getQueryParams(this.params),
+      queryParams: getGraphQueryParams(this.params),
     });
   }
 }

@@ -21,6 +21,7 @@ import { isCtrlOrMetaPressed } from '../../utils';
 import { SEARCH_LINKS } from '../../links';
 import { annotationTypesMap } from '../../annotation-styles';
 import { TagHandler } from '../../services/highlight-text.service';
+import { InternalSearchService } from '../../services/internal-search.service';
 
 @Injectable()
 export class AnnotationTagHandler extends TagHandler {
@@ -28,7 +29,10 @@ export class AnnotationTagHandler extends TagHandler {
   popoverElement: HTMLElement;
   dropdownController: DropdownController;
 
-  constructor(protected readonly rendererFactory2: RendererFactory2) {
+  constructor(
+    protected readonly rendererFactory2: RendererFactory2,
+    protected readonly internalSearch: InternalSearchService
+  ) {
     super();
     const renderer = rendererFactory2.createRenderer(document.body, null);
     this.popoverElement = this.createPopoverElement();
@@ -254,6 +258,23 @@ export class AnnotationTagHandler extends TagHandler {
       const link = meta.links[domain.toLowerCase()] || url.replace(/%s/, encodeURIComponent(meta.allText));
       htmlLinks += `<a target="_blank" href="${escape(link)}">${escape(domain.replace('_', ' '))}</a><br>`;
     }
+    htmlLinks += `</div></div>`;
+
+    // search internal links
+    // TODO: collapsing doesn't work here
+    // need to play around with the stopPropagation
+    const searchInternalLinkCollapseTargetId = uniqueId('enrichment-tooltip-internal-collapse-target');
+    htmlLinks += `
+      <div>
+        <div>Search internal links <i class="fas fa-external-link-alt ml-1 text-muted"></i></div>
+        <div>
+    `;
+    const visLink = this.internalSearch.getVisualizerLink(meta.allText);
+    htmlLinks += `<a target="_blank" href="${visLink}">Knowledge Graph</a><br>`;
+    const contLink = this.internalSearch.getFileContentLink(meta.allText);
+    htmlLinks += `<a target="_blank" href="${contLink}">File Content</a><br>`;
+    const mapLink = this.internalSearch.getFileContentLink(meta.allText, {types: ['map']});
+    htmlLinks += `<a target="_blank" href="${mapLink}">Map Content</a><br>`;
     htmlLinks += `</div></div>`;
 
     base.push(htmlLinks);
