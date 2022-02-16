@@ -1,0 +1,43 @@
+{
+  "auth": {
+    "username": "davidregla_gDwjcB",
+    "access_key": ""
+  },
+  "browsers": [
+    {
+      "os": "OS X Big Sur",
+      "browser": "chrome",
+      "versions": [
+        "latest"
+      ]
+    },
+    {
+      "os": "Windows 10",
+      "browser": "chrome",
+      "versions": [
+        "latest"
+      ]
+    },
+    {
+      "os": "OS X Big Sur",
+      "browser": "firefox",
+      "versions": [
+        "latest"
+      ]
+    }
+  ],
+  "run_settings": {
+    "npm_dependencies": {
+      "@percy/cli": "^1.0.0-beta.74",
+      "@percy/cypress": "^3.1.1"
+    },
+    "cypress_config_file": "./cypress.json",
+    "cypress_version": "9",
+    "project_name": "Lifelike App",
+    "build_name": "DEMO environment",
+    "parallels": "1",
+    "system_env_vars": [
+      "PERCY_TOKEN"
+    ]
+  }
+}
