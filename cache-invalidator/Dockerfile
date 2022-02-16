@@ -28,7 +28,7 @@ RUN PIPENV_VENV_IN_PROJECT=1 pipenv install --deploy $(if [ "$DEV" ]; then echo 
 # Runtime stage
 # ========================================
 FROM base
-LABEL app=lifelike
+LABEL org.opencontainers.image.source https://github.com/SBRG/lifelike
 
 # Copy Python virtual environment
 COPY --from=build-deps /.venv /.venv

@@ -38,7 +38,8 @@ CMD yarn dev-start
 # Runtime stage - NGINX
 # ========================================
 FROM nginx:1.21
-LABEL app=kg-prototypes
+LABEL org.opencontainers.image.source https://github.com/SBRG/lifelike
+
 WORKDIR /usr/share/nginx/html
 
 # Copy built assets
