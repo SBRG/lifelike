@@ -26,9 +26,9 @@ jobs:
             path: appserver
           - name: frontend
             path: client
-          - name: elasticsearch
-            path: docker
-            file: docker/elasticsearch.Dockerfile
+          # - name: elasticsearch
+          #   path: docker
+          #   file: docker/elasticsearch.Dockerfile
           # - name: Grap data migrator
           #   path: graph-db
           #   image: lifelike-graph-db
