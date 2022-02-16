@@ -36,7 +36,7 @@ else
       -b 0.0.0.0:${PORT:-5000} \
       --workers=${GUNICORN_WORKERS:-9} \
       --threads=${GUNICORN_THREADS:-10} \
-      --timeout=${GUNICORN_TIMEOUT:-1200} \
+      --timeout=${GUNICORN_TIMEOUT:-300} \
       --max-requests=${GUNICORN_MAX_REQUESTS:-120} \
       app:app
   fi

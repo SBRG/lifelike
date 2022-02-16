@@ -1,14 +1,14 @@
 # ========================================
 # Base image
 # ========================================
-FROM fedora:35 as base
+FROM python:3.10-slim as base
 
 ENV LANG C.UTF-8
 ENV LC_ALL C.UTF-8
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONFAULTHANDLER 1
 
-RUN dnf install -y pipenv
+RUN pip install pipenv
 
 
 # ========================================
@@ -17,8 +17,9 @@ RUN dnf install -y pipenv
 FROM base as build-deps
 
 # Install build dependencies
-RUN dnf install -y python3-devel libxml2-devel libxslt-devel && \
-    dnf groupinstall -y 'Development Tools'
+RUN apt-get update \
+    && apt-get install -y liblmdb-dev python3-dev libxml2-dev libxslt-dev build-essential \
+    && apt-get clean
 
 # Copy Pipfiles
 COPY Pipfile Pipfile.lock ./
@@ -32,10 +33,11 @@ RUN PIPENV_VENV_IN_PROJECT=1 pipenv install --deploy $(if [ "$DEV" ]; then echo 
 # Runtime stage
 # ========================================
 FROM base
-LABEL app=lifelike
 
 # Install runtime system dependencies
-RUN dnf install -y graphviz && dnf clean packages
+RUN apt-get update \
+    && apt-get install -y libmagic-dev graphviz libgraphviz-dev \
+    && apt-get clean
 
 # Copy Python virtual environment
 COPY --from=build-deps /.venv /.venv
@@ -54,7 +56,6 @@ ENV MIGRATE_DB=
 
 # Create an initial admin user
 ENV INITIAL_ADMIN_EMAIL=
-ENV INITIAL_ADMIN_PASSWORD=password
 
 # LMDB database volume
 ENV LMDB_DATA_DIR=/lmdb
