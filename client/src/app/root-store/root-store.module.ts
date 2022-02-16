@@ -10,7 +10,6 @@ import {
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { localStorageSync } from 'ngrx-store-localstorage';
 
-import { UserFileImportModule } from 'app/user-file-import/user-file-import.module';
 import { LOGOUT_SUCCESS } from 'app/shared/constants';
 
 import { environment } from '../../environments/environment';
@@ -57,7 +56,6 @@ export const metaReducers: MetaReducer<State>[] = !environment.production
 
 @NgModule({
     imports: [
-        UserFileImportModule,
         /**
          * StoreModule.forRoot is imported once in the root module, accepting a reducer
          * function or object map of reducer functions. If passed an object of

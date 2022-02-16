@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 
-import { WorkspaceManager } from 'app/shared/workspace-manager';
+import { InternalSearchService } from 'app/shared/services/internal-search.service';
+import { SearchType } from 'app/search/shared';
 
 import { GraphEntity, GraphEntityType, UniversalGraphEdge, UniversalGraphNode } from '../services/interfaces';
 
@@ -12,7 +13,7 @@ export class InfoViewPanelComponent {
 
   @Input() selected: GraphEntity | undefined;
 
-  constructor(protected readonly workspaceManager: WorkspaceManager) {
+  constructor(protected readonly internalSearch: InternalSearchService) {
   }
 
   get isNode() {
@@ -32,43 +33,12 @@ export class InfoViewPanelComponent {
   }
 
   searchMapNodeInVisualizer(node) {
-    // TODO: This is a temp fix to make searching compoounds/species easier. Sometime in the future it's expected that these types will be
-    // squashed down into a single type.
-    let entityType = node.label;
-    let organism = '';
-
-    if (entityType === 'compound') {
-      entityType = 'chemical';
-    } else if (entityType === 'species') {
-      entityType = 'taxonomy';
-    // TODO: Temp change to allow users to quickly find genes. We will likely remove this once entity IDs are included in the node metadata.
-    } else if (entityType === 'gene') {
-      organism = '9606';
-    }
-
-    this.workspaceManager.navigate(['/search'], {
-      queryParams: {
-        q: node.display_name,
-        page: 1,
-        entities: entityType,
-        domains: '',
-        organism
-      },
-      sideBySide: true,
-      newTab: true,
+    return this.internalSearch.visualizer_tmp_fix(node.display_name, {
+      entities: [node.label]
     });
   }
 
-  searchMapNodeInContent(node, types: string) {
-    this.workspaceManager.navigate(['/search/content'], {
-      queryParams: {
-        q: `"${node.display_name}"`,
-        types,
-        limit: 20,
-        page: 1
-      },
-      sideBySide: true,
-      newTab: true,
-    });
+  searchMapNodeInContent(node, type: SearchType | string) {
+    return this.internalSearch.fileContents(node.display_name, {types: [type]});
   }
 }

@@ -8,7 +8,7 @@ import { parseURLToDomainName } from 'app/shared/utils/browser';
 
 import { GraphSearchParameters } from '../graph-search';
 import { getLink } from '../utils/records';
-import { getQueryParams } from '../utils/search';
+import { getGraphQueryParams } from '../utils/search';
 
 @Component({
   selector: 'app-search-record-node',
@@ -95,7 +95,7 @@ export class SearchRecordNodeComponent {
 
   getVisualizerQueryParams(params) {
     return {
-      ...getQueryParams(this.params),
+      ...getGraphQueryParams(this.params),
       ...params,
     };
   }

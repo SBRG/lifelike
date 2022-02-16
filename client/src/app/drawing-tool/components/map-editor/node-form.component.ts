@@ -1,13 +1,4 @@
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  EventEmitter,
-  Input,
-  Output,
-  ViewChild,
-  HostListener,
-} from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, ViewChild, HostListener, } from '@angular/core';
 
 import { cloneDeep, isNil, startCase } from 'lodash-es';
 
@@ -15,12 +6,10 @@ import { annotationTypes, annotationTypesMap } from 'app/shared/annotation-style
 import { nullIfEmpty, RecursivePartial } from 'app/shared/utils/types';
 import { openPotentialInternalLink } from 'app/shared/utils/browser';
 import { WorkspaceManager } from 'app/shared/workspace-manager';
+import { InternalSearchService } from 'app/shared/services/internal-search.service';
+import { SearchType } from 'app/search/shared';
 
-import {
-  DETAIL_NODE_LABELS,
-  isCommonNodeDisplayName,
-  UniversalGraphNode,
-} from '../../services/interfaces';
+import { DETAIL_NODE_LABELS, isCommonNodeDisplayName, UniversalGraphNode, } from '../../services/interfaces';
 import { LINE_TYPES } from '../../services/line-types';
 import { PALETTE_COLORS } from '../../services/palette';
 import { InfoPanel } from '../../models/info-panel';
@@ -63,7 +52,10 @@ export class NodeFormComponent implements AfterViewInit {
 
   fixedType = false;
 
-  constructor(protected readonly workspaceManager: WorkspaceManager) {
+  constructor(
+    protected readonly workspaceManager: WorkspaceManager,
+    protected readonly internalSearch: InternalSearchService
+  ) {
   }
 
   changeOverflow(newValue) {
@@ -147,7 +139,7 @@ export class NodeFormComponent implements AfterViewInit {
     } else if (fromDetailNode && !toDetailNode) {
       // If we are moving away from a detail node, restore the display name (sometimes)
       if ((nullIfEmpty(this.node.display_name) === null
-        || isCommonNodeDisplayName(this.previousLabel, this.node.display_name))
+          || isCommonNodeDisplayName(this.previousLabel, this.node.display_name))
         && nullIfEmpty(this.node.data.detail) !== null
         && this.node.data.detail.length <= 50) {
         this.node.display_name = this.node.data.detail;
@@ -277,43 +269,12 @@ export class NodeFormComponent implements AfterViewInit {
   }
 
   searchMapNodeInVisualizer(node) {
-    // TODO: This is a temp fix to make searching compoounds/species easier. Sometime in the future it's expected that these types will be
-    // squashed down into a single type.
-    let entityType = node.label;
-    let organism = '';
-
-    if (entityType === 'compound') {
-      entityType = 'chemical';
-    } else if (entityType === 'species') {
-      entityType = 'taxonomy';
-    // TODO: Temp change to allow users to quickly find genes. We will likely remove this once entity IDs are included in the node metadata.
-    } else if (entityType === 'gene') {
-      organism = '9606';
-    }
-
-    this.workspaceManager.navigate(['/search'], {
-      queryParams: {
-        q: node.display_name,
-        page: 1,
-        entities: entityType,
-        domains: '',
-        organism
-      },
-      sideBySide: true,
-      newTab: true,
+    return this.internalSearch.visualizer_tmp_fix(node.display_name, {
+      entities: [node.label]
     });
   }
 
-  searchMapNodeInContent(node, types: string) {
-    this.workspaceManager.navigate(['/search/content'], {
-      queryParams: {
-        q: `"${node.display_name}"`,
-        types,
-        limit: 20,
-        page: 1
-      },
-      sideBySide: true,
-      newTab: true,
-    });
+  searchMapNodeInContent(node, type: SearchType | string) {
+    return this.internalSearch.fileContents(node.display_name, {types: [type]});
   }
 }

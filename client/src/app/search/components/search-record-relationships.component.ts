@@ -6,7 +6,7 @@ import { UniversalGraphNode } from 'app/drawing-tool/services/interfaces';
 import { FTSReferenceRecord, GraphNode } from 'app/interfaces';
 import { PUBMED_URL } from 'app/shared/constants';
 import { stringToHex } from 'app/shared/utils';
-import { getQueryParams } from 'app/search/utils/search';
+import { getGraphQueryParams } from 'app/search/utils/search';
 
 import { getLink } from '../utils/records';
 import { GraphSearchParameters } from '../graph-search';
@@ -94,7 +94,7 @@ export class SearchRecordRelationshipsComponent {
 
   getVisualizerQueryParams(params) {
     return {
-      ...getQueryParams(this.params),
+      ...getGraphQueryParams(this.params),
       ...params,
     };
   }

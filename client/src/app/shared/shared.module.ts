@@ -84,6 +84,7 @@ import { ModuleMenuComponent } from './components/module-menu/module-menu.compon
 import { WarningListComponent } from './components/warning-list/warning-list.component';
 import { WarningPillComponent } from './components/warning-pill/warning-pill.component';
 import { BaseControlComponent } from './components/base-control.component';
+import { InternalSearchService } from './services/internal-search.service';
 
 const components = [
   VisJsNetworkComponent,
@@ -178,6 +179,7 @@ const components = [
     SharedNgrxEffects,
     SharedSearchService,
     SessionStorageService,
+    InternalSearchService,
     ApiService,
     AccountsService,
     DataTransferDataService,

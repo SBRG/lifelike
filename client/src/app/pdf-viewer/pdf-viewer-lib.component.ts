@@ -27,6 +27,7 @@ import { ErrorHandler } from 'app/shared/services/error-handler.service';
 import { toValidLink } from 'app/shared/utils/browser';
 import { openModal } from 'app/shared/utils/modals';
 import { IS_MAC } from 'app/shared/utils/platform';
+import { InternalSearchService } from 'app/shared/services/internal-search.service';
 
 import { PageViewport } from 'pdfjs-dist/types/display/display_utils';
 import { PDFDocumentProxy } from 'pdfjs-dist/types/display/api';
@@ -187,14 +188,17 @@ export class PdfViewerLibComponent implements OnInit, OnDestroy {
   @ViewChild(PdfViewerComponent, {static: false})
   private pdfComponent: PdfViewerComponent;
 
-  constructor(protected readonly elementRef: ElementRef,
-              protected readonly modalService: NgbModal,
-              private cfr: ComponentFactoryResolver,
-              private appRef: ApplicationRef,
-              private injector: Injector,
-              protected readonly zone: NgZone,
-              protected readonly snackBar: MatSnackBar,
-              protected readonly errorHandler: ErrorHandler) {
+  constructor(
+    protected readonly elementRef: ElementRef,
+    protected readonly modalService: NgbModal,
+    private cfr: ComponentFactoryResolver,
+    private appRef: ApplicationRef,
+    private injector: Injector,
+    protected readonly zone: NgZone,
+    protected readonly snackBar: MatSnackBar,
+    protected readonly errorHandler: ErrorHandler,
+    protected readonly internalSearch: InternalSearchService,
+  ) {
   }
 
   ngOnInit() {
@@ -478,6 +482,28 @@ export class PdfViewerLibComponent implements OnInit, OnDestroy {
       const link = an.meta.links[domain.toLowerCase()] || url.replace(/%s/, encodeURIComponent(an.meta.allText));
       htmlLinks += `<a target="_blank" href="${escape(link)}">${escape(domain.replace('_', ' '))}</a><br>`;
     }
+    htmlLinks += `</div></div>`;
+
+    // search internal links
+    const searchInternalLinkCollapseTargetId = uniqueId('pdf-tooltip-internal-collapse-target');
+    htmlLinks += `
+      <div>
+        <div
+          class="tooltip-collapse-control collapsed"
+          role="button"
+          data-toggle="collapse"
+          data-target="#${searchInternalLinkCollapseTargetId}"
+          aria-expanded="false"
+          aria-controls="${searchInternalLinkCollapseTargetId}"
+        >Search internal links <i class="fas fa-external-link-alt ml-1 text-muted"></i></div>
+        <div class="collapse" id="${searchInternalLinkCollapseTargetId}">
+    `;
+    const visLink = this.internalSearch.getVisualizerLink(an.meta.allText);
+    htmlLinks += `<a target="_blank" href="${visLink}">Knowledge Graph</a><br>`;
+    const contLink = this.internalSearch.getFileContentLink(an.meta.allText);
+    htmlLinks += `<a target="_blank" href="${contLink}">File Content</a><br>`;
+    const mapLink = this.internalSearch.getFileContentLink(an.meta.allText, {types: ['map']});
+    htmlLinks += `<a target="_blank" href="${mapLink}">Map Content</a><br>`;
     htmlLinks += `</div></div>`;
 
     base.push(htmlLinks);
