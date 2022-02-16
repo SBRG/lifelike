@@ -5,8 +5,8 @@ home: https://lifelike.bio
 icon: https://github.com/SBRG/lifelike/raw/main/appserver/assets/lifelike.png
 type: application
 
-version: 0.4.6
-appVersion: 0.10.0
+version: 0.5.0
+appVersion: 0.10.4
 
 kubeVersion: ">=1.20.0-0"
 
@@ -23,7 +23,7 @@ sources:
 dependencies:
   - name: postgresql
     repository: https://charts.bitnami.com/bitnami
-    version: 10.16.2
+    version: 11.0.4
     condition: postgresql.enabled
   - name: neo4j
     version: 4.4.3

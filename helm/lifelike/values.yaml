@@ -1,7 +1,3 @@
-global: {}
-nameOverride: ""
-fullnameOverride: ""
-
 # -----------------------------------------------------------------------------
 # Expose through Ingress
 # -----------------------------------------------------------------------------
@@ -16,7 +12,7 @@ ingress:
 
   ## -- Ingress annotations
   annotations: {}
-    # cert-manager.io/cluster-issuer: letsencrypt
+    # cert-manager.io/cluster-issuer: letsencrypt-prod
     # nginx.ingress.kubernetes.io/proxy-body-size: "0"
 
   ## -- Ingress TLS
@@ -31,7 +27,7 @@ ingress:
 # ------------------------------------------------------------------------------
 api:
   image:
-    repository: us.gcr.io/able-goods-221820/lifelike-appserver
+    repository: ghcr.io/sbrg/lifelike-appserver
     ## -- Overrides the image tag whose default is the chart appVersion.
     tag: ""
 
@@ -44,6 +40,10 @@ api:
     # Create an initial admin user (initial password is "password")
     INITIAL_ADMIN_EMAIL: admin@example.com
     # LOG_LEVEL: debug
+
+  lmdb:
+    # -- Load LMDB data from storage when initializing
+    loadEnabled: false
 
   # -- Number of replicas running the appserver
   replicaCount: 1
@@ -59,55 +59,54 @@ api:
   # -- if using some PV that does not support readWriteMany, set this to 'Recreate'
   strategyType: RollingUpdate
 
-  lmdb:
-    loadEnabled: false
-
-  service:
-    type: ClusterIP
-    port: 5000
-
-  resources: {}
-    # requests:
+  # -- Optional resources requests and limits
+  resources:
+    requests:
+      ephemeral-storage: 8Gi
     #   cpu: 500m
     #   memory: 2000Mi
     # limits:
     #   cpu: 100m
     #   memory: 128Mi
 
-  podSecurityContext:
-    runAsUser: 1000
-    fsGroup: 1000
-
-  livenessProbe:
-    # -- Set to false to disable liveness probes
-    enabled: true
-    path: /meta
-    # failureThreshold: 20
-    # initialDelaySeconds: 20
-    # periodSeconds: 10
-    # successThreshold: 1
-    # timeoutSeconds: 10
-
-  readinessProbe:
-    # -- Set to false to disable readiness probes
-    enabled: true
-    path: /meta
-    # failureThreshold: 20
-    # initialDelaySeconds: 20
-    # periodSeconds: 10
-    # successThreshold: 1
-    # timeoutSeconds: 10
-
-  ## -- Optional extra volumes
+  ## -- Optional extra volumes (e.g. for LMDB)
   extraVolumes: []
   # - name: lmdb
   #   hostPath:
   #     path: /mnt/data/lmdb
-
   extraVolumeMounts: []
   # - name: lmdb
   #   mountPath: /lmdb
   #   readOnly: false
+
+  podSecurityContext:
+    runAsUser: 0
+    # runAsUser: 1000
+    # fsGroup: 1000
+
+  livenessProbe:
+    ## -- Set to false to disable liveness probes
+    enabled: true
+    path: /meta
+    failureThreshold: 20
+    initialDelaySeconds: 20
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 10
+
+  readinessProbe:
+    ## -- Set to false to disable readiness probes
+    enabled: true
+    path: /meta
+    failureThreshold: 20
+    initialDelaySeconds: 20
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 10
+
+  service:
+    type: ClusterIP
+    port: 5000
 
   dbWaiter:
     image:
@@ -117,11 +116,11 @@ api:
     timeoutSeconds: 30
 
 # ------------------------------------------------------------------------------
-# Frontend (webserver)
+# Frontend (web)
 # ------------------------------------------------------------------------------
 frontend:
   image:
-    repository: us.gcr.io/able-goods-221820/lifelike-frontend
+    repository: ghcr.io/sbrg/lifelike-frontend
     ## -- Overrides the image tag whose default is the chart appVersion.
     tag: ""
 
@@ -136,19 +135,82 @@ frontend:
     targetCPUUtilizationPercentage: 80
     targetMemoryUtilizationPercentage: 80
 
-  service:
-    type: ClusterIP
-    port: 80
+  ## -- Optional resources requests and limits
+  resources: {}
+    # requests:
+    #   cpu: 500m
+    #   memory: 2000Mi
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
 
   livenessProbe:
-    # -- Set to false to disable liveness probes
+    ## -- Set to false to disable liveness probes
     enabled: true
     path: /
+    failureThreshold: 20
+    initialDelaySeconds: 20
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 10
 
   readinessProbe:
     ## -- Set to false to disable readiness probes
     enabled: true
     path: /
+    failureThreshold: 20
+    initialDelaySeconds: 20
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 10
+
+  service:
+    type: ClusterIP
+    port: 80
+
+# ------------------------------------------------------------------------------
+# Statistical enrichment
+# ------------------------------------------------------------------------------
+statisticalEnrichment:
+  image:
+    repository: ghcr.io/sbrg/lifelike-statistical-enrichment
+    ## -- Overrides the image tag whose default is the chart appVersion.
+    tag: ""
+
+  replicaCount: 1
+
+  ## -- Optional resources requests and limits
+  resources: {}
+    # requests:
+    #   cpu: 500m
+    #   memory: 2000Mi
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+
+  livenessProbe:
+    ## -- Set to false to disable liveness probes
+    enabled: true
+    path: /healthz
+    failureThreshold: 20
+    initialDelaySeconds: 20
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 10
+
+  readinessProbe:
+    ## -- Set to false to disable readiness probes
+    enabled: true
+    path: /healthz
+    failureThreshold: 20
+    initialDelaySeconds: 20
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 10
+  
+  service:
+    type: ClusterIP
+    port: 5000
 
 
 # ------------------------------------------------------------------------------
@@ -156,83 +218,53 @@ frontend:
 # ------------------------------------------------------------------------------
 pdfparser:
   image:
-    repository: us.gcr.io/able-goods-221820/lifelike-pdfparser
-    tag: latest
+    repository: ghcr.io/sbrg/lifelike-pdfparser
+    ## -- Overrides the pdfparser image tag
+    tag: "latest"
 
-  # -- Number of replicas running, ignored if autoScaling is enabled
+  ## -- Number of replicas running, ignored if autoScaling is enabled
   replicaCount: 1
 
-  # -- Horizontal pod autoscaler configuration
+  ## -- Horizontal pod autoscaler configuration
   autoScaling:
-    # -- Set to true to enable autoscaling, ignoring pdfparser.replicaCount
+    ## -- Set to true to enable autoscaling, ignoring pdfparser.replicaCount
     enabled: false
     minReplicas: 2
     maxReplicas: 4
     targetCPUUtilizationPercentage: 80
     targetMemoryUtilizationPercentage: 80
 
-  service:
-    type: ClusterIP
-    port: 7600
+  resources: {}
+    # requests:
+    #   cpu: 500m
+    #   memory: 2000Mi
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
 
   livenessProbe:
-    # -- Set to false to disable liveness probes
+    ## -- Set to false to disable liveness probes
     enabled: true
     path: /
+    failureThreshold: 20
+    initialDelaySeconds: 20
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 10
 
   readinessProbe:
     ## -- Set to false to disable readiness probes
     enabled: true
     path: /
-
-# ------------------------------------------------------------------------------
-# Statistical enrichment
-# ------------------------------------------------------------------------------
-statisticalEnrichment:
-  image:
-    repository: us.gcr.io/able-goods-221820/lifelike-statistical-enrichment
-    ## -- Overrides the image tag whose default is the chart appVersion.
-    tag: ""
-
-  replicaCount: 1
+    failureThreshold: 20
+    initialDelaySeconds: 20
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 10
 
   service:
     type: ClusterIP
-    port: 5000
-
-  livenessProbe:
-    # -- Set to false to disable liveness probes
-    enabled: true
-    path: /healthz
-
-  readinessProbe:
-    # -- Set to false to disable readiness probes
-    enabled: true
-    path: /healthz
-
-  resources: {}
-
-
-# ------------------------------------------------------------------------------
-# Worker
-# ------------------------------------------------------------------------------
-worker:
-  image:
-    repository: us.gcr.io/able-goods-221820/lifelike-worker
-    ## -- Overrides the image tag whose default is the chart appVersion.
-    tag: ""
-
-  # -- Number of running replicas, ignored if autoScaling is enabled
-  replicaCount: 1
-
-  # -- Horizontal pod autoscaler configuration
-  autoScaling:
-    # -- Set to true to enable autoscaling, ignoring pdfparser.replicaCount
-    enabled: false
-    minReplicas: 2
-    maxReplicas: 4
-    targetCPUUtilizationPercentage: 80
-    targetMemoryUtilizationPercentage: 80
+    port: 7600
 
 
 # ------------------------------------------------------------------------------
@@ -291,9 +323,9 @@ elasticsearchExternal:
 postgresql:
   # -- Set to false to disable automatic deployment of PostgreSQL
   enabled: true
-  postgresqlDatabase: postgres
-  postgresqlPassword: password
-
+  auth:
+    postgresPassword: password
+    database: database
 
 # ------------------------------------------------------------------------------
 # Neo4j database
@@ -329,9 +361,11 @@ neo4j:
 elasticsearch:
   ## -- Set to false to disable automatic deployment of Elasticsearch
   enabled: true
-  fullnameOverride: elasticsearch
-  image: us.gcr.io/able-goods-221820/lifelike-elasticsearch
+
+  image: ghcr.io/sbrg/lifelike-elasticsearch
   imageTag: 7.16.3
+
+  fullnameOverride: elasticsearch
 
   ## -- Elasticsearch configuration
   esConfig:
@@ -363,13 +397,14 @@ redis:
     persistence:
       ## -- As we use Redis as a cache, we don't need persistence
       enabled: false
-
+    ## -- Extra configuration for Redis master
     extraFlags:
       - --maxmemory-policy allkeys-lru
 
   replica:
     persistence:
       enabled: false
+    ## -- Extra configuration for Redis replica
     extraFlags:
       - --maxmemory-policy allkeys-lru
 

@@ -17,6 +17,7 @@ ingress:
 
 # Customize the initial admin user (password is "password" until changed)
 api:
+  replicaCount: 2
   extraEnv:
     INITIAL_ADMIN_EMAIL: admin@demo.lifelike.cloud
 

@@ -109,7 +109,7 @@ Return the PostgreSQL database name
 */}}
 {{- define "lifelike.postgresqlDatabase" -}}
 {{- if .Values.postgresql.enabled }}
-    {{- printf "%s" .Values.postgresql.postgresqlDatabase -}}
+    {{- printf "%s" .Values.postgresql.auth.database -}}
 {{- else -}}
     {{- printf "%s" .Values.postgresqlExternal.database -}}
 {{- end -}}
@@ -120,7 +120,7 @@ Return the PostgreSQL user
 */}}
 {{- define "lifelike.postgresqlUser" -}}
 {{- if .Values.postgresql.enabled }}
-    {{- printf "%s" .Values.postgresql.postgresqlUsername -}}
+    {{- default "postgres" .Values.postgresql.auth.username | quote -}}
 {{- else -}}
     {{- printf "%s" .Values.postgresqlExternal.user -}}
 {{- end -}}
@@ -131,7 +131,7 @@ Return the PostgreSQL password
 */}}
 {{- define "lifelike.postgresqlPassword" -}}
 {{- if .Values.postgresql.enabled }}
-    {{- printf "%s" .Values.postgresql.postgresqlPassword -}}
+    {{- printf "%s" .Values.postgresql.auth.postgresPassword -}}
 {{- else -}}
     {{- printf "%s" .Values.postgresqlExternal.password -}}
 {{- end -}}

@@ -70,4 +70,7 @@ spec:
           command:
             - flask
             - load-lmdb
+          volumeMounts:
+            - mountPath: /lmdb
+              name: lmdb-storage
         {{- end -}}
