@@ -6,7 +6,6 @@
 # Disable the embedded PostgreSQL subchart
 postgresql:
   enabled: false
-
 # Configure external psostgres database
 postgresqlExternal:
   host: postgres.local
@@ -15,25 +14,21 @@ postgresqlExternal:
   database: postgres
   password: password
 
-
-# Disable embedded Elasticsearch subchart
-elasticsearch:
-  enabled: false
-
-elasticsearchExternal:
-  host: elasticsearch.local
-  port: 9200
-  user: "elastic"
-  password: "password"
-
-
 # Disable embedded Neo4j subchart
 neo4j:
   enabled: false
-
 # Configure external Neo4j database
 neo4jExternal:
   host: neo4j.local
   port: 7687
   user: neo4j
   password: password
+
+# Disable embedded Elasticsearch subchart
+elasticsearch:
+  enabled: false
+elasticsearchExternal:
+  host: elasticsearch.local
+  port: 9200
+  user: "elastic"
+  password: "password"

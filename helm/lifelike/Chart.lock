@@ -1,7 +1,7 @@
 dependencies:
 - name: postgresql
   repository: https://charts.bitnami.com/bitnami
-  version: 10.16.2
+  version: 11.0.4
 - name: neo4j
   repository: https://neo4j-contrib.github.io/neo4j-helm
   version: 4.4.3
@@ -11,5 +11,5 @@ dependencies:
 - name: redis
   repository: https://charts.bitnami.com/bitnami
   version: 16.2.0
-digest: sha256:2eed73ddd1b21f91b43b858afdf453466083810899f04afe862c7b104621bd21
-generated: "2022-01-28T03:31:28.401031-06:00"
+digest: sha256:c0ef04fdf66584711cf11dbe4c73313b58c7413506804a27d531532967241ad0
+generated: "2022-02-16T02:58:36.519945-06:00"
