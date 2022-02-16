@@ -28,7 +28,7 @@ jobs:
             path: client
           - name: elasticsearch
             path: docker
-            file: elasticsearch.Dockerfile
+            file: docker/elasticsearch.Dockerfile
           # - name: Grap data migrator
           #   path: graph-db
           #   image: lifelike-graph-db
@@ -63,7 +63,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: ${{ matrix.path }}
-          file: ${{ matrix.file || 'Dockerfile' }}
+          file: ${{ matrix.file }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           push: true
