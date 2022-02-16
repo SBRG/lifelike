@@ -2,7 +2,7 @@
 version: "3.8"
 
 services:
-  webserver:
+  frontend:
     build:
       context: ../client
       args:
@@ -45,3 +45,8 @@ services:
     volumes:
       - ../cache-invalidator:/app
     user: root
+
+  elasticsearch:
+    build:
+      context: .
+      dockerfile: elasticsearch.Dockerfile

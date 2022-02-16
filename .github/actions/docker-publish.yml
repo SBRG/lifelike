@@ -60,6 +60,8 @@ runs:
       with:
         file: ${{ inputs.dockerfile }}
         context: ${{ inputs.context }}
-        push: ${{ inputs.push }}
         tags: ${{ steps.docker_meta.outputs.tags }}
         labels: ${{ steps.docker_meta.outputs.labels }}
+        push: ${{ inputs.push }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
