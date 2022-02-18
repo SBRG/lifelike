@@ -1,0 +1,35 @@
+version: "3.8"
+
+services:
+  neo4j:
+    image: neo4j:4.4-community
+    restart: on-failure
+    environment:
+      - NEO4J_AUTH=neo4j/password
+      - NEO4JLABS_PLUGINS=["apoc"]
+      - NEO4J_dbms.unmanaged_extension_classes=n10s.endpoint=/rdf # for the neosemantics-4.3.0.0.jar
+    ports:
+      - 7687
+    volumes:
+      - neo4j:/var/lib/neo4j/data
+
+  migrator:
+    build:
+      context: migrator
+    environment:
+      - CHANGELOG_FILE=lifelike-graph/changelog-master.xml
+      - NEO4J_HOST=neo4j
+      - LOG_LEVEL=INFO
+      - AZURE_ACCOUNT_STORAGE_NAME
+      - AZURE_ACCOUNT_STORAGE_KEY
+      - DATAFILES_PREFIX
+    volumes:
+      - ./changelog:/liquibase/changelog
+      - ./tmp:/tmp
+    depends_on:
+      - neo4j
+    links:
+      - neo4j
+
+volumes:
+  neo4j: {}
