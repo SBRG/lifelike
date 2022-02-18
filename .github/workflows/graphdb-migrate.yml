@@ -1,0 +1,47 @@
+name: Grpah DB Migrate
+
+on:
+  workflow_dispatch:
+    inputs:
+      neo4j_host:
+        description: Neo4j target host to run migration
+        type: string
+        required: true
+      neo4j_password:
+        description: Neo4j password
+        type: string
+        required: true
+      graphdb_migrator_tag:
+        description: Tag of the graphdb-migrator image to use
+        type: string
+        required: true
+        default: latest
+      changelog:
+        description: Path to the master changelog file
+        type: string
+        required: true
+        default: 'lifelike-graph/changelog-master.xml'
+      datafiles_prefix:
+        description: Prefix of the datafiles in remote storage (stage/prod)
+        type: choice
+        required: true
+        default: stage
+        options:
+          - stage
+          - prod
+
+jobs:
+  migrate:
+    name: Migrate Neo4j DB
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+    container:
+      image: ghcr.io/SBRG/lifelike-migrator:${{ github.event.inputs.graphdb_migrator_tag }}
+      volumes:
+        - ${{ github.workspace }}/graph-db/changelog:/liquibase/changelog
+      env:
+        NEO4J_HOST: ${{ github.event.inputs.neo4j_host }}
+        NEO4J_PASSWORD: ${{ github.event.inputs.neo4j_password }}
+        CHANGELOG_FILE: ${{ github.event.inputs.changelog }}
+        DATAFILES_PREFIX: ${{ github.event.inputs.datafiles_prefix }}
