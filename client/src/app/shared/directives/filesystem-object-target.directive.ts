@@ -89,9 +89,9 @@ export class FilesystemObjectTargetDirective {
         if (transferData.privileges.writable) {
           const progressDialogRef = this.progressDialog.display({
             title: 'File Move',
-            progressObservable: new BehaviorSubject<Progress>(new Progress({
+            progressObservables: [new BehaviorSubject<Progress>(new Progress({
               status: 'Moving to the new folder...',
-            })),
+            }))],
           });
 
           this.filesystemService.save([transferData.hashId], {

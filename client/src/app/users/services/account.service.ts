@@ -9,7 +9,7 @@ import {
   UserCreationRequest,
   ChangePasswordRequest,
   PrivateAppUser,
-  UserUpdateRequest,
+  UserUpdateData,
 
 } from 'app/interfaces';
 import { ResultList } from 'app/shared/schemas/common';
@@ -36,9 +36,9 @@ export class AccountService implements OnDestroy {
         ).pipe(map(resp => resp.result));
     }
 
-    updateUser(request: UserUpdateRequest) {
+    updateUser(updateData: UserUpdateData, hashId: string) {
         return this.http.put<{result: AppUser}>(
-            `${this.accountApi}/${request.hashId}`, request);
+            `${this.accountApi}/${hashId}`, updateData);
     }
 
     resetPassword(email: string) {
@@ -51,13 +51,17 @@ export class AccountService implements OnDestroy {
 
     /**
      * Return list of users
-     * @param username - optional val to query against list of users
+     * @param hashId - optional val to query against list of users
      */
     getUsers(hashId?: string): Observable<ResultList<PrivateAppUser>> {
         if (hashId) {
             return this.http.get<ResultList<PrivateAppUser>>(`${this.accountApi}/${hashId}`);
         }
         return this.http.get<ResultList<PrivateAppUser>>(`${this.accountApi}/`);
+    }
+
+    getUserBySubject(subject: string): Observable<PrivateAppUser> {
+      return this.http.get<PrivateAppUser>(`${this.accountApi}/subject/${subject}`);
     }
 
     currentUser(): Observable<PrivateAppUser> {

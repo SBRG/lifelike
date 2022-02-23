@@ -6,43 +6,6 @@
   <app-modal-body>
     <app-form-input-feedback [control]="form" [formLevel]="true"></app-form-input-feedback>
 
-    <ng-container *ngIf="promptUpload">
-      <ul ngbNav #nav="ngbNav" class="nav-tabs" [activeId]="form.get('contentSource').value"
-          (activeIdChange)="activeTabChanged($event)">
-        <li ngbNavItem="contentValue">
-          <a ngbNavLink>From Device</a>
-          <ng-template ngbNavContent>
-            <app-form-row for="content-value" label="File" [control]="form.get('contentValue')">
-              <div class="d-flex align-items-center text-truncate">
-                <button type="button" class="btn btn-secondary mr-2" (click)="showFileDialog()">
-                  Browse...
-                </button>
-                <div class="text-truncate" *ngIf="form.get('contentValue').value != null; else noFileChosen">
-                  <i class="fa fa-fw fa-file-upload text-icon"></i>
-                  {{ form.get('contentValue').value.name }}
-                </div>
-                <ng-template #noFileChosen>
-                </ng-template>
-              </div>
-              <input type="file" id="content-value" (change)="fileChanged($event)"
-                     class="d-none" #fileInput>
-            </app-form-row>
-          </ng-template>
-        </li>
-        <li ngbNavItem="contentUrl">
-          <a ngbNavLink>From URL</a>
-          <ng-template ngbNavContent>
-            <app-form-row for="content-url" label="URL" [control]="form.get('contentUrl')">
-              <input type="text" formControlName="contentUrl" id="content-url" [appFormInput]="form.get('contentUrl')"
-                     placeholder="https://www.example.com/file.pdf" (change)="urlChanged($event)">
-            </app-form-row>
-          </ng-template>
-        </li>
-      </ul>
-
-      <div [ngbNavOutlet]="nav" class="mt-4"></div>
-    </ng-container>
-
     <app-form-row for="parent" [label]="parentLabel" [control]="form.get('parent')" *ngIf="promptParent">
       <div class="d-flex align-items-center text-truncate">
         <button type="button" class="btn btn-secondary mr-2" (click)="showParentDialog()">

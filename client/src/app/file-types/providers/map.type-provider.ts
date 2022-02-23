@@ -98,7 +98,7 @@ export class MapTypeProvider extends AbstractObjectTypeProvider {
                 contentValue: content
               },
               ...(options.createDialog || {}),
-            });
+            }).then(results => results.pop());
           });
         },
       },

@@ -28,6 +28,7 @@ import {
   serializePaginatedParams,
 } from 'app/shared/utils/params';
 import { WorkspaceManager } from 'app/shared/workspace-manager';
+import { getPath } from 'app/shared/utils/files';
 
 import { AdvancedSearchDialogComponent } from './advanced-search-dialog.component';
 import { RejectedOptionsDialogComponent } from './rejected-options-dialog.component';
@@ -51,22 +52,6 @@ import {
 })
 export class ContentSearchComponent extends PaginatedResultListComponent<ContentSearchParameters,
   RankedItem<FilesystemObject>> implements OnInit, OnDestroy {
-  @Input() snippetAnnotations = false; // false due to LL-2052 - Remove annotation highlighting
-  @Output() modulePropertiesChange = new EventEmitter<ModuleProperties>();
-
-  private readonly defaultLimit = 20;
-  readonly id = uuidv4(); // Used in the template to prevent duplicate ids across panes
-
-  results = new CollectionModel<RankedItem<FilesystemObject>>([], {
-    multipleSelection: false,
-  });
-  fileResults: PDFResult = {hits: [{} as PDFSnippets], maxScore: 0, total: 0};
-  highlightTerms: string[] = [];
-  highlightOptions: FindOptions = {keepSearchSpecialChars: true, wholeWord: true};
-  searchTypes: SearchType[];
-  searchTypesMap: Map<string, SearchType>;
-
-  queryString = '';
 
   get emptyParams(): boolean {
     if (isNil(this.params)) {
@@ -92,6 +77,26 @@ export class ContentSearchComponent extends PaginatedResultListComponent<Content
       this.searchTypes = flatten(providers.map(provider => provider.getSearchTypes()));
       this.searchTypesMap = new Map(Array.from(this.searchTypes.values()).map(value => [value.shorthand, value]));
     });
+  }
+  @Input() snippetAnnotations = false; // false due to LL-2052 - Remove annotation highlighting
+  @Output() modulePropertiesChange = new EventEmitter<ModuleProperties>();
+
+  private readonly defaultLimit = 20;
+  readonly id = uuidv4(); // Used in the template to prevent duplicate ids across panes
+
+  results = new CollectionModel<RankedItem<FilesystemObject>>([], {
+    multipleSelection: false,
+  });
+  fileResults: PDFResult = {hits: [{} as PDFSnippets], maxScore: 0, total: 0};
+  highlightTerms: string[] = [];
+  highlightOptions: FindOptions = {keepSearchSpecialChars: true, wholeWord: true};
+  searchTypes: SearchType[];
+  searchTypesMap: Map<string, SearchType>;
+
+  queryString = '';
+
+  getBreadCrumbsTitle(object: FilesystemObject): string {
+    return getPath(object).map(item => item.effectiveName).join(' > ');
   }
 
   ngOnInit() {

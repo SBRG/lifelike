@@ -2,12 +2,10 @@ import { Platform } from '@angular/cdk/platform';
 import { Component } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { HttpErrorResponse } from '@angular/common/http';
 
 import { Store } from '@ngrx/store';
 import { BehaviorSubject } from 'rxjs';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { catchError } from 'rxjs/operators';
 
 import { State } from 'app/root-store';
 import { MessageArguments, MessageDialog } from 'app/shared/services/message-dialog.service';
@@ -69,9 +67,9 @@ export class LoginComponent {
     modalRef.result.then(email => {
       const progressDialogRef = this.progressDialog.display({
         title: `Sending request`,
-        progressObservable: new BehaviorSubject<Progress>(new Progress({
+        progressObservables: [new BehaviorSubject<Progress>(new Progress({
           status: 'Sending request...',
-        })),
+        }))],
       });
       this.accountService.resetPassword(email.email)
         .pipe()

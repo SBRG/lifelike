@@ -84,9 +84,9 @@ export class ObjectListComponent {
       } else {
         const progressDialogRef = this.progressDialog.display({
           title: `Download ${getObjectLabel(target)}`,
-          progressObservable: new BehaviorSubject<Progress>(new Progress({
+          progressObservables: [new BehaviorSubject<Progress>(new Progress({
             status: 'Generating download...',
-          })),
+          }))],
         });
         this.filesystemService.getContent(target.hashId).pipe(
           map(blob => {

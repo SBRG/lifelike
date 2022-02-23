@@ -4,7 +4,6 @@ import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
-import { ApiService } from 'app/shared/services/api.service';
 import {
   PaginatedRequestOptions,
   ResultList,
@@ -30,14 +29,11 @@ import { Collaborator } from '../models/collaborator';
 @Injectable()
 export class ProjectsService {
 
-  constructor(protected readonly http: HttpClient,
-              protected readonly apiService: ApiService) {
-  }
+  constructor(protected readonly http: HttpClient) {}
 
   list(options?: PaginatedRequestOptions): Observable<ProjectList> {
     return this.http.get<ResultList<ProjectData>>(
       `/api/projects/projects`, {
-        ...this.apiService.getHttpOptions(true),
         params: serializePaginatedParams(options, false),
       },
     ).pipe(
@@ -55,7 +51,6 @@ export class ProjectsService {
     return this.http.post<ResultList<ProjectData>>(
       `/api/projects/search`,
       options,
-      this.apiService.getHttpOptions(true),
     ).pipe(
       map(data => {
         const projectList = new ProjectList();
@@ -71,7 +66,6 @@ export class ProjectsService {
     return this.http.post<SingleResult<ProjectData>>(
       `/api/projects/projects`,
       request,
-      this.apiService.getHttpOptions(true),
     ).pipe(
       map(data => new ProjectImpl().update(data.result)),
     );
@@ -80,7 +74,6 @@ export class ProjectsService {
   get(hashId: string): Observable<ProjectImpl> {
     return this.http.get<SingleResult<ProjectData>>(
       `/api/projects/projects/${encode(hashId)}`,
-      this.apiService.getHttpOptions(true),
     ).pipe(
       map(data => new ProjectImpl().update(data.result)),
     );
@@ -93,7 +86,7 @@ export class ProjectsService {
       `/api/projects/projects`, {
         ...changes,
         hashIds,
-      }, this.apiService.getHttpOptions(true),
+      }
     ).pipe(
       map(data => {
         const ret: { [hashId: string]: ProjectImpl } = updateWithLatest || {};
@@ -112,7 +105,6 @@ export class ProjectsService {
     Observable<ModelList<Collaborator>> {
     return this.http.get<ResultList<CollaboratorData>>(
       `/api/projects/projects/${hashId}/collaborators`, {
-        ...this.apiService.getHttpOptions(true),
         params: serializePaginatedParams(options, false),
       },
     ).pipe(
@@ -131,7 +123,6 @@ export class ProjectsService {
     return this.http.post<ResultList<CollaboratorData>>(
       `/api/projects/projects/${hashId}/collaborators`,
       request,
-      this.apiService.getHttpOptions(true),
     ).pipe(
       map(data => {
         const collaboratorsList = new ModelList<Collaborator>();

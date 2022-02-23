@@ -31,6 +31,7 @@ export const createGraphSearchParamsFromQuery: (params: GraphQueryParameters) =>
     entities: entities?.split(';') ?? [],
     page: parseInt(page, 10) || 1,
     limit: VIZ_SEARCH_LIMIT,
+    ...rest
   });
 
 export type ContentSearchQueryParameters = {

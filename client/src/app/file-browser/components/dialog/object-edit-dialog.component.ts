@@ -1,10 +1,5 @@
 import { Component, ElementRef, Input, ViewChild } from '@angular/core';
-import {
-  FormControl,
-  FormGroup,
-  ValidationErrors,
-  Validators
-} from '@angular/forms';
+import { FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
@@ -14,11 +9,10 @@ import { OrganismAutocomplete } from 'app/interfaces';
 import { AnnotationMethods, NLPANNOTATIONMODELS } from 'app/interfaces/annotation';
 import { ENTITY_TYPE_MAP } from 'app/shared/annotation-types';
 import { filenameValidator } from 'app/shared/validators';
-import {FORMATS_WITH_POSSIBLE_DESCRIPTION, MAX_DESCRIPTION_LENGTH} from 'app/shared/constants';
-import {extractDescriptionFromSankey} from 'app/shared-sankey/constants';
+import { MAX_DESCRIPTION_LENGTH } from 'app/shared/constants';
 
 import { FilesystemObject } from '../../models/filesystem-object';
-import { AnnotationConfigurations, ObjectContentSource, ObjectCreateRequest } from '../../schema';
+import { AnnotationConfigurations, ObjectCreateRequest } from '../../schema';
 import { ObjectSelectionDialogComponent } from './object-selection-dialog.component';
 
 @Component({
@@ -40,9 +34,16 @@ export class ObjectEditDialogComponent extends CommonFormDialogComponent<ObjectE
     key => NLPANNOTATIONMODELS.has(key)).map(hasKey => hasKey);
 
   private _object: FilesystemObject;
-  private filePossiblyAnnotatable = false;
+  protected filePossiblyAnnotatable = false;
 
-
+  readonly defaultAnnotationMethods = this.annotationModels.reduce(
+            (obj, key) => ({
+              ...obj, [key]: new FormGroup(
+                {
+                  nlp: new FormControl(false),
+                  rulesBased: new FormControl(true),
+                }),
+            }), {});
 
   readonly form: FormGroup = new FormGroup({
     contentSource: new FormControl('contentValue'),
@@ -55,16 +56,7 @@ export class ObjectEditDialogComponent extends CommonFormDialogComponent<ObjectE
     annotationConfigs: new FormGroup(
       {
         excludeReferences: new FormControl(true),
-        annotationMethods: new FormGroup(
-          this.annotationModels.reduce(
-            (obj, key) => ({
-              ...obj, [key]: new FormGroup(
-                {
-                  nlp: new FormControl(false),
-                  rulesBased: new FormControl(true),
-                }),
-            }), {}),
-        ),
+        annotationMethods: new FormGroup(this.defaultAnnotationMethods),
       }, [Validators.required]),
     organism: new FormControl(null),
     mimeType: new FormControl(null),
@@ -152,25 +144,6 @@ export class ObjectEditDialogComponent extends CommonFormDialogComponent<ObjectE
     return this.object.isAnnotatable || this.filePossiblyAnnotatable || this.forceAnnotationOptions;
   }
 
-  private getFileContentRequest(value: { [key: string]: any }): Partial<ObjectContentSource> {
-    if (this.promptUpload) {
-      switch (value.contentSource) {
-        case 'contentValue':
-          return {
-            contentValue: value.contentValue,
-          };
-        case 'contentUrl':
-          return {
-            contentUrl: value.contentUrl,
-          };
-        default:
-          return {};
-      }
-    } else {
-      return {};
-    }
-  }
-
   applyValue(value: ObjectEditDialogValue) {
     Object.assign(this.object, value.objectChanges);
   }
@@ -188,62 +161,31 @@ export class ObjectEditDialogComponent extends CommonFormDialogComponent<ObjectE
       annotationConfigs: value.annotationConfigs,
     };
 
-    const request: ObjectCreateRequest = {
-      filename: value.filename,
-      parentHashId: value.parent ? value.parent.hashId : null,
-      description: value.description,
-      public: value.public,
-      mimeType: value.mimeType,
-      fallbackOrganism: value.organism,
-      annotationConfigs: value.annotationConfigs,
-      ...this.getFileContentRequest(value),
-    };
+    const request: ObjectCreateRequest = this.createObjectRequest(value);
 
     return {
       object: this.object,
       objectChanges,
       request,
       annotationConfigs: value.annotationConfigs,
-      organism: value.organism,
+      organism: value.organism
+    };
+  }
+
+  createObjectRequest(value): ObjectCreateRequest {
+    return {
+      filename: value.filename,
+      parentHashId: value.parent ? value.parent.hashId : null,
+      description: value.description,
+      public: value.public,
+      mimeType: value.mimeType,
+      fallbackOrganism: value.organism,
+      annotationConfigs: value.annotationConfigs
     };
   }
 
   organismChanged(organism: OrganismAutocomplete | null) {
     this.form.get('organism').setValue(organism ? organism : null);
-  }
-
-  activeTabChanged(newId) {
-    this.form.get('contentSource').setValue(newId);
-    this.form.get('contentValue').setValue(null);
-    this.filePossiblyAnnotatable = newId === 'contentUrl' && this.form.get('contentUrl').value.length;
-  }
-
-  urlChanged(event) {
-    this.form.get('filename').setValue(this.extractFilename(event.target.value));
-    this.filePossiblyAnnotatable = this.form.get('contentUrl').value.length;
-  }
-
-  fileChanged(event) {
-    if (event.target.files.length) {
-      const file = event.target.files[0];
-      const filename = this.extractFilename(file.name);
-      const format = filename.split('.').pop();
-      this.extractDescription(file, format).then(description => {
-        this.form.get('description').setValue(description);
-        this.form.get('description').markAsDirty();
-      });
-      this.form.get('contentValue').setValue(file);
-      this.form.get('filename').setValue(filename);
-      this.form.get('filename').markAsDirty();
-      this.getDocumentPossibility(file).then(maybeDocument => {
-        if (file === this.form.get('contentValue').value) {
-          this.filePossiblyAnnotatable = maybeDocument;
-        }
-      });
-    } else {
-      this.form.get('contentValue').setValue(null);
-      this.filePossiblyAnnotatable = false;
-    }
   }
 
   onAnnotationMethodPick(method: string, checked: boolean) {
@@ -254,44 +196,6 @@ export class ObjectEditDialogComponent extends CommonFormDialogComponent<ObjectE
     } else {
       field.setValue(null);
     }
-  }
-
-  private extractFilename(s: string): string {
-    s = s.replace(/^.*[/\\]/, '').trim();
-    if (s.length) {
-      return s.replace(/(?:\.llmap)?\.json$/i, '');
-    } else {
-      const isMap = s.match(/\.json$/i);
-      return 'document' + (isMap ? '' : '.pdf');
-    }
-  }
-
-  private extractDescription(file: File, format: string): Promise<string> {
-     if (FORMATS_WITH_POSSIBLE_DESCRIPTION.includes(format)) {
-       return file.text().then(text => {
-          if (format === 'graph') {
-            return extractDescriptionFromSankey(text);
-          }
-          // TODO: Do we want to map here?
-       });
-     }
-     return Promise.resolve('');
-  }
-
-  private getDocumentPossibility(file): Promise<boolean> {
-    // Too big, assume it could be a document
-    if (file.size >= 1024 * 500) {
-      return Promise.resolve(true);
-    }
-
-    return file.text().then(text => {
-      try {
-        JSON.parse(text);
-        return false;
-      } catch (e) {
-        return true;
-      }
-    });
   }
 
   showFileDialog() {
