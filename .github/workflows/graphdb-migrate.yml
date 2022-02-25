@@ -34,15 +34,18 @@ jobs:
   migrate:
     name: Migrate Neo4j DB
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
+    timeout-minutes: 360
     container:
       image: ghcr.io/sbrg/lifelike-graphdb-migrator:${{ github.event.inputs.graphdb_migrator_tag }}
-      volumes:
-        - ${{ github.workspace }}/graph-db/changelog:/liquibase/changelog
       options: --user root
       env:
         NEO4J_HOST: ${{ github.event.inputs.neo4j_host }}
         NEO4J_PASSWORD: ${{ github.event.inputs.neo4j_password }}
         CHANGELOG_FILE: ${{ github.event.inputs.changelog }}
         DATAFILES_PREFIX: ${{ github.event.inputs.datafiles_prefix }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Copy changelog files
+        run: cp -rp graph-db/changelog /liquibase/changelog
+      - name: Run Liquibase migrations
+        run: /liquibase/docker-entrypoint.sh update
