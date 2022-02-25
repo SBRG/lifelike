@@ -48,9 +48,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Copy changelog files
-        run: cp -rp graph-db/changelog /liquibase/changelog
+        run: cp -rp graph-db/changelog/* /liquibase/changelog/
       - run: ls -lah /liquibase/changelog
-      - run: ls -lah /liquibase/changelog/*
       - name: Run Liquibase migrations
         run: |
           cd /liquibase
