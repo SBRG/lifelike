@@ -50,4 +50,6 @@ jobs:
       - name: Copy changelog files
         run: cp -rp graph-db/changelog /liquibase/changelog
       - name: Run Liquibase migrations
-        run: /liquibase/docker-entrypoint.sh update
+        run: |
+          cd /liquibase
+          ./docker-entrypoint.sh update
