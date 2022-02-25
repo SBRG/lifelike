@@ -37,7 +37,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
     container:
-      image: ghcr.io/SBRG/lifelike-migrator:${{ github.event.inputs.graphdb_migrator_tag }}
+      image: ghcr.io/sbrg/lifelike-migrator:${{ github.event.inputs.graphdb_migrator_tag }}
       volumes:
         - ${{ github.workspace }}/graph-db/changelog:/liquibase/changelog
       env:
