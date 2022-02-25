@@ -43,6 +43,8 @@ jobs:
         NEO4J_PASSWORD: ${{ github.event.inputs.neo4j_password }}
         CHANGELOG_FILE: ${{ github.event.inputs.changelog }}
         DATAFILES_PREFIX: ${{ github.event.inputs.datafiles_prefix }}
+        AZURE_ACCOUNT_STORAGE_KEY: ${{ secrets.AZURE_ACCOUNT_STORAGE_KEY }}
+        AZURE_ACCOUNT_STORAGE_NAME: ${{ secrets.AZURE_ACCOUNT_STORAGE_NAME }}
     steps:
       - uses: actions/checkout@v2
       - name: Copy changelog files
