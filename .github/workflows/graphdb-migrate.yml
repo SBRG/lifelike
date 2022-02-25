@@ -40,6 +40,7 @@ jobs:
       image: ghcr.io/sbrg/lifelike-graphdb-migrator:${{ github.event.inputs.graphdb_migrator_tag }}
       volumes:
         - ${{ github.workspace }}/graph-db/changelog:/liquibase/changelog
+      options: --user root
       env:
         NEO4J_HOST: ${{ github.event.inputs.neo4j_host }}
         NEO4J_PASSWORD: ${{ github.event.inputs.neo4j_password }}
