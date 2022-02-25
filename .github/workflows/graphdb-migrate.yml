@@ -47,9 +47,10 @@ jobs:
         AZURE_ACCOUNT_STORAGE_NAME: ${{ secrets.AZURE_ACCOUNT_STORAGE_NAME }}
     steps:
       - uses: actions/checkout@v2
-      - run: ls -lah
       - name: Copy changelog files
         run: cp -rp graph-db/changelog /liquibase/changelog
+      - run: ls -lah /liquibase/changelog
+      - run: ls -lah /liquibase/changelog/*
       - name: Run Liquibase migrations
         run: |
           cd /liquibase
