@@ -17,10 +17,14 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public class AzureCloudStorage extends CloudStorage {
     ShareDirectoryClient storageClient;
     static final String CLOUD_SHARE_NAME = "knowledge-graph";
     static final String CLOUD_FILE_DIR = "migration";
+    static final Logger logger = LogManager.getLogger(AzureCloudStorage.class);
 
     public AzureCloudStorage(String storageAccountName, String storageAccountKey) {
         this.connectionString = "DefaultEndpointsProtocol=https;" +
@@ -84,7 +88,7 @@ public class AzureCloudStorage extends CloudStorage {
             bao.close();
             startPosition += chunkSize + 1;
             remainingChunks -= chunkSize;
-            System.out.printf("Downloaded %s / %s total file size\n", totalFileSize - remainingChunks, totalFileSize);
+            logger.info("Downloaded %s / %s total file size\n", totalFileSize - remainingChunks, totalFileSize);
         } while (remainingChunks > 0);
 
         this.unzipFile(saveDir + "/" + fileName, saveDir);
@@ -125,7 +129,7 @@ public class AzureCloudStorage extends CloudStorage {
         List<String> unzipped = new ArrayList<>();
         int read;
 
-        System.out.println("Unzipping file: " + path);
+        logger.info("Unzipping file: " + path);
         ZipFile zip = new ZipFile(path);
         Enumeration<? extends ZipEntry> entries = zip.entries();
 
@@ -140,12 +144,12 @@ public class AzureCloudStorage extends CloudStorage {
             is.close();
             out.close();
             unzipped.add(filePath);
-            System.out.println("Unzipped: " + filePath);
+            logger.info("Unzipped file: " + filePath);
         }
         zip.close();
 
         new File(path).delete();
-        System.out.println("Deleted zip file: " + path);
+        logger.info("Deleted zip file: " + path);
 
         return unzipped;
     }

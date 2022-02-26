@@ -15,22 +15,23 @@ import org.neo4j.driver.Session;
 
 /**
  * <changeSet id="..." author="...">
- *     <comment>...</comment>
- *     <customChange
- *       class="edu.ucsd.sbrg.ConditionQueryHandler"
- *       query="..."
- *       conditionQuery="..."
- *       neo4jHost="${neo4jHost}"
- *       neo4jCredentials="${neo4jCredentials}"
- *       neo4jDatabase="${neo4jDatabase}"
- *     />
- *   </changeSet>
+ * <comment>...</comment>
+ * <customChange
+ * class="edu.ucsd.sbrg.ConditionQueryHandler"
+ * query="..."
+ * conditionQuery="..."
+ * neo4jHost="${neo4jHost}"
+ * neo4jCredentials="${neo4jCredentials}"
+ * neo4jDatabase="${neo4jDatabase}"
+ * />
+ * </changeSet>
  *
- *   query: The cypher query to be executed.
- *   conditionQuery: The cypher query that acts as the loop condition.
- *      E.g MATCH (...) RETURN COUNT(n)
+ * query: The cypher query to be executed.
+ * conditionQuery: The cypher query that acts as the loop condition.
+ * E.g MATCH (...) RETURN COUNT(n)
  *
- *   This class does not use a file - if one is needed, then make a new ConditionFileQueryHandler?
+ * This class does not use a file - if one is needed, then make a new
+ * ConditionFileQueryHandler?
  */
 public class ConditionQueryHandler implements CustomTaskChange {
     private String query;
@@ -42,27 +43,44 @@ public class ConditionQueryHandler implements CustomTaskChange {
     private String neo4jCredentials;
     private String neo4jDatabase;
 
-    public ConditionQueryHandler() {}
+    public ConditionQueryHandler() {
+    }
 
-    public String getQuery() { return this.query; }
+    public String getQuery() {
+        return this.query;
+    }
 
-    public void setQuery(String query) { this.query = query; }
+    public void setQuery(String query) {
+        this.query = query;
+    }
 
-    public String getConditionQuery() { return this.conditionQuery; }
+    public String getConditionQuery() {
+        return this.conditionQuery;
+    }
 
-    public void setConditionQuery(String conditionQuery) { this.conditionQuery = conditionQuery; }
+    public void setConditionQuery(String conditionQuery) {
+        this.conditionQuery = conditionQuery;
+    }
 
-    public String getNeo4jHost() { return this.neo4jHost; }
+    public String getNeo4jHost() {
+        return this.neo4jHost;
+    }
 
-    public void setNeo4jHost(String neo4jHost) { this.neo4jHost = neo4jHost; }
+    public void setNeo4jHost(String neo4jHost) {
+        this.neo4jHost = neo4jHost;
+    }
 
-    public String getNeo4jCredentials() { return this.neo4jCredentials; }
+    public String getNeo4jCredentials() {
+        return this.neo4jCredentials;
+    }
 
     public void setNeo4jCredentials(String neo4jCredentials) {
         this.neo4jCredentials = neo4jCredentials;
     }
 
-    public String getNeo4jDatabase() { return this.neo4jDatabase; }
+    public String getNeo4jDatabase() {
+        return this.neo4jDatabase;
+    }
 
     public void setNeo4jDatabase(String neo4jDatabase) {
         this.neo4jDatabase = neo4jDatabase;
@@ -70,8 +88,9 @@ public class ConditionQueryHandler implements CustomTaskChange {
 
     /**
      * Return results from a MATCH (...) RETURN COUNT(...)
+     *
      * @param session Graph session.
-     * @param cypher The count cypher.
+     * @param cypher  The count cypher.
      * @return
      */
     public int graphConditionCount(Session session, String cypher) {

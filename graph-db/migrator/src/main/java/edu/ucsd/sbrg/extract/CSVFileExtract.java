@@ -16,7 +16,7 @@ public class CSVFileExtract extends FileExtract {
      * OR
      *
      * https://www.univocity.com/pages/univocity_parsers_documentation
-     *  https://mvnrepository.com/artifact/com.univocity/univocity-parsers
+     * https://mvnrepository.com/artifact/com.univocity/univocity-parsers
      */
     @Override
     public List<String[]> getFileContent() throws IOException {

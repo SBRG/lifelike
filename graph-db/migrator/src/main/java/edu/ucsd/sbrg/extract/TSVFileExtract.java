@@ -6,15 +6,20 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public class TSVFileExtract extends FileExtract {
     static final String DELIMITER = "\t";
+    static final Logger logger = LogManager.getLogger(TSVFileExtract.class);
 
     public TSVFileExtract(String fileName, String fileDir, String fileExtension) {
         this.fileDir = fileDir;
         this.fileExtension = fileExtension;
         this.fileName = fileName;
         this.filePath = fileDir + "/" + fileName.substring(0, fileName.lastIndexOf(".")) + fileExtension;
-        System.out.println("Processing file: " + this.filePath);
+
+        logger.info("Processing file: " + this.filePath);
     }
 
     @Override

@@ -5,7 +5,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.neo4j.driver.*;
 
-import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -53,14 +52,16 @@ public class Neo4jGraph {
         return this.neo4jPassword;
     }
 
-    public Driver getDriver() { return this.driver; }
+    public Driver getDriver() {
+        return this.driver;
+    }
 
     public Session getSession() {
         return this.driver.session(SessionConfig.forDatabase(databaseName));
     }
 
     private Collection<List<String[]>> partitionData(List<String[]> data, int chunkSize) {
-        logger.info("Partitioning data into " + chunkSize + " chunk size.");
+        logger.info("Partitioning data into " + chunkSize + " size chunks.");
         AtomicInteger counter = new AtomicInteger();
         return data.stream()
                 .collect(Collectors.groupingBy(i -> counter.getAndIncrement() / chunkSize)).values();
@@ -68,16 +69,16 @@ public class Neo4jGraph {
 
     public void execute(String query, List<String[]> data, String[] keys, int chunkSize) throws CustomChangeException {
         if (keys.length != data.get(0).length) {
-            logger.debug("Invalid length not equal; keys.length = " + keys.length + " and data.get(0).length = " + data.get(0).length + ".");
+            logger.warn("Invalid length not equal; keys.length = " + keys.length + " and data.get(0).length = "
+                    + data.get(0).length + ".");
             throw new IllegalArgumentException("The number of keys do not match number of data entries!");
         }
 
         Collection<List<String[]>> chunkedData = this.partitionData(data, chunkSize);
         List<List<Map<String, String>>> chunkedCypherParams = new ArrayList<>();
 
-        System.out.println("Creating chunks of cypher parameters.");
+        logger.debug("Creating chunks of cypher parameters for query: " + query);
         chunkedData.forEach(contentChunk -> {
-            logger.info("New cypher parameters chunk");
             List<Map<String, String>> cypherParamsChunk = new ArrayList<>();
             contentChunk.forEach(row -> {
                 Map<String, String> param = new HashMap<>();
@@ -92,7 +93,7 @@ public class Neo4jGraph {
                     // delete the last comma
                     sb.deleteCharAt(sb.length() - 1);
                     sb.append("}");
-                    System.out.println(sb);
+                    logger.debug(sb);
                 } catch (IndexOutOfBoundsException e) {
                     throw new IndexOutOfBoundsException();
                 }
@@ -102,7 +103,7 @@ public class Neo4jGraph {
         });
 
         Session session = this.driver.session(SessionConfig.forDatabase(databaseName));
-        System.out.println("Executing cypher query: " + query);
+        logger.info("Executing query: " + query);
         chunkedCypherParams.forEach(paramChunk -> {
             session.writeTransaction(tx -> tx.run(query, parameters("rows", paramChunk)));
         });
