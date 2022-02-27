@@ -6,12 +6,12 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import liquibase.Scope;
+import liquibase.logging.Logger;
 
 public class TSVFileExtract extends FileExtract {
+    static final Logger logger = Scope.getCurrentScope().getLog(TSVFileExtract.class);
     static final String DELIMITER = "\t";
-    static final Logger logger = LogManager.getLogger(TSVFileExtract.class);
 
     public TSVFileExtract(String fileName, String fileDir, String fileExtension) {
         this.fileDir = fileDir;

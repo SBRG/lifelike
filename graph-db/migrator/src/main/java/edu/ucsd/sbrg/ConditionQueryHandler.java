@@ -1,17 +1,19 @@
 package edu.ucsd.sbrg;
 
-import edu.ucsd.sbrg.neo4j.Neo4jGraph;
+import java.time.Duration;
 
+import org.neo4j.driver.Session;
+import org.neo4j.driver.TransactionConfig;
+
+import edu.ucsd.sbrg.neo4j.Neo4jGraph;
+import liquibase.Scope;
 import liquibase.change.custom.CustomTaskChange;
 import liquibase.database.Database;
 import liquibase.exception.CustomChangeException;
 import liquibase.exception.SetupException;
 import liquibase.exception.ValidationErrors;
+import liquibase.logging.Logger;
 import liquibase.resource.ResourceAccessor;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.neo4j.driver.Session;
 
 /**
  * <changeSet id="..." author="...">
@@ -34,10 +36,14 @@ import org.neo4j.driver.Session;
  * ConditionFileQueryHandler?
  */
 public class ConditionQueryHandler implements CustomTaskChange {
+    static final Logger logger = Scope.getCurrentScope().getLog(ConditionQueryHandler.class);
+
+    private static final TransactionConfig transactionConfig = TransactionConfig.builder()
+            .withTimeout(Duration.ofMinutes(15)).build();
+
     private String query;
     private String conditionQuery;
     private ResourceAccessor resourceAccessor;
-    static final Logger logger = LogManager.getLogger(FileQueryHandler.class);
 
     private String neo4jHost;
     private String neo4jCredentials;
@@ -94,23 +100,23 @@ public class ConditionQueryHandler implements CustomTaskChange {
      * @return
      */
     public int graphConditionCount(Session session, String cypher) {
-        return session.readTransaction(tx -> tx.run(cypher).single().values().get(0).asInt());
+        return session.readTransaction(tx -> tx.run(cypher).single().values().get(0).asInt(), transactionConfig);
     }
 
     @Override
     public void execute(Database database) throws CustomChangeException {
         Neo4jGraph graph = new Neo4jGraph(this.getNeo4jHost(), this.getNeo4jCredentials(), this.getNeo4jDatabase());
         Session session = graph.getSession();
-        System.out.println("Executing condition cypher query: " + this.getConditionQuery());
+        logger.fine("Executing condition cypher query: " + this.getConditionQuery());
         int nodeCount = this.graphConditionCount(session, this.getConditionQuery());
-        System.out.printf("Node count before execution %s\n", nodeCount);
-        System.out.println("Executing cypher query: " + this.getQuery());
+        logger.info("Node count before execution " + nodeCount);
+        logger.fine("Executing cypher query: " + this.getQuery());
 
         try {
             while (nodeCount > 0) {
-                session.writeTransaction(tx -> tx.run(this.getQuery())).consume();
+                session.writeTransaction(tx -> tx.run(this.getQuery()), transactionConfig).consume();
                 nodeCount = this.graphConditionCount(session, this.getConditionQuery());
-                System.out.printf("Node count after execution %s\n", nodeCount);
+                logger.info("Node count after execution: " + nodeCount);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -126,6 +132,7 @@ public class ConditionQueryHandler implements CustomTaskChange {
 
     @Override
     public void setUp() throws SetupException {
+        logger.info("Liquibase setUp");
         // Any setup steps go here
         // Liquibase calls before execute()
     }

@@ -33,20 +33,24 @@ ADD --chown=liquibase:liquibase https://github.com/neo4j-contrib/neo4j-jdbc/rele
 COPY --from=build --chown=liquibase:liquibase /target/graphdb-migrator-*.jar ./lib
 
 # Neo4j database configuration
-ENV NEO4J_HOST=neo4j
+ENV NEO4J_HOST=
 ENV NEO4J_USERNAME=neo4j
-ENV NEO4J_PASSWORD=password
+ENV NEO4J_PASSWORD=neo4j
 ENV NEO4J_DATABASE=neo4j
+
+# Master changelog file. e.g. lifelike-graph/changelog-master.xml
+ENV CHANGELOG_FILE=
 
 # Remote storage configuration
 ENV STORAGE_TYPE=azure
 ENV AZURE_ACCOUNT_STORAGE_NAME=
 ENV AZURE_ACCOUNT_STORAGE_KEY=
+
 # Storage files prefix (stage or prod)
-ENV DATAFILES_PREFIX=
+ENV DATAFILES_PREFIX=stage
 
 # Liquibase configuration
-ENV LOG_LEVEL=INFO
+ENV LOG_LEVEL=info
 
 # Add wait-for-it command
 ADD --chown=liquibase:liquibase https://raw.githubusercontent.com/vishnubob/wait-for-it/81b1373f17855a4dc21156cfe1694c31d7d1792e/wait-for-it.sh /wait-for-it.sh

@@ -1,29 +1,28 @@
 package edu.ucsd.sbrg;
 
-import edu.ucsd.sbrg.extract.FileExtract;
-import edu.ucsd.sbrg.extract.FileExtractFactory;
-import edu.ucsd.sbrg.extract.FileType;
-import edu.ucsd.sbrg.neo4j.Neo4jGraph;
-import edu.ucsd.sbrg.storage.AzureCloudStorage;
-
-import liquibase.change.custom.CustomTaskChange;
-import liquibase.database.Database;
-import liquibase.exception.CustomChangeException;
-import liquibase.exception.SetupException;
-import liquibase.exception.ValidationErrors;
-import liquibase.resource.ResourceAccessor;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
+
+import edu.ucsd.sbrg.extract.FileExtract;
+import edu.ucsd.sbrg.extract.FileExtractFactory;
+import edu.ucsd.sbrg.extract.FileType;
+import edu.ucsd.sbrg.neo4j.Neo4jGraph;
+import edu.ucsd.sbrg.storage.AzureCloudStorage;
+import liquibase.Scope;
+import liquibase.change.custom.CustomTaskChange;
+import liquibase.database.Database;
+import liquibase.exception.CustomChangeException;
+import liquibase.exception.SetupException;
+import liquibase.exception.ValidationErrors;
+import liquibase.logging.Logger;
+import liquibase.resource.ResourceAccessor;
 
 /**
  * <changeSet id="..." author="...">
@@ -51,21 +50,22 @@ import java.util.Scanner;
  * fileType: the type of file within the zip (e.g CSV, TSV, etc...).
  */
 public class FileQueryHandler implements CustomTaskChange {
+    static final Logger logger = Scope.getCurrentScope().getLog(FileQueryHandler.class);
+
     private String query;
     private String fileName;
     private String fileType;
     private int startAt;
-    private ResourceAccessor resourceAccessor;
-    static final Logger logger = LogManager.getLogger(FileQueryHandler.class);
-
     private String neo4jHost;
     private String neo4jCredentials;
     private String neo4jDatabase;
     private String azureStorageName;
     private String azureStorageKey;
     private String localSaveFileDir;
+    private ResourceAccessor resourceAccessor;
 
     public FileQueryHandler() {
+
     }
 
     public String getQuery() {
@@ -150,13 +150,16 @@ public class FileQueryHandler implements CustomTaskChange {
 
     @Override
     public void execute(Database database) throws CustomChangeException {
-        AzureCloudStorage cloudStorage = new AzureCloudStorage(this.getAzureStorageName(), this.getAzureStorageKey());
-        FileExtract fileExtract = new FileExtractFactory(FileType.valueOf(this.getFileType()))
-                .getInstance(this.getFileName(), this.getLocalSaveFileDir());
+        logger.info("Executing FileQueryHandler for: " + this.getFileName());
+
         Neo4jGraph graph = new Neo4jGraph(this.getNeo4jHost(), this.getNeo4jCredentials(), this.getNeo4jDatabase());
 
+        AzureCloudStorage cloudStorage = new AzureCloudStorage(this.getAzureStorageName(), this.getAzureStorageKey());
+        FileExtract fileExtract = new FileExtractFactory(
+                FileType.valueOf(this.getFileType())).getInstance(this.getFileName(), this.getLocalSaveFileDir());
+
         List<String[]> content = new ArrayList<>();
-        final int chunkSize = 5000;
+        final int chunkSize = System.getenv("CHUNK_SIZE") != null ? Integer.parseInt(System.getenv("CHUNK_SIZE")) : 500;
         int processed = 0;
         int skipCount = 0;
         String lastProcessedLine = null;
@@ -179,18 +182,15 @@ public class FileQueryHandler implements CustomTaskChange {
 
                 logger.info("Downloading file " + fileExtract.getFileName() + " from Azure Cloud.");
                 cloudStorage.downloadToFile(fileExtract.getFileName(), fileExtract.getFileDir());
-                logger.info("Finished downloading file " + fileExtract.getFileName() + " from Azure Cloud.");
             }
 
-            logger.info("Open file: " + fileExtract.getFilePath());
+            logger.info("Processing file: " + fileExtract.getFilePath());
             FileInputStream input = new FileInputStream(fileExtract.getFilePath());
 
             try (Scanner sc = new Scanner(input)) {
                 sc.useDelimiter(fileExtract.getDelimiter());
-
                 while (sc.hasNextLine()) {
                     String currentLine = sc.nextLine();
-                    logger.debug("Loop: read next line '" + currentLine + "' from file.");
                     if (header == null) {
                         header = currentLine.split(fileExtract.getDelimiter(), -1);
                         skipCount++;
@@ -199,6 +199,7 @@ public class FileQueryHandler implements CustomTaskChange {
                             skipCount++;
                         } else {
                             if ((content.size() > 0 && (content.size() % (chunkSize * 4) == 0))) {
+                                logger.info("Processing next chunk (" + processed + ")");
                                 try {
                                     graph.execute(this.getQuery(), content, header, chunkSize);
                                 } catch (CustomChangeException ce) {
@@ -206,7 +207,7 @@ public class FileQueryHandler implements CustomTaskChange {
                                     String output = "Encountered error! Set startAt to line " +
                                             (processed + 1) + " (last value processed in file: " + lastProcessedLine +
                                             ") to pick up where left off.";
-                                    logger.error(output);
+                                    logger.severe(output);
                                     throw new CustomChangeException();
                                 }
                                 processed += content.size();
@@ -240,7 +241,7 @@ public class FileQueryHandler implements CustomTaskChange {
                     String output = "Encountered error! Set startAt to line " +
                             (processed + 1) + " (last value processed in file: " + lastProcessedLine +
                             ") to pick up where left off.";
-                    logger.error(output);
+                    logger.severe(output);
                     throw new CustomChangeException();
                 }
             }
@@ -255,7 +256,7 @@ public class FileQueryHandler implements CustomTaskChange {
 
     @Override
     public String getConfirmationMessage() {
-        return "Working";
+        return "Changelog executed successfully" + this.getFileName();
     }
 
     @Override

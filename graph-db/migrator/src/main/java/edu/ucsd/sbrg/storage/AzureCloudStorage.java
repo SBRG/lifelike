@@ -1,12 +1,12 @@
 package edu.ucsd.sbrg.storage;
 
-import com.azure.core.util.Context;
-import com.azure.storage.file.share.ShareDirectoryClient;
-import com.azure.storage.file.share.ShareFileClient;
-import com.azure.storage.file.share.ShareFileClientBuilder;
-import com.azure.storage.file.share.models.ShareFileRange;
-
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.time.Duration;
@@ -17,14 +17,16 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import com.azure.core.util.Context;
+import com.azure.storage.file.share.ShareDirectoryClient;
+import com.azure.storage.file.share.ShareFileClient;
+import com.azure.storage.file.share.ShareFileClientBuilder;
+import com.azure.storage.file.share.models.ShareFileRange;
 
 public class AzureCloudStorage extends CloudStorage {
     ShareDirectoryClient storageClient;
     static final String CLOUD_SHARE_NAME = "knowledge-graph";
     static final String CLOUD_FILE_DIR = "migration";
-    static final Logger logger = LogManager.getLogger(AzureCloudStorage.class);
 
     public AzureCloudStorage(String storageAccountName, String storageAccountKey) {
         this.connectionString = "DefaultEndpointsProtocol=https;" +
@@ -88,7 +90,8 @@ public class AzureCloudStorage extends CloudStorage {
             bao.close();
             startPosition += chunkSize + 1;
             remainingChunks -= chunkSize;
-            logger.info("Downloaded %s / %s total file size\n", totalFileSize - remainingChunks, totalFileSize);
+            logger.info("Downloaded " + String.valueOf(totalFileSize - remainingChunks) + " / "
+                    + String.valueOf(totalFileSize) + " total file size\n");
         } while (remainingChunks > 0);
 
         this.unzipFile(saveDir + "/" + fileName, saveDir);
