@@ -40,19 +40,20 @@ ENV NEO4J_DATABASE=neo4j
 
 # Remote storage configuration
 ENV STORAGE_TYPE=azure
-ENV AZURE_STORAGE_NAME=
-ENV AZURE_STORAGE_KEY=
+ENV AZURE_ACCOUNT_STORAGE_NAME=
+ENV AZURE_ACCOUNT_STORAGE_KEY=
 # Storage files prefix (stage or prod)
 ENV DATAFILES_PREFIX=
 
 # Liquibase configuration
-ENV LOG_LEVEL=WARNING
+ENV LOG_LEVEL=INFO
 
 # Add wait-for-it command
-ADD --chown=liquibase:liquibase https://raw.githubusercontent.com/vishnubob/wait-for-it/81b1373f17855a4dc21156cfe1694c31d7d1792e/wait-for-it.sh ./
-RUN chmod +x ./wait-for-it.sh
+ADD --chown=liquibase:liquibase https://raw.githubusercontent.com/vishnubob/wait-for-it/81b1373f17855a4dc21156cfe1694c31d7d1792e/wait-for-it.sh /wait-for-it.sh
+RUN chmod +x /wait-for-it.sh
 
 # Override parent image entrypoint
 COPY --chown=liquibase:liquibase docker-entrypoint.sh ./
+RUN chmod +x docker-entrypoint.sh
 
 CMD ["update"]

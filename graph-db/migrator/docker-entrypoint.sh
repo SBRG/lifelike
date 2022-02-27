@@ -30,7 +30,7 @@ else
     fi
 
     ## Wait until Neo4j is available
-    ./wait-for-it.sh "${NEO4J_HOST}" --timeout=600 -- echo "Neo4j is up"
+    /wait-for-it.sh "${NEO4J_HOST}" --timeout=600 -- echo "Neo4j is up"
 
     ## Include standard defaultsFile
     liquibase \
