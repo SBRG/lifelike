@@ -39,6 +39,11 @@ on:
         options:
           - stage
           - prod
+      chunk_size:
+        description: Liquibase transaction chunk size
+        type: string
+        required: true
+        default: '2000'
       changelog:
         description: Path to the changelog file
         type: string
@@ -67,6 +72,7 @@ jobs:
         DATAFILES_PREFIX: ${{ github.event.inputs.datafiles_prefix }}
         AZURE_ACCOUNT_STORAGE_KEY: ${{ secrets.AZURE_ACCOUNT_STORAGE_KEY }}
         AZURE_ACCOUNT_STORAGE_NAME: ${{ secrets.AZURE_ACCOUNT_STORAGE_NAME }}
+        CHUNK_SIZE: ${{ github.event.inputs.chunk_size }}
     steps:
       - uses: actions/checkout@v2
       - name: Copy changelog files
