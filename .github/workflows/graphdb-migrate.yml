@@ -4,23 +4,33 @@ on:
   workflow_dispatch:
     inputs:
       neo4j_host:
-        description: Neo4j target host to run migration
+        description: Neo4j target host
         type: string
         required: true
+      neo4j_username:
+        description: Neo4j username
+        type: string
+        required: true
+        default: neo4j
       neo4j_password:
         description: Neo4j password
         type: string
         required: true
-      graphdb_migrator_tag:
-        description: Tag of the graphdb-migrator image to use
-        type: string
+      log_level:
+        description: Log level
+        type: choice
         required: true
-        default: latest
-      changelog:
-        description: Path to the master changelog file
-        type: string
+        default: info
+        options:
+          - debug
+          - info
+          - warn
+          - error
+      release_lock:
+        description: Release any present lock before executing
+        type: boolean
         required: true
-        default: 'lifelike-graph/changelog-master.xml'
+        default: true
       datafiles_prefix:
         description: Prefix of the datafiles in remote storage (stage/prod)
         type: choice
@@ -29,18 +39,30 @@ on:
         options:
           - stage
           - prod
+      changelog:
+        description: Path to the changelog file
+        type: string
+        required: true
+        default: 'lifelike-graph/changelog-master.xml'
+      migrator_image_tag:
+        description: Tag of the graphdb-migrator image to use
+        type: string
+        required: true
+        default: latest
 
 jobs:
   migrate:
     name: Migrate Neo4j DB
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     timeout-minutes: 360
     container:
-      image: ghcr.io/sbrg/lifelike-graphdb-migrator:${{ github.event.inputs.graphdb_migrator_tag }}
+      image: ghcr.io/sbrg/lifelike-graphdb-migrator:${{ github.event.inputs.migrator_image_tag }}
       options: --user root
       env:
         NEO4J_HOST: ${{ github.event.inputs.neo4j_host }}
+        NEO4J_USERNAME: ${{ github.event.inputs.neo4j_username }}
         NEO4J_PASSWORD: ${{ github.event.inputs.neo4j_password }}
+        LOG_LEVEL: ${{ github.event.inputs.log_level }}
         CHANGELOG_FILE: ${{ github.event.inputs.changelog }}
         DATAFILES_PREFIX: ${{ github.event.inputs.datafiles_prefix }}
         AZURE_ACCOUNT_STORAGE_KEY: ${{ secrets.AZURE_ACCOUNT_STORAGE_KEY }}
@@ -49,7 +71,8 @@ jobs:
       - uses: actions/checkout@v2
       - name: Copy changelog files
         run: cp -rp graph-db/changelog/* /liquibase/changelog/
+      - name: Release previous lock
+        if: ${{ github.event.inputs.release_lock }}
+        run: /docker-entrypoint.sh releaseLocks
       - name: Run Liquibase migrations
-        run: |
-          cd /liquibase
-          ./docker-entrypoint.sh update
+        run: /docker-entrypoint.sh update
