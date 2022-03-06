@@ -1,4 +1,4 @@
-ARG LIQUIBASE_IMAGE_TAG=4.6
+ARG LIQUIBASE_IMAGE_TAG=4.7.1
 
 # ========================================
 # Maven build stage
@@ -20,7 +20,7 @@ RUN mvn -B clean package -DskipTests
 FROM liquibase/liquibase:$LIQUIBASE_IMAGE_TAG
 LABEL org.opencontainers.image.source https://github.com/SBRG/lifelike
 
-ARG LIQUIBASE_NEO4J_VERSION=4.6.2
+ARG LIQUIBASE_NEO4J_VERSION=4.7.1.3
 ARG NEO4J_JDBC_VERSION=4.0.5
 
 # Install liquibase-neo4j extension

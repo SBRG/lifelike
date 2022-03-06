@@ -152,105 +152,116 @@ public class FileQueryHandler implements CustomTaskChange {
     public void execute(Database database) throws CustomChangeException {
         logger.info("Executing FileQueryHandler for: " + this.getFileName());
 
-        Neo4jGraph graph = new Neo4jGraph(this.getNeo4jHost(), this.getNeo4jCredentials(), this.getNeo4jDatabase());
-
         AzureCloudStorage cloudStorage = new AzureCloudStorage(this.getAzureStorageName(), this.getAzureStorageKey());
         FileExtract fileExtract = new FileExtractFactory(
                 FileType.valueOf(this.getFileType())).getInstance(this.getFileName(), this.getLocalSaveFileDir());
 
-        List<String[]> content = new ArrayList<>();
-        final int chunkSize = System.getenv("CHUNK_SIZE") != null ? Integer.parseInt(System.getenv("CHUNK_SIZE")) : 500;
-        int processed = 0;
-        int skipCount = 0;
-        String lastProcessedLine = null;
-        String[] header = null;
-        try {
-            if (!Files.exists(Paths.get(fileExtract.getFilePath()))) {
-                // we need to check for prefix because sometimes
-                // the data is different from different environments
-                // and we need to consider that, e.g drop specific nodes
-                String prefix = System.getenv("DATAFILES_PREFIX"); // prod or stage
-                if (prefix != null && prefix.length() > 0) {
-                    String prefixName = prefix + "-" + fileExtract.getFileName();
-                    if (cloudStorage.fileExists(prefixName)) {
-                        fileExtract.setFileName(prefixName);
-                        String newPath = fileExtract.getFileDir() + "/"
-                                + prefixName.substring(0, prefixName.lastIndexOf(".")) + fileExtract.getFileExtension();
-                        fileExtract.setFilePath(newPath);
-                    }
+        if (!Files.exists(Paths.get(fileExtract.getFilePath()))) {
+            // we need to check for prefix because sometimes
+            // the data is different from different environments
+            // and we need to consider that, e.g drop specific nodes
+            String prefix = System.getenv("DATAFILES_PREFIX"); // prod or stage
+            if (prefix != null && prefix.length() > 0) {
+                String prefixName = prefix + "-" + fileExtract.getFileName();
+                if (cloudStorage.fileExists(prefixName)) {
+                    fileExtract.setFileName(prefixName);
+                    String newPath = fileExtract.getFileDir() + "/"
+                            + prefixName.substring(0, prefixName.lastIndexOf(".")) + fileExtract.getFileExtension();
+                    fileExtract.setFilePath(newPath);
                 }
-
-                logger.info("Downloading file " + fileExtract.getFileName() + " from Azure Cloud.");
+            }
+            logger.info("Downloading file " + fileExtract.getFileName() + " from Azure Cloud.");
+            try {
                 cloudStorage.downloadToFile(fileExtract.getFileName(), fileExtract.getFileDir());
+            } catch (IOException e) {
+                logger.severe(e.toString());
             }
+        }
 
-            logger.info("Processing file: " + fileExtract.getFilePath());
-            FileInputStream input = new FileInputStream(fileExtract.getFilePath());
+        Neo4jGraph graph = new Neo4jGraph(this.getNeo4jHost(), this.getNeo4jCredentials(), this.getNeo4jDatabase());
 
-            try (Scanner sc = new Scanner(input)) {
-                sc.useDelimiter(fileExtract.getDelimiter());
-                while (sc.hasNextLine()) {
-                    String currentLine = sc.nextLine();
-                    if (header == null) {
-                        header = currentLine.split(fileExtract.getDelimiter(), -1);
-                        skipCount++;
-                    } else {
-                        if (skipCount != this.getStartAt()) {
-                            skipCount++;
-                        } else {
-                            if ((content.size() > 0 && (content.size() % (chunkSize * 4) == 0))) {
-                                logger.info("Processing next chunk (" + processed + ")");
-                                try {
-                                    graph.execute(this.getQuery(), content, header, chunkSize);
-                                } catch (CustomChangeException ce) {
-                                    ce.printStackTrace();
-                                    String output = "Encountered error! Set startAt to line " +
-                                            (processed + 1) + " (last value processed in file: " + lastProcessedLine +
-                                            ") to pick up where left off.";
-                                    logger.severe(output);
-                                    throw new CustomChangeException();
-                                }
-                                processed += content.size();
-                                lastProcessedLine = Arrays.toString(content.get(content.size() - 1));
-                                content.clear();
-                            }
-                            content.add(currentLine.split(fileExtract.getDelimiter(), -1));
-                        }
-                    }
-                }
+        final int chunkSize = System.getenv("CHUNK_SIZE") != null
+                ? Integer.parseInt(System.getenv("CHUNK_SIZE"))
+                : 2000;
+        int processed = 0, skippedCount = 0;
+        String[] header = null;
+        List<String[]> content = new ArrayList<>();
 
-                sc.close();
-            }
+        logger.info("Processing file: " + fileExtract.getFilePath());
 
-            input.close();
-
-            logger.info("Deleting file: " + fileExtract.getFilePath());
-            new File(fileExtract.getFilePath()).delete();
-
-            // wrap up any leftovers in content
-            // since file could be smaller than chunkSize * 4
-            if (content.size() > 0) {
+        try (FileInputStream input = new FileInputStream(fileExtract.getFilePath())) {
+            try (Scanner sc = new Scanner(input).useDelimiter(fileExtract.getDelimiter())) {
                 try {
-                    logger.info("Executing query");
-                    graph.execute(this.getQuery(), content, header, chunkSize);
-                    processed += content.size();
-                    lastProcessedLine = Arrays.toString(content.get(content.size() - 1));
-                    content.clear();
-                } catch (CustomChangeException ce) {
-                    ce.printStackTrace();
-                    String output = "Encountered error! Set startAt to line " +
-                            (processed + 1) + " (last value processed in file: " + lastProcessedLine +
-                            ") to pick up where left off.";
-                    logger.severe(output);
-                    throw new CustomChangeException();
+                    while (sc.hasNextLine()) {
+                        String[] currentRow = sc.nextLine().split(fileExtract.getDelimiter(), -1);
+
+                        if (header == null) {
+                            header = currentRow;
+                            skippedCount++;
+                            continue;
+                        } else if (skippedCount < this.getStartAt()) {
+                            skippedCount++;
+                            continue;
+                        } else if (content.size() == 0 || (content.size() % chunkSize) != 0) {
+                            content.add(currentRow);
+                            continue;
+                        }
+
+                        // logger.fine(String.format(processed + " \t " +
+                        // Runtime.getRuntime().freeMemory() +
+                        // " \t \t " + Runtime.getRuntime().totalMemory() +
+                        // " \t \t " + Runtime.getRuntime().maxMemory()));
+
+                        logger.info("Executing next chunk from " + this.fileName + ". Processed: " + processed);
+                        try {
+                            graph.execute(this.getQuery(), content, header, chunkSize);
+                        } catch (CustomChangeException ce) {
+                            ce.printStackTrace();
+                            String lastProcessedLine = Arrays.toString(content.get(content.size() - 1));
+                            String output = "Encountered error! Set startAt to line " +
+                                    (processed + 1) + " (last value processed in file: " + lastProcessedLine +
+                                    ") to pick up where left off.";
+                            logger.severe(output);
+                            throw new CustomChangeException();
+                        } finally {
+                            processed += content.size();
+                            content.clear();
+                        }
+
+                    }
+                } finally {
+                    sc.close();
                 }
             }
+            input.close();
         } catch (IOException e) {
-            e.printStackTrace();
-            System.exit(1);
+            logger.severe(e.toString());
+        }
+
+        logger.info("Deleting file: " + fileExtract.getFilePath());
+        new File(fileExtract.getFilePath()).delete();
+
+        // wrap up any leftovers in content
+        // since file could be smaller than chunkSize * 4
+        if (content.size() > 0) {
+            try {
+                logger.info("Executing remaining query chunk");
+                graph.execute(this.getQuery(), content, header, chunkSize);
+                processed += content.size();
+                content.clear();
+            } catch (CustomChangeException ce) {
+                ce.printStackTrace();
+                String lastProcessedLine = Arrays.toString(content.get(content.size() - 1));
+                String output = "Encountered error! Set startAt to line " +
+                        (processed + 1) + " (last value processed in file: " + lastProcessedLine +
+                        ") to pick up where left off.";
+                logger.severe(output);
+                throw new CustomChangeException();
+            }
         }
 
         graph.getDriver().close();
+        graph = null;
         logger.info("Finished processing");
     }
 
