@@ -6,11 +6,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import liquibase.Scope;
-import liquibase.logging.Logger;
-
 public class TSVFileExtract extends FileExtract {
-    static final Logger logger = Scope.getCurrentScope().getLog(TSVFileExtract.class);
     static final String DELIMITER = "\t";
 
     public TSVFileExtract(String fileName, String fileDir, String fileExtension) {
@@ -35,6 +31,7 @@ public class TSVFileExtract extends FileExtract {
      */
     @Override
     public List<String[]> getFileContent() throws IOException {
+        logger.info("Parsing content of file: " + this.filePath);
         return Files.lines(Paths.get(this.getFilePath()))
                 // skip header
                 .skip(1).map(line -> line.split(DELIMITER)).collect(Collectors.toList());

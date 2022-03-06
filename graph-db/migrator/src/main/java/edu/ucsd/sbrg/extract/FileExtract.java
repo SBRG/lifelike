@@ -1,6 +1,11 @@
 package edu.ucsd.sbrg.extract;
 
+import liquibase.Scope;
+import liquibase.logging.Logger;
+
 public abstract class FileExtract implements Extract {
+    static final Logger logger = Scope.getCurrentScope().getLog(FileExtract.class);
+
     String fileDir;
     String fileExtension;
     String fileName;
@@ -18,7 +23,9 @@ public abstract class FileExtract implements Extract {
         this.fileExtension = fileExtension;
     }
 
-    public String getFileExtension() { return this.fileExtension; }
+    public String getFileExtension() {
+        return this.fileExtension;
+    }
 
     public void setFileDir(String fileDir) {
         this.fileDir = fileDir;
@@ -28,7 +35,9 @@ public abstract class FileExtract implements Extract {
         return this.fileDir;
     }
 
-    public void setFilePath(String filePath) { this.filePath = filePath; }
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
+    }
 
     public String getFilePath() {
         return this.filePath;

@@ -24,7 +24,6 @@ import liquibase.logging.Logger;
 
 public class Neo4jGraph {
     static final Logger logger = Scope.getCurrentScope().getLog(Neo4jGraph.class);
-
     private static final TransactionConfig transactionConfig = TransactionConfig.builder()
             .withTimeout(Duration.ofMinutes(15)).build();
 
@@ -40,7 +39,6 @@ public class Neo4jGraph {
         this.neo4jUsername = creds[0];
         this.neo4jPassword = creds[1];
         this.databaseName = databaseName;
-
         this.driver = GraphDatabase.driver(neo4jHost, AuthTokens.basic(neo4jUsername, neo4jPassword));
     }
 
@@ -74,6 +72,7 @@ public class Neo4jGraph {
     }
 
     public void execute(String query, List<String[]> data, String[] keys, int chunkSize) throws CustomChangeException {
+        // Validate data
         if (keys.length != data.get(0).length) {
             logger.warning("Invalid length not equal; keys.length==" + keys.length + " and data.get(0).length=="
                     + data.get(0).length);
@@ -88,20 +87,12 @@ public class Neo4jGraph {
             List<Map<String, String>> cypherParamsChunk = new ArrayList<>();
             contentChunk.forEach(row -> {
                 Map<String, String> param = new HashMap<>();
-                try {
-                    StringBuilder sb = new StringBuilder();
-                    sb.append("Added to param chunk: {");
-                    for (int i = 0; i < keys.length; i++) {
+                for (int i = 0; i < keys.length; i++) {
+                    try {
                         param.put(keys[i], row[i]);
-                        sb.append(keys[i] + ": " + row[i]);
-                        sb.append(",");
+                    } catch (IndexOutOfBoundsException e) {
+                        throw new IndexOutOfBoundsException();
                     }
-                    // delete the last comma
-                    sb.deleteCharAt(sb.length() - 1);
-                    sb.append("}");
-                    logger.fine(sb.toString());
-                } catch (IndexOutOfBoundsException e) {
-                    throw new IndexOutOfBoundsException();
                 }
                 cypherParamsChunk.add(param);
             });
@@ -109,14 +100,13 @@ public class Neo4jGraph {
         });
 
         Session session = this.driver.session(SessionConfig.forDatabase(databaseName));
-        logger.fine("Executing " + chunkedCypherParams.size() + " chunk(s) of queries...");
         chunkedCypherParams.forEach(paramChunk -> {
             try {
                 session.writeTransaction(
                         tx -> tx.run(query, parameters("rows", paramChunk)),
                         transactionConfig);
             } catch (Exception e) {
-                logger.severe(e.getMessage());
+                logger.severe(e.toString());
             }
         });
         session.close();

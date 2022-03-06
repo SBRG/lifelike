@@ -51,7 +51,6 @@ else
       -DazureStorageName="$AZURE_ACCOUNT_STORAGE_NAME" \
       -DazureStorageKey="$AZURE_ACCOUNT_STORAGE_KEY" \
       -DlocalSaveFileDir=/tmp \
-      -Dliquibase.hub.mode=off \
-      -Djava.util.logging.manager=org.apache.logging.log4j.jul.LogManager
+      -Dliquibase.hub.mode=off
   fi
 fi
