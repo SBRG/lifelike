@@ -7,14 +7,20 @@ Liquibase based migrator for Neo4j
 To run migrations from Lifelike Docker registry latest image, you can run the following command:
 
 ```bash
-# Update migrations
+# Update using bundled changelog files
 docker run --rm \
   --env NEO4J_HOST=neo4j:7687 \
   --env NEO4J_PASSWORD=password \
   --env AZURE_ACCOUNT_STORAGE_NAME=lifelike \
   --env AZURE_ACCOUNT_STORAGE_KEY=<storage-key> \
-  --env CHANGELOG_DIR=lifelike-graph
+  --env CHANGELOG_DIR=lifelike-graph \
   ghcr.io/sbrg/lifelike-graphdb-migrator:latest
+
+# Or you can run your own local changelog files by setting a volume mount
+# pointing to your changelog directory by adding a `--volume` argument
+docket run --rm \
+  --volume /path/to/my/changelog/dir:/liquibase/changelog \
+  # [... other arguments ...]
 ```
 
 ### Environment Variables
