@@ -75,6 +75,8 @@ SET n:BioCycClass:db_BsubCyc,n.biocyc_id=row.biocyc_id,n.name=row.name,n.data_so
       neo4jHost="${neo4jHost}"
       neo4jCredentials="${neo4jCredentials}"
       neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
       localSaveFileDir="${localSaveFileDir}"
 
     />
@@ -97,6 +99,8 @@ SET n:Compound:db_BsubCyc,n.biocyc_id=row.biocyc_id,n.name=row.name,n.abbrev_nam
       neo4jHost="${neo4jHost}"
       neo4jCredentials="${neo4jCredentials}"
       neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
       localSaveFileDir="${localSaveFileDir}"
 
     />
@@ -119,6 +123,8 @@ SET n:DNABindingSite:db_BsubCyc,n.biocyc_id=row.biocyc_id,n.abs_center_pos=row.a
       neo4jHost="${neo4jHost}"
       neo4jCredentials="${neo4jCredentials}"
       neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
       localSaveFileDir="${localSaveFileDir}"
 
     />
@@ -141,6 +147,8 @@ SET n:Gene:db_BsubCyc,n.biocyc_id=row.biocyc_id,n.name=row.name,n.accession=row.
       neo4jHost="${neo4jHost}"
       neo4jCredentials="${neo4jCredentials}"
       neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
       localSaveFileDir="${localSaveFileDir}"
 
     />
@@ -163,6 +171,8 @@ SET n:Terminator:db_BsubCyc,n.biocyc_id=row.biocyc_id,n.left_end_position=row.le
       neo4jHost="${neo4jHost}"
       neo4jCredentials="${neo4jCredentials}"
       neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
       localSaveFileDir="${localSaveFileDir}"
 
     />
@@ -185,6 +195,8 @@ SET n:Promoter:db_BsubCyc,n.biocyc_id=row.biocyc_id,n.name=row.name,n.pos_1=row.
       neo4jHost="${neo4jHost}"
       neo4jCredentials="${neo4jCredentials}"
       neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
       localSaveFileDir="${localSaveFileDir}"
 
     />
@@ -207,6 +219,8 @@ SET n:TranscriptionUnit:db_BsubCyc,n.biocyc_id=row.biocyc_id,n.name=row.name,n.d
       neo4jHost="${neo4jHost}"
       neo4jCredentials="${neo4jCredentials}"
       neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
       localSaveFileDir="${localSaveFileDir}"
 
     />
@@ -229,6 +243,8 @@ SET n:RNA:db_BsubCyc,n.biocyc_id=row.biocyc_id,n.name=row.name,n.data_source='Bi
       neo4jHost="${neo4jHost}"
       neo4jCredentials="${neo4jCredentials}"
       neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
       localSaveFileDir="${localSaveFileDir}"
 
     />
@@ -251,6 +267,8 @@ SET n:Protein:db_BsubCyc,n.biocyc_id=row.biocyc_id,n.name=row.name,n.abbrev_name
       neo4jHost="${neo4jHost}"
       neo4jCredentials="${neo4jCredentials}"
       neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
       localSaveFileDir="${localSaveFileDir}"
 
     />
@@ -273,6 +291,8 @@ SET n:Reaction:db_BsubCyc,n.biocyc_id=row.biocyc_id,n.name=row.name,n.ec_number=
       neo4jHost="${neo4jHost}"
       neo4jCredentials="${neo4jCredentials}"
       neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
       localSaveFileDir="${localSaveFileDir}"
 
     />
@@ -295,6 +315,8 @@ SET n:Pathway:db_BsubCyc,n.biocyc_id=row.biocyc_id,n.name=row.name,n.data_source
       neo4jHost="${neo4jHost}"
       neo4jCredentials="${neo4jCredentials}"
       neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
       localSaveFileDir="${localSaveFileDir}"
 
     />
@@ -317,6 +339,8 @@ SET n:EnzReaction:db_BsubCyc,n.biocyc_id=row.biocyc_id,n.name=row.name,n.data_so
       neo4jHost="${neo4jHost}"
       neo4jCredentials="${neo4jCredentials}"
       neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
       localSaveFileDir="${localSaveFileDir}"
 
     />
@@ -339,6 +363,8 @@ SET n:Regulation:db_BsubCyc,n.biocyc_id=row.biocyc_id,n.mode=row.mode,n.mechanis
       neo4jHost="${neo4jHost}"
       neo4jCredentials="${neo4jCredentials}"
       neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
       localSaveFileDir="${localSaveFileDir}"
 
     />
@@ -362,6 +388,8 @@ MERGE (b)-[r:HAS_SYNONYM]->(a)
       neo4jHost="${neo4jHost}"
       neo4jCredentials="${neo4jCredentials}"
       neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
       localSaveFileDir="${localSaveFileDir}"
 
     />
@@ -385,6 +413,8 @@ MERGE (b)-[r:HAS_SYNONYM]->(a)
       neo4jHost="${neo4jHost}"
       neo4jCredentials="${neo4jCredentials}"
       neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
       localSaveFileDir="${localSaveFileDir}"
 
     />
@@ -408,6 +438,8 @@ MERGE (b)-[r:HAS_SYNONYM]->(a)
       neo4jHost="${neo4jHost}"
       neo4jCredentials="${neo4jCredentials}"
       neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
       localSaveFileDir="${localSaveFileDir}"
 
     />
@@ -431,6 +463,8 @@ MERGE (b)-[r:HAS_SYNONYM]->(a)
       neo4jHost="${neo4jHost}"
       neo4jCredentials="${neo4jCredentials}"
       neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
       localSaveFileDir="${localSaveFileDir}"
 
     />
@@ -454,6 +488,8 @@ MERGE (b)-[r:HAS_SYNONYM]->(a)
       neo4jHost="${neo4jHost}"
       neo4jCredentials="${neo4jCredentials}"
       neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
       localSaveFileDir="${localSaveFileDir}"
 
     />
@@ -477,6 +513,8 @@ MERGE (b)-[r:HAS_SYNONYM]->(a)
       neo4jHost="${neo4jHost}"
       neo4jCredentials="${neo4jCredentials}"
       neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
       localSaveFileDir="${localSaveFileDir}"
 
     />
@@ -500,6 +538,8 @@ MERGE (b)-[r:HAS_SYNONYM]->(a)
       neo4jHost="${neo4jHost}"
       neo4jCredentials="${neo4jCredentials}"
       neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
       localSaveFileDir="${localSaveFileDir}"
 
     />
@@ -524,6 +564,8 @@ RETURN COUNT(*)
       neo4jHost="${neo4jHost}"
       neo4jCredentials="${neo4jCredentials}"
       neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
       localSaveFileDir="${localSaveFileDir}"
 
     />
@@ -548,6 +590,8 @@ RETURN COUNT(*)
       neo4jHost="${neo4jHost}"
       neo4jCredentials="${neo4jCredentials}"
       neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
       localSaveFileDir="${localSaveFileDir}"
 
     />
@@ -572,6 +616,8 @@ RETURN COUNT(*)
       neo4jHost="${neo4jHost}"
       neo4jCredentials="${neo4jCredentials}"
       neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
       localSaveFileDir="${localSaveFileDir}"
 
     />
@@ -596,6 +642,8 @@ RETURN COUNT(*)
       neo4jHost="${neo4jHost}"
       neo4jCredentials="${neo4jCredentials}"
       neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
       localSaveFileDir="${localSaveFileDir}"
 
     />
@@ -620,6 +668,8 @@ RETURN COUNT(*)
       neo4jHost="${neo4jHost}"
       neo4jCredentials="${neo4jCredentials}"
       neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
       localSaveFileDir="${localSaveFileDir}"
 
     />
@@ -644,6 +694,8 @@ RETURN COUNT(*)
       neo4jHost="${neo4jHost}"
       neo4jCredentials="${neo4jCredentials}"
       neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
       localSaveFileDir="${localSaveFileDir}"
 
     />
@@ -668,6 +720,8 @@ RETURN COUNT(*)
       neo4jHost="${neo4jHost}"
       neo4jCredentials="${neo4jCredentials}"
       neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
       localSaveFileDir="${localSaveFileDir}"
 
     />
@@ -692,6 +746,8 @@ RETURN COUNT(*)
       neo4jHost="${neo4jHost}"
       neo4jCredentials="${neo4jCredentials}"
       neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
       localSaveFileDir="${localSaveFileDir}"
 
     />
@@ -716,6 +772,8 @@ RETURN COUNT(*)
       neo4jHost="${neo4jHost}"
       neo4jCredentials="${neo4jCredentials}"
       neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
       localSaveFileDir="${localSaveFileDir}"
 
     />
@@ -740,6 +798,8 @@ RETURN COUNT(*)
       neo4jHost="${neo4jHost}"
       neo4jCredentials="${neo4jCredentials}"
       neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
       localSaveFileDir="${localSaveFileDir}"
 
     />
@@ -764,6 +824,8 @@ RETURN COUNT(*)
       neo4jHost="${neo4jHost}"
       neo4jCredentials="${neo4jCredentials}"
       neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
       localSaveFileDir="${localSaveFileDir}"
 
     />
@@ -788,6 +850,8 @@ RETURN COUNT(*)
       neo4jHost="${neo4jHost}"
       neo4jCredentials="${neo4jCredentials}"
       neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
       localSaveFileDir="${localSaveFileDir}"
 
     />
@@ -812,6 +876,8 @@ RETURN COUNT(*)
       neo4jHost="${neo4jHost}"
       neo4jCredentials="${neo4jCredentials}"
       neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
       localSaveFileDir="${localSaveFileDir}"
 
     />
@@ -836,6 +902,8 @@ RETURN COUNT(*)
       neo4jHost="${neo4jHost}"
       neo4jCredentials="${neo4jCredentials}"
       neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
       localSaveFileDir="${localSaveFileDir}"
 
     />
@@ -860,6 +928,8 @@ RETURN COUNT(*)
       neo4jHost="${neo4jHost}"
       neo4jCredentials="${neo4jCredentials}"
       neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
       localSaveFileDir="${localSaveFileDir}"
 
     />
@@ -884,6 +954,8 @@ RETURN COUNT(*)
       neo4jHost="${neo4jHost}"
       neo4jCredentials="${neo4jCredentials}"
       neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
       localSaveFileDir="${localSaveFileDir}"
 
     />
@@ -908,6 +980,8 @@ RETURN COUNT(*)
       neo4jHost="${neo4jHost}"
       neo4jCredentials="${neo4jCredentials}"
       neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
       localSaveFileDir="${localSaveFileDir}"
 
     />
@@ -932,6 +1006,8 @@ RETURN COUNT(*)
       neo4jHost="${neo4jHost}"
       neo4jCredentials="${neo4jCredentials}"
       neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
       localSaveFileDir="${localSaveFileDir}"
 
     />
@@ -956,6 +1032,8 @@ RETURN COUNT(*)
       neo4jHost="${neo4jHost}"
       neo4jCredentials="${neo4jCredentials}"
       neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
       localSaveFileDir="${localSaveFileDir}"
 
     />
@@ -980,6 +1058,8 @@ RETURN COUNT(*)
       neo4jHost="${neo4jHost}"
       neo4jCredentials="${neo4jCredentials}"
       neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
       localSaveFileDir="${localSaveFileDir}"
 
     />
@@ -1004,6 +1084,8 @@ RETURN COUNT(*)
       neo4jHost="${neo4jHost}"
       neo4jCredentials="${neo4jCredentials}"
       neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
       localSaveFileDir="${localSaveFileDir}"
 
     />
@@ -1028,6 +1110,8 @@ RETURN COUNT(*)
       neo4jHost="${neo4jHost}"
       neo4jCredentials="${neo4jCredentials}"
       neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
       localSaveFileDir="${localSaveFileDir}"
 
     />
