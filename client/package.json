@@ -36,7 +36,7 @@
     "@ngrx/schematics": "9.2.1",
     "@ngrx/store": "9.2.1",
     "@ngrx/store-devtools": "9.2.1",
-    "@popperjs/core": "^2.0.3",
+    "@popperjs/core": "^2.11.4",
     "angular-resize-event": "^1.2.1",
     "angular-split": "^3.0.3",
     "bootstrap": "^4.5.0",
