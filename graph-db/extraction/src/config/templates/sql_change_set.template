@@ -1,0 +1,6 @@
+  <changeSet id="${change_id}" author="${author}">
+    <comment>${change_comment}</comment>
+    <sql>
+    ${cypher_query}
+    </sql>
+  </changeSet>

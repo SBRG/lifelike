@@ -1,0 +1,15 @@
+set_tax_refseq:
+  description: extract tax_id and refseq from string id.
+  query: match(n:db_STRING) with n, split(n.eid, '.') as ids set n.tax_id = ids[0], n.refseq = ids[1];
+
+add_gene_link_by_refseq:
+  description: find gene by locus_tag by match STRING refseq, then create HAS_GENE relationship from STRING to Gene
+  query: match(n:db_STRING), (m:Gene) where m.locus_tag = n.refseq merge (n)-[:HAS_GENE]->(m);
+
+add_gene_line_by_name:
+  description: find STRING associated genes by tax_id and name, then create the HAS_GENE relationship
+  query: >
+    match(n:db_STRING) where not (n)-[:HAS_GENE]-()
+        with n match (m:Gene) where m.tax_id = n.tax_id and m.name = n.name
+        merge (n)-[:HAS_GENE]->(m);
+
