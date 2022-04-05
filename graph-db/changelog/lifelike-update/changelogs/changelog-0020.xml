@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd">
+
+  <changeSet id="LL-4222 Create STRING constraints and indexes" author="rcai">
+    <comment>Create constraints and indexes for STRING nodes, created on 03/31/2022</comment>
+    <sql>
+    CREATE CONSTRAINT constraint_db_STRING_eid IF NOT EXISTS ON (n:db_STRING) ASSERT n.eid IS UNIQUE;
+CREATE CONSTRAINT constraint_db_STRING_string_id IF NOT EXISTS ON (n:db_STRING) ASSERT n.string_id IS UNIQUE;
+CREATE INDEX index_db_STRING_name IF NOT EXISTS FOR (n:db_STRING) ON (n.name);
+CREATE INDEX index_db_STRING_refseq IF NOT EXISTS FOR (n:db_STRING) ON (n.refseq);
+CREATE INDEX index_db_STRING_tax_id IF NOT EXISTS FOR (n:db_STRING) ON (n.tax_id);
+    </sql>
+  </changeSet>
+
+  <changeSet id="LL-4222 load String Protein from string-data-v11.5.zip, date 03/31/2022" author="rcai">
+    <comment>
+        load all String Protein from string-data-v11.5.zip
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.ZipFileQueryHandler"
+      query="
+      UNWIND $rows as row
+MERGE (n:db_STRING {eid: row.eid})
+SET n:Protein,n.name=row.name,n.protein_size=row.protein_size,n.annotation=row.annotation,n.data_source='STRING'
+      "
+      fileName="string-data.tsv"
+      zipFileName="jira-LL-4222-string-data-v11.5.zip"
+      startAt="1"
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="LL-4222 set_tax_refseq, data 03/31/2022" author="rcai">
+    <comment>extract tax_id and refseq from string id.</comment>
+    <sql>
+    match(n:db_STRING) with n, split(n.eid, '.') as ids set n.tax_id = ids[0], n.refseq = ids[1];
+    </sql>
+  </changeSet>
+
+  <changeSet id="LL-4222 add_gene_link_by_refseq, data 03/31/2022" author="rcai">
+    <comment>find gene by locus_tag by match STRING refseq, then create HAS_GENE relationship from STRING to Gene</comment>
+    <sql>
+    match(n:db_STRING), (m:Gene) where m.locus_tag = n.refseq merge (n)-[:HAS_GENE]->(m);
+    </sql>
+  </changeSet>
+
+  <changeSet id="LL-4222 add_gene_line_by_name, data 03/31/2022" author="rcai">
+    <comment>find STRING associated genes by tax_id and name, then create the HAS_GENE relationship</comment>
+    <sql>
+    match(n:db_STRING) where not (n)-[:HAS_GENE]-()
+    with n match (m:Gene) where m.tax_id = n.tax_id and m.name = n.name
+    merge (n)-[:HAS_GENE]->(m);
+
+    </sql>
+  </changeSet>
+</databaseChangeLog>
