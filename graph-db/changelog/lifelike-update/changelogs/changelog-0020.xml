@@ -33,6 +33,8 @@ SET n:Protein,n.name=row.name,n.protein_size=row.protein_size,n.annotation=row.a
       neo4jHost="${neo4jHost}"
       neo4jCredentials="${neo4jCredentials}"
       neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
       localSaveFileDir="${localSaveFileDir}"
 
     />
