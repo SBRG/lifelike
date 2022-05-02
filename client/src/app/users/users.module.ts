@@ -4,7 +4,6 @@ import { EffectsModule } from '@ngrx/effects';
 
 import { SharedModule } from 'app/shared/shared.module';
 
-import { AccountService } from './services/account.service';
 import { UserSettingsComponent } from './components/user-settings.component';
 import { UserProfileComponent } from './components/user-profile.component';
 import { UserSecurityComponent } from './components/user-security.component';
@@ -13,6 +12,8 @@ import { TermsOfServiceDialogComponent } from './components/terms-of-service-dia
 import { TermsOfServiceComponent } from './components/terms-of-service.component';
 import { TermsOfServiceTextComponent } from './components/terms-of-service-text.component';
 import { ChangePasswordDialogComponent } from './components/change-password-dialog.component';
+import { AccountService } from './services/account.service';
+import { KeycloakAccountService } from './services/keycloak-account.service';
 
 const components = [
   UserProfileComponent,
@@ -30,7 +31,7 @@ const components = [
     SharedModule,
   ],
   declarations: components,
-  providers: [AccountService],
+  providers: [AccountService, KeycloakAccountService],
   entryComponents: [TermsOfServiceDialogComponent, ChangePasswordDialogComponent],
   exports: components,
 })

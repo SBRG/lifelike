@@ -213,9 +213,9 @@ export class EnrichmentTableViewerComponent implements OnInit, OnDestroy, AfterV
   save() {
     const progressDialogRef = this.progressDialog.display({
       title: 'Working...',
-      progressObservable: new BehaviorSubject<Progress>(new Progress({
+      progressObservables: [new BehaviorSubject<Progress>(new Progress({
         status: 'Saving enrichment table...',
-      })),
+      }))],
     });
     const observable = combineLatest(
       this.object$,

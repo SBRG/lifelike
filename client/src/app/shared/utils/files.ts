@@ -1,6 +1,8 @@
-import {from, Observable, OperatorFunction, Subject} from 'rxjs';
-import {map, mergeMap} from 'rxjs/operators';
+import { from, Observable, OperatorFunction, Subject } from 'rxjs';
+import { map, mergeMap } from 'rxjs/operators';
 import JSZip from 'jszip';
+
+import { FilesystemObject } from 'app/file-browser/models/filesystem-object';
 
 export function mapBlobToJson<T>(): OperatorFunction<Blob, Promise<T>> {
   return map(async blob => {
@@ -87,3 +89,13 @@ export function openDownloadForBlob(blob: Blob, filename: string): void {
     link.remove();
   }, 100);
 }
+
+export const getPath = (object: FilesystemObject | undefined): FilesystemObject[] => {
+  let current = object;
+  const path = [];
+  while (current != null) {
+    path.push(current);
+    current = current.parent;
+  }
+  return path.reverse();
+};

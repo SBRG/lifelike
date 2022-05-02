@@ -4,7 +4,6 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { ApiService } from 'app/shared/services/api.service';
 import { ResultList, ResultMapping } from 'app/shared/schemas/common';
 import { Annotation } from 'app/pdf-viewer/annotation-type';
 import {
@@ -22,14 +21,11 @@ import {
 
 @Injectable()
 export class AnnotationsService {
-  constructor(protected readonly http: HttpClient,
-              protected readonly apiService: ApiService) {
-  }
+  constructor(protected readonly http: HttpClient) {}
 
   getAnnotations(hashId: string): Observable<Annotation[]> {
     return this.http.get<ResultList<Annotation>>(
       `/api/filesystem/objects/${encodeURIComponent(hashId)}/annotations`,
-      this.apiService.getHttpOptions(true),
     ).pipe(
       map(data => data.results),
     );
@@ -38,7 +34,6 @@ export class AnnotationsService {
   getSortedAnnotations(hashId: string, sort: SortingAlgorithmId) {
     return this.http.post(
       `/api/filesystem/objects/${encodeURIComponent(hashId)}/annotations/sorted`, {}, {
-        ...this.apiService.getHttpOptions(true),
         params: {sort},
         responseType: 'text',
       },
@@ -52,7 +47,6 @@ export class AnnotationsService {
         hashIds,
         ...request,
       },
-      this.apiService.getHttpOptions(true),
     );
   }
 
@@ -60,7 +54,6 @@ export class AnnotationsService {
     return this.http.post<ResultList<Annotation>>(
       `/api/filesystem/objects/${encodeURIComponent(hashId)}/annotations/custom`,
       request,
-      this.apiService.getHttpOptions(true),
     ).pipe(
       map(data => data.results),
     );
@@ -70,9 +63,7 @@ export class AnnotationsService {
     return this.http.request<ResultList<string>>(
       'DELETE',
       `/api/filesystem/objects/${encodeURIComponent(hashId)}/annotations/custom/${encodeURIComponent(uuid)}`, {
-        ...this.apiService.getHttpOptions(true, {
-          contentType: 'application/json',
-        }),
+        headers: {'Content-Type': 'application/json'},
         body: request,
         responseType: 'json',
       },
@@ -85,7 +76,6 @@ export class AnnotationsService {
     return this.http.post<{}>(
       `/api/filesystem/objects/${encodeURIComponent(hashId)}/annotations/exclusions`,
       request,
-      this.apiService.getHttpOptions(true),
     ).pipe(
       map(() => ({}))
     );
@@ -95,9 +85,7 @@ export class AnnotationsService {
     return this.http.request<{}>(
       'DELETE',
       `/api/filesystem/objects/${encodeURIComponent(hashId)}/annotations/exclusions`, {
-        ...this.apiService.getHttpOptions(true, {
-          contentType: 'application/json',
-        }),
+        headers: {'Content-Type': 'application/json'},
         body: request,
         responseType: 'json',
       },

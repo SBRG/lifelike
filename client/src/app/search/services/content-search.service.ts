@@ -6,7 +6,6 @@ import { map } from 'rxjs/operators';
 
 import { FilesystemObject } from 'app/file-browser/models/filesystem-object';
 import { ProjectData } from 'app/file-browser/schema';
-import { ApiService } from 'app/shared/services/api.service';
 
 import {
   AnnotationRequestOptions,
@@ -21,9 +20,7 @@ import { ContentSearchParameters, ContentSearchQueryParameters } from '../utils/
 
 @Injectable()
 export class ContentSearchService {
-  constructor(protected readonly http: HttpClient,
-              protected readonly apiService: ApiService) {
-  }
+  constructor(protected readonly http: HttpClient) {}
 
   // TODO: Use endpoint `'annotations/generate'` instead
   // then add an if block for mime_type?
@@ -31,7 +28,6 @@ export class ContentSearchService {
     return this.http.post<AnnotationResponse>(
       `/api/filesystem/annotations/text/generate`,
       params,
-      this.apiService.getHttpOptions(true),
     );
   }
 
@@ -39,7 +35,6 @@ export class ContentSearchService {
     return this.http.get<ContentSearchResponseData>(
       `/api/search/content`,
       {
-        ...this.apiService.getHttpOptions(true),
         params: {
           ...request
         }
@@ -63,7 +58,6 @@ export class ContentSearchService {
   getProjects(): Observable<ProjectData[]> {
     return this.http.get<{results: ProjectData[]}>(
       `/api/projects/projects`, {
-        ...this.apiService.getHttpOptions(true),
       },
     ).pipe(map(resp => resp.results));
   }
@@ -71,7 +65,6 @@ export class ContentSearchService {
   getSynoynms(searchTerm: string, organisms: string[], types: string[], page: number, limit: number): Observable<SynonymSearchResponse> {
     return this.http.get<SynonymSearchResponse>(
       `/api/search/synonyms`, {
-        ...this.apiService.getHttpOptions(true),
         params: {
           term: searchTerm,
           organisms: organisms.join(';'),

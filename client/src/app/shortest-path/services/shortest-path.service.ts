@@ -4,23 +4,17 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { AuthenticationService } from 'app/auth/services/authentication.service';
-import { AbstractService } from 'app/shared/services/abstract-service';
-
 @Injectable({
   providedIn: 'root'
 })
-export class ShortestPathService extends AbstractService {
+export class ShortestPathService {
   readonly kgAPI = '/api/knowledge-graph';
 
-  constructor(auth: AuthenticationService, http: HttpClient) {
-    super(auth, http);
-  }
+  constructor(private http: HttpClient) { }
 
   getShortestPathQueryResult(queryId: number): Observable<any> {
     return this.http.get<{result: any}>(
       `${this.kgAPI}/shortest-path-query/${queryId}`, {
-        ...this.getHttpOptions(true),
       }
     ).pipe(
       map((resp: any) => resp.result),
@@ -30,7 +24,6 @@ export class ShortestPathService extends AbstractService {
   getShortestPathQueryList(): Observable<any> {
     return this.http.get<{result: Map<number, string>}>(
       `${this.kgAPI}/shortest-path-query-list`, {
-        ...this.getHttpOptions(true),
       }
     ).pipe(
       map((resp: any) => resp.result),

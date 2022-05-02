@@ -4,7 +4,7 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { asyncScheduler, Observable, Subscription } from 'rxjs';
 import { throttleTime } from 'rxjs/operators';
 
-import { Progress } from 'app/interfaces/common-dialog.interface';
+import {Progress, ProgressMode} from 'app/interfaces/common-dialog.interface';
 
 
 /**
@@ -16,35 +16,58 @@ import { Progress } from 'app/interfaces/common-dialog.interface';
 })
 export class ProgressDialogComponent implements OnInit, OnDestroy {
   @Input() title: string;
-  @Input() progressObservable: Observable<Progress>;
+  @Input()
+  progressObservables: Observable<Progress>[];
+
+
   @Input() cancellable = false;
   @Output() readonly progressCancel = new EventEmitter<any>();
-  progressSubscription: Subscription;
   /**
    * Periodically updated with the progress of the upload.
    */
-  lastProgress: Progress = new Progress();
+  lastProgresses: Progress[] = [];
+
+
+  private progressSubscription = new Subscription();
+
 
   constructor(public activeModal: NgbActiveModal) {
   }
 
   ngOnInit() {
-    this.progressSubscription = this.progressObservable
-      .pipe(throttleTime(250, asyncScheduler, {
-        leading: true,
-        trailing: true,
-      })) // The progress bar cannot be updated more than once every 250ms due to its CSS animation
-      .subscribe(value => this.lastProgress = value);
+    for (let i = 0; i < this.progressObservables.length; i++) {
+      const progressObservable = this.progressObservables[i];
+      this.lastProgresses.push(new Progress());
+      this.progressSubscription.add(progressObservable
+        .pipe(throttleTime(250, asyncScheduler, {
+          leading: true,
+          trailing: true,
+        })) // The progress bar cannot be updated more than once every 250ms due to its CSS animation
+        .subscribe(value => this.lastProgresses[i] = value));
+    }
   }
 
   ngOnDestroy() {
-    if (this.progressSubscription != null) {
-      this.progressSubscription.unsubscribe();
-    }
+    this.progressSubscription.unsubscribe();
   }
 
   cancel() {
     this.activeModal.dismiss();
     this.progressCancel.emit();
   }
+}
+
+export function getProgressStatus(event, loadingStatus: string, finishStatus: string): Progress {
+  if (event.loaded >= event.total) {
+    return new Progress({
+      mode: ProgressMode.Buffer,
+      status: loadingStatus,
+      value: event.loaded / event.total,
+    });
+  }
+  return new Progress({
+      mode: ProgressMode.Determinate,
+      status: finishStatus,
+      value: event.loaded / event.total,
+    });
 }

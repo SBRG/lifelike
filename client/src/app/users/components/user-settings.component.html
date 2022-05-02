@@ -19,9 +19,14 @@
           </li>
 
           <li ngbNavItem="security">
-            <a ngbNavLink>Password</a>
-            <ng-template ngbNavContent>
-              <app-user-security [user]="user"></app-user-security>
+            <ng-container *ngIf="oauthEnabled; else basicPasswordChange">
+              <a class="nav-link" [href]="oauthPasswordChangeLink" target="_blank">Password <i class="fas fa-external-link-alt ml-1"></i></a>
+            </ng-container>
+            <ng-template #basicPasswordChange>
+              <a ngbNavLink>Password</a>
+              <ng-template ngbNavContent>
+                <app-user-security [user]="user"></app-user-security>
+              </ng-template>
             </ng-template>
           </li>
         </ul>

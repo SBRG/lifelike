@@ -1,7 +1,8 @@
 import { createAction, props } from '@ngrx/store';
 
-import { AppUser, PrivateAppUser, Credential } from 'app/interfaces';
+import { AppUser, PrivateAppUser, Credential, UserUpdateData, OAuthLoginData } from 'app/interfaces';
 import { LOGOUT_SUCCESS } from 'app/shared/constants';
+import { KeycloakUserData } from 'app/users/interfaces';
 
 
 export const checkTermsOfService = createAction(
@@ -32,6 +33,16 @@ export const loginSuccess = createAction(
     props<{user: PrivateAppUser}>(),
 );
 
+export const oauthLogin = createAction(
+  '[Auth] OAuth Login',
+  props<{oauthLoginData: OAuthLoginData}>(),
+);
+
+export const oauthLoginSuccess = createAction(
+  '[Auth] OAuth Login Success',
+  props<{lifelikeUser: PrivateAppUser, oauthUser: OAuthLoginData}>(),
+);
+
 export const loginFailure = createAction(
     '[Auth] Login Failure',
 );
@@ -44,6 +55,10 @@ export const loginRedirect = createAction(
 
 export const logout = createAction(
     '[Auth] Logout'
+);
+
+export const oauthLogout = createAction(
+  '[Auth] OAuth Logout'
 );
 
 /** Used when an update is performed on a logged in user */
@@ -70,7 +85,22 @@ export const updatePassword = createAction(
   '[Auth] Changing Initial Password',
 );
 
-export const userUpdated = createAction(
-    '[Auth] Updated user',
-    props<{user: PrivateAppUser}>(),
+export const updateUser = createAction(
+    '[Auth] Update user',
+    props<{userUpdateData: UserUpdateData, hashId: string}>(),
+);
+
+export const updateUserSuccess = createAction(
+  '[Auth] Update User Success',
+  props<{userUpdateData: UserUpdateData}>(),
+);
+
+export const updateOAuthUser = createAction(
+  '[Auth] Update OAuth user',
+  props<{userUpdateData: KeycloakUserData}>(),
+);
+
+export const updateOAuthUserSuccess = createAction(
+'[Auth] Update OAuth User Success',
+props<{userUpdateData: KeycloakUserData}>(),
 );

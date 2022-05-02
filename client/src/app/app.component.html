@@ -15,6 +15,8 @@
           <i class="far fa-window-restore"></i>
         </a>
       </ng-template>
+      <!-- TODO: Something odd is happening when OAuth is enabled and these `appLink` links are clicked when the user is not logged in. For
+        some reason a bunch of redirects happen all at once, rather than just one single redirect. -->
       <a appLink="/projects" placement="right" ngbTooltip="File Browser" [forceWorkbench]="true" [newTab]="true" preferPane="left">
         <i class="fa fa-folder"></i>
       </a>
@@ -43,6 +45,26 @@
       <a [href]="helpDeskUrl" target="_blank" placement="right" triggers="hover" ngbTooltip="Feedback and Questions">
         <i class="fa fa-comment"></i>
       </a>
+
+      <div ngbDropdown placement="top-left" container="body">
+        <a id="terms-and-policies-dropdown" ngbDropdownToggle ngbTooltip="Terms & Policies" container="body">
+          <i class="far fa-file-contract"></i>
+        </a>
+        <div ngbDropdownMenu aria-labelledby="terms-and-policies-dropdown" class="dropdown-menu">
+          <a class="dropdown-item" [routerLink]="['/terms-and-conditions']" placement="right">
+            Terms & Conditions
+          </a>
+          <a class="dropdown-item" [routerLink]="['/privacy-policy']" placement="right">
+            Privacy Policy
+          </a>
+          <a class="dropdown-item" [routerLink]="['/cookie-policy']" placement="right">
+            Cookie Policy
+          </a>
+          <a class="dropdown-item" [routerLink]="['/copyright-infringement-policy']" placement="right">
+            Copyright Infringement Policy
+          </a>
+        </div>
+      </div>
 
       <ng-container *ngIf="(loggedIn$ | async); else loggedOut">
         <div ngbDropdown placement="top-left" container="body">

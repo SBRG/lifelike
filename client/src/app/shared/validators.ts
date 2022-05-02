@@ -38,7 +38,7 @@ export function potentiallyInternalUrl(control: AbstractControl): { [key: string
 }
 
 export function filenameValidator(control: AbstractControl): ValidationErrors | null {
-  const forbidden = control.value.match(/[^\p{L}\d ()\[\]+{}^%$!.,'\-_@#]/gu);
+  const forbidden = control.value.match(validFilenameRegex);
   return forbidden !== null ? {filenameError: {value: forbidden}} : null;
 }
 
@@ -47,3 +47,6 @@ export function noWhitespaceValidator(control: AbstractControl): ValidationError
   const forbidden = /\s/g.test(control.value);
   return forbidden ? {whitespaceError: {value: control.value}} : null;
 }
+
+
+export const validFilenameRegex = /[^\p{L}\d ()\[\]+{}^%$!.,'\-_@#]/gu;
