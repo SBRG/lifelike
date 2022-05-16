@@ -61,7 +61,7 @@ sendgrid = "==6.9.3"
 werkzeug = "==0.16.1"
 lmdb = "==1.2.1"
 pillow = "==8.4.0"
-pyparsing = "==2.4.7"
+pyparsing = "==3.0.9"
 svg-stack = "==0.1.0"
 elastic-apm = {extras = ["flask"], version = "*"}
 
