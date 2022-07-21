@@ -1,8 +1,8 @@
 # ![Lifelike](https://sbrg.github.io/lifelike-website/favicon.ico) Lifelike
 
-<img src="https://sbrg.github.io/lifelike-website/assets/img/cfb_logo.png" alt="CFB" border="0" /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<img src="https://sbrg.github.io/lifelike-website/assets/img/dtu_logo.png" alt="DTU" border="0" /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<img src="https://sbrg.github.io/lifelike-website/assets/img/ucsd_logo.png" alt="UCSD" border="0" />
+<img src="https://sbrg.github.io/lifelike-website/images/cfb_logo.png" alt="CFB" border="0" /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<img src="https://sbrg.github.io/lifelike-website/images/dtu_logo.png" alt="DTU" border="0" /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<img src="https://sbrg.github.io/lifelike-website/images/ucsd_logo.png" alt="UCSD" border="0" />
 
 Lifelike is an open-source project that aims to provide a simple, yet powerful platform for turning structured and unstructured data from a variety of sources into a single, coherent and explorable knowledge graph.
 
