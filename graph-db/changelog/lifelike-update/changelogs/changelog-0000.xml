@@ -1,0 +1,1119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd">
+
+  <changeSet id="Create BioCyc constraints and indexes" author="rcai">
+    <comment>Create constraints and indexes for BioCyc nodes, created on 03/10/2022</comment>
+    <sql>
+    CREATE CONSTRAINT constraint_db_BioCyc_eid IF NOT EXISTS ON (n:db_BioCyc) ASSERT n.eid IS UNIQUE;
+CREATE INDEX index_db_BioCyc_biocyc_id IF NOT EXISTS FOR (n:db_BioCyc) ON (n.biocyc_id);
+CREATE INDEX index_db_BioCyc_name IF NOT EXISTS FOR (n:db_BioCyc) ON (n.name);
+CREATE CONSTRAINT constraint_db_BsubCyc_eid IF NOT EXISTS ON (n:db_BsubCyc) ASSERT n.eid IS UNIQUE;
+CREATE INDEX index_db_BsubCyc_biocyc_id IF NOT EXISTS FOR (n:db_BsubCyc) ON (n.biocyc_id);
+CREATE INDEX index_db_BsubCyc_name IF NOT EXISTS FOR (n:db_BsubCyc) ON (n.name);
+CREATE CONSTRAINT constraint_Synonym_name IF NOT EXISTS ON (n:Synonym) ASSERT n.name IS UNIQUE;
+CREATE INDEX index_Synonym_lowercase_name IF NOT EXISTS FOR (n:Synonym) ON (n.lowercase_name);
+CREATE CONSTRAINT constraint_BioCycClass_eid IF NOT EXISTS ON (n:BioCycClass) ASSERT n.eid IS UNIQUE;
+CREATE INDEX index_BioCycClass_biocyc_id IF NOT EXISTS FOR (n:BioCycClass) ON (n.biocyc_id);
+CREATE INDEX index_BioCycClass_name IF NOT EXISTS FOR (n:BioCycClass) ON (n.name);
+CREATE CONSTRAINT constraint_Compound_eid IF NOT EXISTS ON (n:Compound) ASSERT n.eid IS UNIQUE;
+CREATE INDEX index_Compound_biocyc_id IF NOT EXISTS FOR (n:Compound) ON (n.biocyc_id);
+CREATE INDEX index_Compound_name IF NOT EXISTS FOR (n:Compound) ON (n.name);
+CREATE CONSTRAINT constraint_DNABindingSite_eid IF NOT EXISTS ON (n:DNABindingSite) ASSERT n.eid IS UNIQUE;
+CREATE INDEX index_DNABindingSite_biocyc_id IF NOT EXISTS FOR (n:DNABindingSite) ON (n.biocyc_id);
+CREATE INDEX index_DNABindingSite_name IF NOT EXISTS FOR (n:DNABindingSite) ON (n.name);
+CREATE CONSTRAINT constraint_Gene_eid IF NOT EXISTS ON (n:Gene) ASSERT n.eid IS UNIQUE;
+CREATE INDEX index_Gene_biocyc_id IF NOT EXISTS FOR (n:Gene) ON (n.biocyc_id);
+CREATE INDEX index_Gene_name IF NOT EXISTS FOR (n:Gene) ON (n.name);
+CREATE CONSTRAINT constraint_Terminator_eid IF NOT EXISTS ON (n:Terminator) ASSERT n.eid IS UNIQUE;
+CREATE INDEX index_Terminator_biocyc_id IF NOT EXISTS FOR (n:Terminator) ON (n.biocyc_id);
+CREATE INDEX index_Terminator_name IF NOT EXISTS FOR (n:Terminator) ON (n.name);
+CREATE CONSTRAINT constraint_Promoter_eid IF NOT EXISTS ON (n:Promoter) ASSERT n.eid IS UNIQUE;
+CREATE INDEX index_Promoter_biocyc_id IF NOT EXISTS FOR (n:Promoter) ON (n.biocyc_id);
+CREATE INDEX index_Promoter_name IF NOT EXISTS FOR (n:Promoter) ON (n.name);
+CREATE CONSTRAINT constraint_TranscriptionUnit_eid IF NOT EXISTS ON (n:TranscriptionUnit) ASSERT n.eid IS UNIQUE;
+CREATE INDEX index_TranscriptionUnit_biocyc_id IF NOT EXISTS FOR (n:TranscriptionUnit) ON (n.biocyc_id);
+CREATE INDEX index_TranscriptionUnit_name IF NOT EXISTS FOR (n:TranscriptionUnit) ON (n.name);
+CREATE CONSTRAINT constraint_RNA_eid IF NOT EXISTS ON (n:RNA) ASSERT n.eid IS UNIQUE;
+CREATE INDEX index_RNA_biocyc_id IF NOT EXISTS FOR (n:RNA) ON (n.biocyc_id);
+CREATE INDEX index_RNA_name IF NOT EXISTS FOR (n:RNA) ON (n.name);
+CREATE CONSTRAINT constraint_Protein_eid IF NOT EXISTS ON (n:Protein) ASSERT n.eid IS UNIQUE;
+CREATE INDEX index_Protein_biocyc_id IF NOT EXISTS FOR (n:Protein) ON (n.biocyc_id);
+CREATE INDEX index_Protein_name IF NOT EXISTS FOR (n:Protein) ON (n.name);
+CREATE CONSTRAINT constraint_Reaction_eid IF NOT EXISTS ON (n:Reaction) ASSERT n.eid IS UNIQUE;
+CREATE INDEX index_Reaction_biocyc_id IF NOT EXISTS FOR (n:Reaction) ON (n.biocyc_id);
+CREATE INDEX index_Reaction_name IF NOT EXISTS FOR (n:Reaction) ON (n.name);
+CREATE CONSTRAINT constraint_Pathway_eid IF NOT EXISTS ON (n:Pathway) ASSERT n.eid IS UNIQUE;
+CREATE INDEX index_Pathway_biocyc_id IF NOT EXISTS FOR (n:Pathway) ON (n.biocyc_id);
+CREATE INDEX index_Pathway_name IF NOT EXISTS FOR (n:Pathway) ON (n.name);
+CREATE CONSTRAINT constraint_EnzReaction_eid IF NOT EXISTS ON (n:EnzReaction) ASSERT n.eid IS UNIQUE;
+CREATE INDEX index_EnzReaction_biocyc_id IF NOT EXISTS FOR (n:EnzReaction) ON (n.biocyc_id);
+CREATE INDEX index_EnzReaction_name IF NOT EXISTS FOR (n:EnzReaction) ON (n.name);
+CREATE CONSTRAINT constraint_Regulation_eid IF NOT EXISTS ON (n:Regulation) ASSERT n.eid IS UNIQUE;
+CREATE INDEX index_Regulation_biocyc_id IF NOT EXISTS FOR (n:Regulation) ON (n.biocyc_id);
+CREATE INDEX index_Regulation_name IF NOT EXISTS FOR (n:Regulation) ON (n.name);
+    </sql>
+  </changeSet>
+
+  <changeSet id="load BioCycClass from BsubCyc-data-47.zip, date 03/10/2022" author="rcai">
+    <comment>
+        load BioCyc BioCycClass.tsv from BsubCyc-data-47.zip, 7565 rows
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.ZipFileQueryHandler"
+      query="
+      UNWIND $rows as row
+MERGE (n:db_BioCyc {eid: row.eid})
+SET n:BioCycClass:db_BsubCyc,n.biocyc_id=row.biocyc_id,n.name=row.name,n.data_source='BioCyc'
+      "
+      fileName="BioCycClass.tsv"
+      zipFileName="BsubCyc-data-47.zip"
+      startAt="1"
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="load Compound from BsubCyc-data-47.zip, date 03/10/2022" author="rcai">
+    <comment>
+        load BioCyc Compound.tsv from BsubCyc-data-47.zip, 5242 rows
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.ZipFileQueryHandler"
+      query="
+      UNWIND $rows as row
+MERGE (n:db_BioCyc {eid: row.eid})
+SET n:Compound:db_BsubCyc,n.biocyc_id=row.biocyc_id,n.name=row.name,n.abbrev_name=row.abbrev_name,n.inchi_key=row.inchi_key,n.inchi=row.inchi,n.smiles=row.smiles,n.data_source='BioCyc'
+      "
+      fileName="Compound.tsv"
+      zipFileName="BsubCyc-data-47.zip"
+      startAt="1"
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="load DNABindingSite from BsubCyc-data-47.zip, date 03/10/2022" author="rcai">
+    <comment>
+        load BioCyc DNABindingSite.tsv from BsubCyc-data-47.zip, 831 rows
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.ZipFileQueryHandler"
+      query="
+      UNWIND $rows as row
+MERGE (n:db_BioCyc {eid: row.eid})
+SET n:DNABindingSite:db_BsubCyc,n.biocyc_id=row.biocyc_id,n.abs_center_pos=row.abs_center_pos,n.site_length=row.site_length,n.data_source='BioCyc'
+      "
+      fileName="DNABindingSite.tsv"
+      zipFileName="BsubCyc-data-47.zip"
+      startAt="1"
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="load Gene from BsubCyc-data-47.zip, date 03/10/2022" author="rcai">
+    <comment>
+        load BioCyc Gene.tsv from BsubCyc-data-47.zip, 4536 rows
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.ZipFileQueryHandler"
+      query="
+      UNWIND $rows as row
+MERGE (n:db_BioCyc {eid: row.eid})
+SET n:Gene:db_BsubCyc,n.biocyc_id=row.biocyc_id,n.name=row.name,n.accession=row.accession,n.left_end_position=row.left_end_position,n.right_end_position=row.right_end_position,n.strand=row.strand,n.data_source='BioCyc'
+      "
+      fileName="Gene.tsv"
+      zipFileName="BsubCyc-data-47.zip"
+      startAt="1"
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="load Terminator from BsubCyc-data-47.zip, date 03/10/2022" author="rcai">
+    <comment>
+        load BioCyc Terminator.tsv from BsubCyc-data-47.zip, 1147 rows
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.ZipFileQueryHandler"
+      query="
+      UNWIND $rows as row
+MERGE (n:db_BioCyc {eid: row.eid})
+SET n:Terminator:db_BsubCyc,n.biocyc_id=row.biocyc_id,n.left_end_position=row.left_end_position,n.right_end_position=row.right_end_position,n.data_source='BioCyc'
+      "
+      fileName="Terminator.tsv"
+      zipFileName="BsubCyc-data-47.zip"
+      startAt="1"
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="load Promoter from BsubCyc-data-47.zip, date 03/10/2022" author="rcai">
+    <comment>
+        load BioCyc Promoter.tsv from BsubCyc-data-47.zip, 1235 rows
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.ZipFileQueryHandler"
+      query="
+      UNWIND $rows as row
+MERGE (n:db_BioCyc {eid: row.eid})
+SET n:Promoter:db_BsubCyc,n.biocyc_id=row.biocyc_id,n.name=row.name,n.pos_1=row.pos_1,n.strand=row.strand,n.data_source='BioCyc'
+      "
+      fileName="Promoter.tsv"
+      zipFileName="BsubCyc-data-47.zip"
+      startAt="1"
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="load TranscriptionUnit from BsubCyc-data-47.zip, date 03/10/2022" author="rcai">
+    <comment>
+        load BioCyc TranscriptionUnit.tsv from BsubCyc-data-47.zip, 1647 rows
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.ZipFileQueryHandler"
+      query="
+      UNWIND $rows as row
+MERGE (n:db_BioCyc {eid: row.eid})
+SET n:TranscriptionUnit:db_BsubCyc,n.biocyc_id=row.biocyc_id,n.name=row.name,n.data_source='BioCyc'
+      "
+      fileName="TranscriptionUnit.tsv"
+      zipFileName="BsubCyc-data-47.zip"
+      startAt="1"
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="load RNA from BsubCyc-data-47.zip, date 03/10/2022" author="rcai">
+    <comment>
+        load BioCyc RNA.tsv from BsubCyc-data-47.zip, 295 rows
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.ZipFileQueryHandler"
+      query="
+      UNWIND $rows as row
+MERGE (n:db_BioCyc {eid: row.eid})
+SET n:RNA:db_BsubCyc,n.biocyc_id=row.biocyc_id,n.name=row.name,n.data_source='BioCyc'
+      "
+      fileName="RNA.tsv"
+      zipFileName="BsubCyc-data-47.zip"
+      startAt="1"
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="load Protein from BsubCyc-data-47.zip, date 03/10/2022" author="rcai">
+    <comment>
+        load BioCyc Protein.tsv from BsubCyc-data-47.zip, 4569 rows
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.ZipFileQueryHandler"
+      query="
+      UNWIND $rows as row
+MERGE (n:db_BioCyc {eid: row.eid})
+SET n:Protein:db_BsubCyc,n.biocyc_id=row.biocyc_id,n.name=row.name,n.abbrev_name=row.abbrev_name,n.molecular_weight_kd=row.molecular_weight_kd,n.pi=row.pi,n.data_source='BioCyc'
+      "
+      fileName="Protein.tsv"
+      zipFileName="BsubCyc-data-47.zip"
+      startAt="1"
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="load Reaction from BsubCyc-data-47.zip, date 03/10/2022" author="rcai">
+    <comment>
+        load BioCyc Reaction.tsv from BsubCyc-data-47.zip, 1727 rows
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.ZipFileQueryHandler"
+      query="
+      UNWIND $rows as row
+MERGE (n:db_BioCyc {eid: row.eid})
+SET n:Reaction:db_BsubCyc,n.biocyc_id=row.biocyc_id,n.name=row.name,n.ec_number=row.ec_number,n.direction=row.direction,n.location=row.location,n.data_source='BioCyc'
+      "
+      fileName="Reaction.tsv"
+      zipFileName="BsubCyc-data-47.zip"
+      startAt="1"
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="load Pathway from BsubCyc-data-47.zip, date 03/10/2022" author="rcai">
+    <comment>
+        load BioCyc Pathway.tsv from BsubCyc-data-47.zip, 327 rows
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.ZipFileQueryHandler"
+      query="
+      UNWIND $rows as row
+MERGE (n:db_BioCyc {eid: row.eid})
+SET n:Pathway:db_BsubCyc,n.biocyc_id=row.biocyc_id,n.name=row.name,n.data_source='BioCyc'
+      "
+      fileName="Pathway.tsv"
+      zipFileName="BsubCyc-data-47.zip"
+      startAt="1"
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="load EnzReaction from BsubCyc-data-47.zip, date 03/10/2022" author="rcai">
+    <comment>
+        load BioCyc EnzReaction.tsv from BsubCyc-data-47.zip, 1356 rows
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.ZipFileQueryHandler"
+      query="
+      UNWIND $rows as row
+MERGE (n:db_BioCyc {eid: row.eid})
+SET n:EnzReaction:db_BsubCyc,n.biocyc_id=row.biocyc_id,n.name=row.name,n.data_source='BioCyc'
+      "
+      fileName="EnzReaction.tsv"
+      zipFileName="BsubCyc-data-47.zip"
+      startAt="1"
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="load Regulation from BsubCyc-data-47.zip, date 03/10/2022" author="rcai">
+    <comment>
+        load BioCyc Regulation.tsv from BsubCyc-data-47.zip, 917 rows
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.ZipFileQueryHandler"
+      query="
+      UNWIND $rows as row
+MERGE (n:db_BioCyc {eid: row.eid})
+SET n:Regulation:db_BsubCyc,n.biocyc_id=row.biocyc_id,n.mode=row.mode,n.mechanism=row.mechanism,n.data_source='BioCyc'
+      "
+      fileName="Regulation.tsv"
+      zipFileName="BsubCyc-data-47.zip"
+      startAt="1"
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="load BioCycClass synonyms from BsubCyc-data-47.zip, date 03/10/2022" author="rcai">
+    <comment>
+        Load BioCyc BioCycClass-synonyms.tsv from BsubCyc-data-47.zip
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.ZipFileQueryHandler"
+      query="
+      UNWIND $rows AS row
+MERGE (a:Synonym {name: row.name}) SET a.lowercase_name=toLower(row.name)
+WITH row, a MATCH (b:BioCycClass {eid: row.eid})
+MERGE (b)-[r:HAS_SYNONYM]->(a)
+      "
+      fileName="BioCycClass-synonyms.tsv"
+      zipFileName="BsubCyc-data-47.zip"
+      startAt="1"
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="load Compound synonyms from BsubCyc-data-47.zip, date 03/10/2022" author="rcai">
+    <comment>
+        Load BioCyc Compound-synonyms.tsv from BsubCyc-data-47.zip
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.ZipFileQueryHandler"
+      query="
+      UNWIND $rows AS row
+MERGE (a:Synonym {name: row.name}) SET a.lowercase_name=toLower(row.name)
+WITH row, a MATCH (b:Compound {eid: row.eid})
+MERGE (b)-[r:HAS_SYNONYM]->(a)
+      "
+      fileName="Compound-synonyms.tsv"
+      zipFileName="BsubCyc-data-47.zip"
+      startAt="1"
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="load Gene synonyms from BsubCyc-data-47.zip, date 03/10/2022" author="rcai">
+    <comment>
+        Load BioCyc Gene-synonyms.tsv from BsubCyc-data-47.zip
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.ZipFileQueryHandler"
+      query="
+      UNWIND $rows AS row
+MERGE (a:Synonym {name: row.name}) SET a.lowercase_name=toLower(row.name)
+WITH row, a MATCH (b:Gene {eid: row.eid})
+MERGE (b)-[r:HAS_SYNONYM]->(a)
+      "
+      fileName="Gene-synonyms.tsv"
+      zipFileName="BsubCyc-data-47.zip"
+      startAt="1"
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="load Promoter synonyms from BsubCyc-data-47.zip, date 03/10/2022" author="rcai">
+    <comment>
+        Load BioCyc Promoter-synonyms.tsv from BsubCyc-data-47.zip
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.ZipFileQueryHandler"
+      query="
+      UNWIND $rows AS row
+MERGE (a:Synonym {name: row.name}) SET a.lowercase_name=toLower(row.name)
+WITH row, a MATCH (b:Promoter {eid: row.eid})
+MERGE (b)-[r:HAS_SYNONYM]->(a)
+      "
+      fileName="Promoter-synonyms.tsv"
+      zipFileName="BsubCyc-data-47.zip"
+      startAt="1"
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="load Protein synonyms from BsubCyc-data-47.zip, date 03/10/2022" author="rcai">
+    <comment>
+        Load BioCyc Protein-synonyms.tsv from BsubCyc-data-47.zip
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.ZipFileQueryHandler"
+      query="
+      UNWIND $rows AS row
+MERGE (a:Synonym {name: row.name}) SET a.lowercase_name=toLower(row.name)
+WITH row, a MATCH (b:Protein {eid: row.eid})
+MERGE (b)-[r:HAS_SYNONYM]->(a)
+      "
+      fileName="Protein-synonyms.tsv"
+      zipFileName="BsubCyc-data-47.zip"
+      startAt="1"
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="load Reaction synonyms from BsubCyc-data-47.zip, date 03/10/2022" author="rcai">
+    <comment>
+        Load BioCyc Reaction-synonyms.tsv from BsubCyc-data-47.zip
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.ZipFileQueryHandler"
+      query="
+      UNWIND $rows AS row
+MERGE (a:Synonym {name: row.name}) SET a.lowercase_name=toLower(row.name)
+WITH row, a MATCH (b:Reaction {eid: row.eid})
+MERGE (b)-[r:HAS_SYNONYM]->(a)
+      "
+      fileName="Reaction-synonyms.tsv"
+      zipFileName="BsubCyc-data-47.zip"
+      startAt="1"
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="load Pathway synonyms from BsubCyc-data-47.zip, date 03/10/2022" author="rcai">
+    <comment>
+        Load BioCyc Pathway-synonyms.tsv from BsubCyc-data-47.zip
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.ZipFileQueryHandler"
+      query="
+      UNWIND $rows AS row
+MERGE (a:Synonym {name: row.name}) SET a.lowercase_name=toLower(row.name)
+WITH row, a MATCH (b:Pathway {eid: row.eid})
+MERGE (b)-[r:HAS_SYNONYM]->(a)
+      "
+      fileName="Pathway-synonyms.tsv"
+      zipFileName="BsubCyc-data-47.zip"
+      startAt="1"
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="load TYPE_OF relationship in BioCycClass-rels.tsv from BsubCyc-data-47.zip, date 03/10/2022" author="rcai">
+    <comment>
+        Load BioCyc TYPE_OF relationships, BioCycClass-rels.tsv from BsubCyc-data-47.zip
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.ZipFileQueryHandler"
+      query="
+      UNWIND $rows AS row
+with row where row.RELATIONSHIP='TYPE_OF'
+MATCH (a:db_BioCyc {eid: row.from_id}), (b:db_BioCyc {eid: row.to_id})
+MERGE (a)-[r:TYPE_OF]->(b)
+RETURN COUNT(*)
+      "
+      fileName="BioCycClass-rels.tsv"
+      zipFileName="BsubCyc-data-47.zip"
+      startAt="1"
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="load TYPE_OF relationship in Compound-rels.tsv from BsubCyc-data-47.zip, date 03/10/2022" author="rcai">
+    <comment>
+        Load BioCyc TYPE_OF relationships, Compound-rels.tsv from BsubCyc-data-47.zip
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.ZipFileQueryHandler"
+      query="
+      UNWIND $rows AS row
+with row where row.RELATIONSHIP='TYPE_OF'
+MATCH (a:db_BioCyc {eid: row.from_id}), (b:db_BioCyc {eid: row.to_id})
+MERGE (a)-[r:TYPE_OF]->(b)
+RETURN COUNT(*)
+      "
+      fileName="Compound-rels.tsv"
+      zipFileName="BsubCyc-data-47.zip"
+      startAt="1"
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="load Compound CHEBI_LINK from BsubCyc-data-47.zip, date 03/10/2022" author="rcai">
+    <comment>
+        Load Compound CHEBI_LINK: Compound-dblinks.tsv from BsubCyc-data-47.zip
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.ZipFileQueryHandler"
+      query="
+      UNWIND $rows AS row
+with row where row.db_name='CHEBI'
+MATCH (a:db_BioCyc {eid: row.from_id}), (b:db_CHEBI {eid: row.to_id})
+MERGE (a)-[r:CHEBI_LINK]->(b)
+RETURN COUNT(*)
+      "
+      fileName="Compound-dblinks.tsv"
+      zipFileName="BsubCyc-data-47.zip"
+      startAt="1"
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="load ELEMENT_OF relationship in TranscriptionUnit-rels.tsv from BsubCyc-data-47.zip, date 03/10/2022" author="rcai">
+    <comment>
+        Load BioCyc ELEMENT_OF relationships, TranscriptionUnit-rels.tsv from BsubCyc-data-47.zip
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.ZipFileQueryHandler"
+      query="
+      UNWIND $rows AS row
+with row where row.RELATIONSHIP='ELEMENT_OF'
+MATCH (a:db_BioCyc {eid: row.from_id}), (b:db_BioCyc {eid: row.to_id})
+MERGE (a)-[r:ELEMENT_OF]->(b)
+RETURN COUNT(*)
+      "
+      fileName="TranscriptionUnit-rels.tsv"
+      zipFileName="BsubCyc-data-47.zip"
+      startAt="1"
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="load TYPE_OF relationship in RNA-rels.tsv from BsubCyc-data-47.zip, date 03/10/2022" author="rcai">
+    <comment>
+        Load BioCyc TYPE_OF relationships, RNA-rels.tsv from BsubCyc-data-47.zip
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.ZipFileQueryHandler"
+      query="
+      UNWIND $rows AS row
+with row where row.RELATIONSHIP='TYPE_OF'
+MATCH (a:db_BioCyc {eid: row.from_id}), (b:db_BioCyc {eid: row.to_id})
+MERGE (a)-[r:TYPE_OF]->(b)
+RETURN COUNT(*)
+      "
+      fileName="RNA-rels.tsv"
+      zipFileName="BsubCyc-data-47.zip"
+      startAt="1"
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="load ENCODES relationship in RNA-rels.tsv from BsubCyc-data-47.zip, date 03/10/2022" author="rcai">
+    <comment>
+        Load BioCyc ENCODES relationships, RNA-rels.tsv from BsubCyc-data-47.zip
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.ZipFileQueryHandler"
+      query="
+      UNWIND $rows AS row
+with row where row.RELATIONSHIP='ENCODES'
+MATCH (a:db_BioCyc {eid: row.from_id}), (b:db_BioCyc {eid: row.to_id})
+MERGE (a)-[r:ENCODES]->(b)
+RETURN COUNT(*)
+      "
+      fileName="RNA-rels.tsv"
+      zipFileName="BsubCyc-data-47.zip"
+      startAt="1"
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="load MODIFIED_TO relationship in RNA-rels.tsv from BsubCyc-data-47.zip, date 03/10/2022" author="rcai">
+    <comment>
+        Load BioCyc MODIFIED_TO relationships, RNA-rels.tsv from BsubCyc-data-47.zip
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.ZipFileQueryHandler"
+      query="
+      UNWIND $rows AS row
+with row where row.RELATIONSHIP='MODIFIED_TO'
+MATCH (a:db_BioCyc {eid: row.from_id}), (b:db_BioCyc {eid: row.to_id})
+MERGE (a)-[r:MODIFIED_TO]->(b)
+RETURN COUNT(*)
+      "
+      fileName="RNA-rels.tsv"
+      zipFileName="BsubCyc-data-47.zip"
+      startAt="1"
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="load ENCODES relationship in Protein-rels.tsv from BsubCyc-data-47.zip, date 03/10/2022" author="rcai">
+    <comment>
+        Load BioCyc ENCODES relationships, Protein-rels.tsv from BsubCyc-data-47.zip
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.ZipFileQueryHandler"
+      query="
+      UNWIND $rows AS row
+with row where row.RELATIONSHIP='ENCODES'
+MATCH (a:db_BioCyc {eid: row.from_id}), (b:db_BioCyc {eid: row.to_id})
+MERGE (a)-[r:ENCODES]->(b)
+RETURN COUNT(*)
+      "
+      fileName="Protein-rels.tsv"
+      zipFileName="BsubCyc-data-47.zip"
+      startAt="1"
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="load MODIFIED_TO relationship in Protein-rels.tsv from BsubCyc-data-47.zip, date 03/10/2022" author="rcai">
+    <comment>
+        Load BioCyc MODIFIED_TO relationships, Protein-rels.tsv from BsubCyc-data-47.zip
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.ZipFileQueryHandler"
+      query="
+      UNWIND $rows AS row
+with row where row.RELATIONSHIP='MODIFIED_TO'
+MATCH (a:db_BioCyc {eid: row.from_id}), (b:db_BioCyc {eid: row.to_id})
+MERGE (a)-[r:MODIFIED_TO]->(b)
+RETURN COUNT(*)
+      "
+      fileName="Protein-rels.tsv"
+      zipFileName="BsubCyc-data-47.zip"
+      startAt="1"
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="load TYPE_OF relationship in Protein-rels.tsv from BsubCyc-data-47.zip, date 03/10/2022" author="rcai">
+    <comment>
+        Load BioCyc TYPE_OF relationships, Protein-rels.tsv from BsubCyc-data-47.zip
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.ZipFileQueryHandler"
+      query="
+      UNWIND $rows AS row
+with row where row.RELATIONSHIP='TYPE_OF'
+MATCH (a:db_BioCyc {eid: row.from_id}), (b:db_BioCyc {eid: row.to_id})
+MERGE (a)-[r:TYPE_OF]->(b)
+RETURN COUNT(*)
+      "
+      fileName="Protein-rels.tsv"
+      zipFileName="BsubCyc-data-47.zip"
+      startAt="1"
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="load COMPONENT_OF relationship in Protein-rels.tsv from BsubCyc-data-47.zip, date 03/10/2022" author="rcai">
+    <comment>
+        Load BioCyc COMPONENT_OF relationships, Protein-rels.tsv from BsubCyc-data-47.zip
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.ZipFileQueryHandler"
+      query="
+      UNWIND $rows AS row
+with row where row.RELATIONSHIP='COMPONENT_OF'
+MATCH (a:db_BioCyc {eid: row.from_id}), (b:db_BioCyc {eid: row.to_id})
+MERGE (a)-[r:COMPONENT_OF]->(b)
+RETURN COUNT(*)
+      "
+      fileName="Protein-rels.tsv"
+      zipFileName="BsubCyc-data-47.zip"
+      startAt="1"
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="load Protein GO_LINK from BsubCyc-data-47.zip, date 03/10/2022" author="rcai">
+    <comment>
+        Load Protein GO_LINK: Protein-dblinks.tsv from BsubCyc-data-47.zip
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.ZipFileQueryHandler"
+      query="
+      UNWIND $rows AS row
+with row where row.db_name='GO'
+MATCH (a:db_BioCyc {eid: row.from_id}), (b:db_GO {eid: row.to_id})
+MERGE (a)-[r:GO_LINK]->(b)
+RETURN COUNT(*)
+      "
+      fileName="Protein-dblinks.tsv"
+      zipFileName="BsubCyc-data-47.zip"
+      startAt="1"
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="load TYPE_OF relationship in Reaction-rels.tsv from BsubCyc-data-47.zip, date 03/10/2022" author="rcai">
+    <comment>
+        Load BioCyc TYPE_OF relationships, Reaction-rels.tsv from BsubCyc-data-47.zip
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.ZipFileQueryHandler"
+      query="
+      UNWIND $rows AS row
+with row where row.RELATIONSHIP='TYPE_OF'
+MATCH (a:db_BioCyc {eid: row.from_id}), (b:db_BioCyc {eid: row.to_id})
+MERGE (a)-[r:TYPE_OF]->(b)
+RETURN COUNT(*)
+      "
+      fileName="Reaction-rels.tsv"
+      zipFileName="BsubCyc-data-47.zip"
+      startAt="1"
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="load CONSUMED_BY relationship in Reaction-rels.tsv from BsubCyc-data-47.zip, date 03/10/2022" author="rcai">
+    <comment>
+        Load BioCyc CONSUMED_BY relationships, Reaction-rels.tsv from BsubCyc-data-47.zip
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.ZipFileQueryHandler"
+      query="
+      UNWIND $rows AS row
+with row where row.RELATIONSHIP='CONSUMED_BY'
+MATCH (a:db_BioCyc {eid: row.from_id}), (b:db_BioCyc {eid: row.to_id})
+MERGE (a)-[r:CONSUMED_BY]->(b)
+RETURN COUNT(*)
+      "
+      fileName="Reaction-rels.tsv"
+      zipFileName="BsubCyc-data-47.zip"
+      startAt="1"
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="load PRODUCES relationship in Reaction-rels.tsv from BsubCyc-data-47.zip, date 03/10/2022" author="rcai">
+    <comment>
+        Load BioCyc PRODUCES relationships, Reaction-rels.tsv from BsubCyc-data-47.zip
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.ZipFileQueryHandler"
+      query="
+      UNWIND $rows AS row
+with row where row.RELATIONSHIP='PRODUCES'
+MATCH (a:db_BioCyc {eid: row.from_id}), (b:db_BioCyc {eid: row.to_id})
+MERGE (a)-[r:PRODUCES]->(b)
+RETURN COUNT(*)
+      "
+      fileName="Reaction-rels.tsv"
+      zipFileName="BsubCyc-data-47.zip"
+      startAt="1"
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="load Reaction ENZYME_LINK from BsubCyc-data-47.zip, date 03/10/2022" author="rcai">
+    <comment>
+        Load Reaction ENZYME_LINK: Reaction-dblinks.tsv from BsubCyc-data-47.zip
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.ZipFileQueryHandler"
+      query="
+      UNWIND $rows AS row
+with row where row.db_name='Enzyme'
+MATCH (a:db_BioCyc {eid: row.from_id}), (b:db_Enzyme {eid: row.to_id})
+MERGE (a)-[r:ENZYME_LINK]->(b)
+RETURN COUNT(*)
+      "
+      fileName="Reaction-dblinks.tsv"
+      zipFileName="BsubCyc-data-47.zip"
+      startAt="1"
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="load TYPE_OF relationship in Pathway-rels.tsv from BsubCyc-data-47.zip, date 03/10/2022" author="rcai">
+    <comment>
+        Load BioCyc TYPE_OF relationships, Pathway-rels.tsv from BsubCyc-data-47.zip
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.ZipFileQueryHandler"
+      query="
+      UNWIND $rows AS row
+with row where row.RELATIONSHIP='TYPE_OF'
+MATCH (a:db_BioCyc {eid: row.from_id}), (b:db_BioCyc {eid: row.to_id})
+MERGE (a)-[r:TYPE_OF]->(b)
+RETURN COUNT(*)
+      "
+      fileName="Pathway-rels.tsv"
+      zipFileName="BsubCyc-data-47.zip"
+      startAt="1"
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="load IN_PATHWAY relationship in Pathway-rels.tsv from BsubCyc-data-47.zip, date 03/10/2022" author="rcai">
+    <comment>
+        Load BioCyc IN_PATHWAY relationships, Pathway-rels.tsv from BsubCyc-data-47.zip
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.ZipFileQueryHandler"
+      query="
+      UNWIND $rows AS row
+with row where row.RELATIONSHIP='IN_PATHWAY'
+MATCH (a:db_BioCyc {eid: row.from_id}), (b:db_BioCyc {eid: row.to_id})
+MERGE (a)-[r:IN_PATHWAY]->(b)
+RETURN COUNT(*)
+      "
+      fileName="Pathway-rels.tsv"
+      zipFileName="BsubCyc-data-47.zip"
+      startAt="1"
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="load CATALYZES relationship in EnzReaction-rels.tsv from BsubCyc-data-47.zip, date 03/10/2022" author="rcai">
+    <comment>
+        Load BioCyc CATALYZES relationships, EnzReaction-rels.tsv from BsubCyc-data-47.zip
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.ZipFileQueryHandler"
+      query="
+      UNWIND $rows AS row
+with row where row.RELATIONSHIP='CATALYZES'
+MATCH (a:db_BioCyc {eid: row.from_id}), (b:db_BioCyc {eid: row.to_id})
+MERGE (a)-[r:CATALYZES]->(b)
+RETURN COUNT(*)
+      "
+      fileName="EnzReaction-rels.tsv"
+      zipFileName="BsubCyc-data-47.zip"
+      startAt="1"
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="load TYPE_OF relationship in Regulation-rels.tsv from BsubCyc-data-47.zip, date 03/10/2022" author="rcai">
+    <comment>
+        Load BioCyc TYPE_OF relationships, Regulation-rels.tsv from BsubCyc-data-47.zip
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.ZipFileQueryHandler"
+      query="
+      UNWIND $rows AS row
+with row where row.RELATIONSHIP='TYPE_OF'
+MATCH (a:db_BioCyc {eid: row.from_id}), (b:db_BioCyc {eid: row.to_id})
+MERGE (a)-[r:TYPE_OF]->(b)
+RETURN COUNT(*)
+      "
+      fileName="Regulation-rels.tsv"
+      zipFileName="BsubCyc-data-47.zip"
+      startAt="1"
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="load BINDS relationship in Regulation-rels.tsv from BsubCyc-data-47.zip, date 03/10/2022" author="rcai">
+    <comment>
+        Load BioCyc BINDS relationships, Regulation-rels.tsv from BsubCyc-data-47.zip
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.ZipFileQueryHandler"
+      query="
+      UNWIND $rows AS row
+with row where row.RELATIONSHIP='BINDS'
+MATCH (a:db_BioCyc {eid: row.from_id}), (b:db_BioCyc {eid: row.to_id})
+MERGE (a)-[r:BINDS]->(b)
+RETURN COUNT(*)
+      "
+      fileName="Regulation-rels.tsv"
+      zipFileName="BsubCyc-data-47.zip"
+      startAt="1"
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+
+  <changeSet id="load REGULATES relationship in Regulation-rels.tsv from BsubCyc-data-47.zip, date 03/10/2022" author="rcai">
+    <comment>
+        Load BioCyc REGULATES relationships, Regulation-rels.tsv from BsubCyc-data-47.zip
+    </comment>
+    <customChange
+      class="edu.ucsd.sbrg.ZipFileQueryHandler"
+      query="
+      UNWIND $rows AS row
+with row where row.RELATIONSHIP='REGULATES'
+MATCH (a:db_BioCyc {eid: row.from_id}), (b:db_BioCyc {eid: row.to_id})
+MERGE (a)-[r:REGULATES]->(b)
+RETURN COUNT(*)
+      "
+      fileName="Regulation-rels.tsv"
+      zipFileName="BsubCyc-data-47.zip"
+      startAt="1"
+      neo4jHost="${neo4jHost}"
+      neo4jCredentials="${neo4jCredentials}"
+      neo4jDatabase="${neo4jDatabase}"
+      azureStorageName="${azureStorageName}"
+      azureStorageKey="${azureStorageKey}"
+      localSaveFileDir="${localSaveFileDir}"
+
+    />
+  </changeSet>
+</databaseChangeLog>
