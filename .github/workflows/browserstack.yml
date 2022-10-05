@@ -21,7 +21,7 @@ jobs:
           project-name: lifelike
 
       - name: 'Checkout the repository'
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3.1.0
 
       - name: 'Install BrowserStack Cypress CLI'
         run: npm install -g browserstack-cypress-cli
