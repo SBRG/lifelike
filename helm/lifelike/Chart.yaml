@@ -5,8 +5,8 @@ home: https://lifelike.bio
 icon: https://github.com/SBRG/lifelike/raw/main/appserver/assets/lifelike.png
 type: application
 
-version: 0.5.0
-appVersion: 0.10.4
+version: 0.6.2
+appVersion: 0.98.2
 
 kubeVersion: ">=1.20.0-0"
 
