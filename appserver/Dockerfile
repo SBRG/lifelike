@@ -37,7 +37,7 @@ LABEL org.opencontainers.image.source https://github.com/SBRG/lifelike
 
 # Install runtime system dependencies
 RUN apt-get update \
-    && apt-get install -y libmagic-dev graphviz libgraphviz-dev \
+    && apt-get install -y libmagic-dev graphviz libgraphviz-dev curl \
     && apt-get clean
 
 # Copy Python virtual environment

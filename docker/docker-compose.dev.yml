@@ -8,7 +8,7 @@ services:
       args:
         - ANGULAR_CONFIG=dev
     environment:
-      - APPSERVER_URL: http://appserver:5000
+      - APPSERVER_URL=http://appserver:5000
 
   appserver:
     build:
