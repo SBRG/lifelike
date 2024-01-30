@@ -1,3 +1,5 @@
+Most recent version of the code has been moved to: https://github.com/biosustain/lifelike
+
 # ![Lifelike](https://sbrg.github.io/lifelike-website/favicon.ico) Lifelike
 
 <img src="https://sbrg.github.io/lifelike-website/images/cfb_logo.png" alt="CFB" border="0" /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
