@@ -1,0 +1,20 @@
+directories:
+  dataDirectory: ../../data
+  downloadDirectory: ../../data/download
+  processedDirectory: ../../data/processed
+  changelogsDirectory: ../../data/changelogs
+
+neo4j:
+  uri: bolt://localhost:7687
+  user: neo4j
+  password: rcai
+
+biocycFiles:
+  EcoCyc: ecoli_25.5.tar.gz
+  HumanCyc: human.tar_25.5.gz
+  YeastCyc: yeastcyc_25.5.tar.gz
+  PseudomonasCyc: pput160488cyc_25.5.tar.gz
+  BsubCyc: bsub_47.tar.gz
+  PaenibacillusCyc: gcf_000981585_25.5.tar.gz
+
+
