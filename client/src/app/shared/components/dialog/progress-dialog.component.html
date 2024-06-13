@@ -4,18 +4,21 @@
   </h4>
 </div>
 <div class="modal-body">
-  <div class="mb-2">
-    <ngb-progressbar *ngIf="lastProgress.mode === 'DETERMINATE'"
-                     type="primary" [value]="lastProgress.value * 100" [striped]="false" [animated]="false">
-    </ngb-progressbar>
-    <ngb-progressbar *ngIf="lastProgress.mode !== 'DETERMINATE'"
-                     type="primary" [value]="100" [striped]="true" [animated]="true">
-    </ngb-progressbar>
+  <div *ngFor="let lastProgress of lastProgresses">
+    <div class="mb-2">
+      <ngb-progressbar *ngIf="lastProgress.mode === 'DETERMINATE'"
+                       type="primary" [value]="lastProgress.value * 100" [striped]="false" [animated]="false">
+      </ngb-progressbar>
+      <ngb-progressbar *ngIf="lastProgress.mode !== 'DETERMINATE'"
+                       type="primary" [value]="100" [striped]="true" [animated]="true">
+      </ngb-progressbar>
+    </div>
+
+    <div>
+      {{lastProgress.status}}
+    </div>
   </div>
 
-  <div>
-    {{lastProgress.status}}
-  </div>
 
   <ng-container *ngIf="cancellable">
     <div class="mt-4">

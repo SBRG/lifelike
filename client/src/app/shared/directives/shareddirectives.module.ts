@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 
 import { DebounceInputDirective } from './debounceInput';
 import { DebounceClickDirective } from './debounceClick';
-import { ResizableDirective } from './resizable.directive';
 import { LinkWithHrefDirective, LinkWithoutHrefDirective, AbstractLinkDirective } from './link.directive';
 import { FormInputDirective } from './form-input.directive';
 import { AutoFocusDirective } from './auto-focus.directive';
@@ -18,7 +17,6 @@ const directives = [
   AbstractLinkDirective,
   DebounceClickDirective,
   DebounceInputDirective,
-  ResizableDirective,
   LinkWithoutHrefDirective,
   LinkWithHrefDirective,
   FormInputDirective,

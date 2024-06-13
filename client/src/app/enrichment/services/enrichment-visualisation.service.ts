@@ -5,7 +5,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable, combineLatest } from 'rxjs';
 import { map, mergeMap } from 'rxjs/operators';
 
-import { ApiService } from 'app/shared/services/api.service';
 import { BackgroundTask } from 'app/shared/rxjs/background-task';
 import { ErrorHandler } from 'app/shared/services/error-handler.service';
 import { FilesystemObject } from 'app/file-browser/models/filesystem-object';
@@ -31,7 +30,6 @@ const addressPrecisionMistake = d => {
 export class EnrichmentVisualisationService {
 
   constructor(protected readonly http: HttpClient,
-              protected readonly apiService: ApiService,
               protected readonly errorHandler: ErrorHandler,
               protected readonly snackBar: MatSnackBar,
               protected readonly enrichmentService: EnrichmentService) {
@@ -93,7 +91,6 @@ export class EnrichmentVisualisationService {
     return this.http.post<{ result: [] }>(
       `/api/enrichment-visualisation/enrich-with-go-terms`,
       {geneNames, organism: `${taxID}/${organism}`, analysis},
-      this.apiService.getHttpOptions(true),
     ).pipe(
       map((data: any) => data.map(addressPrecisionMistake))
     );

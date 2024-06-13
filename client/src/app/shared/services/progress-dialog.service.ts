@@ -1,16 +1,17 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {Observable} from 'rxjs';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Observable } from 'rxjs';
+import { NgbModalOptions } from '@ng-bootstrap/ng-bootstrap/modal/modal-config';
 
-import {Progress} from 'app/interfaces/common-dialog.interface';
+import { Progress } from 'app/interfaces/common-dialog.interface';
 
-import {ProgressDialogComponent} from '../components/dialog/progress-dialog.component';
+import { ProgressDialogComponent } from '../components/dialog/progress-dialog.component';
 import { openModal } from '../utils/modals';
 
 export interface ProgressDialogArguments {
   title: string;
-  progressObservable: Observable<Progress>;
+  progressObservables: Observable<Progress>[];
   onCancel?: () => void;
 }
 
@@ -23,10 +24,10 @@ export class ProgressDialog {
   ) {
   }
 
-  display(args: ProgressDialogArguments) {
-    const modalRef = openModal(this.modalService, ProgressDialogComponent);
+  display(args: ProgressDialogArguments, options?: NgbModalOptions) {
+    const modalRef = openModal(this.modalService, ProgressDialogComponent, options);
     modalRef.componentInstance.title = args.title;
-    modalRef.componentInstance.progressObservable = args.progressObservable;
+    modalRef.componentInstance.progressObservables = args.progressObservables;
     modalRef.componentInstance.cancellable = !!args.onCancel;
     if (args.onCancel) {
       modalRef.componentInstance.progressCancel.subscribe(() => {

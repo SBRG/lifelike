@@ -1,7 +1,7 @@
 <div class="d-flex flex-column h-100">
   <div class="module-body">
     <div class="mb-3">
-      <app-file-type-label [object]="object"></app-file-type-label>
+      <app-object-path [object]="object.parent" wrap="true"></app-object-path>
     </div>
 
     <h5 (click)="objectEdit.emit(object)">

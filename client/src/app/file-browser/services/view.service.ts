@@ -4,7 +4,6 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { ApiService } from 'app/shared/services/api.service';
 import { ModuleAwareComponent } from 'app/shared/modules';
 
 /**
@@ -12,14 +11,11 @@ import { ModuleAwareComponent } from 'app/shared/modules';
  */
 @Injectable({providedIn: 'root'})
 export class ViewService {
-  constructor(protected readonly http: HttpClient,
-              protected readonly apiService: ApiService) {
-  }
+  constructor(protected readonly http: HttpClient) {}
 
   get(viewId: string): Observable<object> {
     return this.http.get(
       `/api/view/${encodeURIComponent(viewId)}`,
-      this.apiService.getHttpOptions(true),
     );
   }
 
@@ -27,12 +23,10 @@ export class ViewService {
    * Given set of params saves them in DB and returns row UUID
    * @param params arbitrary JSON parsable object
    */
-  create(params: object): Observable<string> {
-    return this.http.post<string>(
+  create(params: object) {
+    return this.http.post(
       `/api/view/`, params,
       {
-        ...this.apiService.getHttpOptions(true),
-        // @ts-ignore
         responseType: 'text'
       }
     );

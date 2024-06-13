@@ -8,6 +8,25 @@ import {OperatingSystems} from 'app/interfaces/shared.interface';
 
 import {FAClass, CustomIconColors, Unicodes} from './constants';
 
+
+/**
+ * Splits a pascal-case (e.g. "TheQuickRedFox") string, separating the words by a " " character. E.g. "The Quick Red Fox".
+ * @param str the pascal-case string to split
+ * @returns the input string with the words split by " "
+ */
+export function splitPascalCaseStr(str: string): string {
+  return str
+    // Look for long acronyms and filter out the last letter
+    .replace(/([A-Z]+)([A-Z][a-z])/g, ' $1 $2')
+    // Look for lower-case letters followed by upper-case letters
+    .replace(/([a-z\d])([A-Z])/g, '$1 $2')
+    // Look for lower-case letters followed by numbers
+    .replace(/([a-zA-Z])(\d)/g, '$1 $2')
+    .replace(/^./, (s) => s.toUpperCase())
+    // Remove any white space left around the word
+    .trim();
+}
+
 /**
  * Takes an input string and returns the title-cased version of that string. E.g., 'lazy dog' becomes 'Lazy Dog'.
  *

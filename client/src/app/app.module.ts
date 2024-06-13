@@ -6,7 +6,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { RootStoreModule } from 'app/root-store';
 import { AdminModule } from 'app/admin/admin.module';
-import { AuthModule } from 'app/auth/auth.module';
+import { LifelikeAuthModule } from 'app/auth/auth.module';
 import { UserModule } from 'app/users/users.module';
 import { AppRoutingModule } from 'app/app-routing.module';
 import { AppComponent } from 'app/app.component';
@@ -34,6 +34,8 @@ import { SankeyViewerLibModule } from 'app/sankey-viewer/sankey-viewer-lib.modul
 import { TraceViewerLibModule } from 'app/trace-viewer/trace-viewer-lib.module';
 import { SankeyManyToManyViewerLibModule } from 'app/sankey-many-to-many-viewer/sankey-viewer-lib.module';
 import { FileTypesModule } from 'app/file-types/file-types.module';
+import { PoliciesModule } from 'app/policies/policies.module';
+import { ReportsModule } from 'app/reports/reports.module';
 
 @NgModule({
   declarations: [
@@ -51,7 +53,7 @@ import { FileTypesModule } from 'app/file-types/file-types.module';
     BrowserModule,
     PdfViewerLibModule,
     AdminModule,
-    AuthModule,
+    LifelikeAuthModule.forRoot(),
     SharedModule,
     AppRoutingModule,
     FileTypesModule,
@@ -72,6 +74,8 @@ import { FileTypesModule } from 'app/file-types/file-types.module';
     EnrichmentVisualisationsModule,
     ShortestPathModule,
     EnrichmentTablesModule,
+    PoliciesModule,
+    ReportsModule,
   ],
   providers: [
     httpInterceptorProviders,

@@ -6,20 +6,16 @@ import { Observable } from 'rxjs';
 
 import { OrganismAutocomplete, OrganismsResult } from 'app/interfaces';
 
-import { ApiService } from './api.service';
 
 @Injectable()
 export class SharedSearchService {
   readonly searchApi = '/api/search';
 
-  constructor(protected readonly http: HttpClient,
-              protected readonly apiService: ApiService) {
-  }
+  constructor(protected readonly http: HttpClient) {}
 
   getOrganismFromTaxId(organismTaxId: string): Observable<OrganismAutocomplete> {
     return this.http.get<{ result: OrganismAutocomplete }>(
       `${this.searchApi}/organism/${organismTaxId}`,
-      this.apiService.getHttpOptions(true),
     ).pipe(map(resp => resp.result));
   }
 
@@ -27,7 +23,6 @@ export class SharedSearchService {
     return this.http.post<{ result: OrganismsResult }>(
       `${this.searchApi}/organisms`,
       {query, limit},
-      this.apiService.getHttpOptions(true),
     ).pipe(map(resp => resp.result));
   }
 }

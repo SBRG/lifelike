@@ -1,11 +1,10 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-import { isNil } from 'lodash-es';
 import { Observable, of, timer, Subscription } from 'rxjs';
 import { map, mergeMap } from 'rxjs/operators';
 
-import { JWTTokenResponse } from 'app/interfaces';
+import { LifelikeJWTTokenResponse } from 'app/interfaces';
 
 
 @Injectable({providedIn: 'root'})
@@ -51,13 +50,12 @@ export class AuthenticationService implements OnDestroy {
   /**
    * Authenticate users to get a JWT
    */
-  public login(email: string, password: string): Observable<JWTTokenResponse> {
-    return this.http.post<JWTTokenResponse>(
+  public login(email: string, password: string): Observable<LifelikeJWTTokenResponse> {
+    return this.http.post<LifelikeJWTTokenResponse>(
       this.baseUrl + '/login',
       {email, password},
     ).pipe(
-      map((resp: JWTTokenResponse) => {
-        localStorage.setItem('authId', resp.user.id.toString());
+      map((resp: LifelikeJWTTokenResponse) => {
         localStorage.setItem('access_jwt', resp.accessToken.token);
         localStorage.setItem('expires_at', resp.accessToken.exp);
         // TODO: Move this out of localStorage
@@ -76,8 +74,6 @@ export class AuthenticationService implements OnDestroy {
     localStorage.removeItem('refresh_jwt');
     localStorage.removeItem('access_jwt');
     localStorage.removeItem('expires_at');
-    // See root-store module where this is set
-    localStorage.removeItem('authId');
   }
 
   /**
@@ -85,7 +81,7 @@ export class AuthenticationService implements OnDestroy {
    */
   public refresh() {
     const jwt = localStorage.getItem('refresh_jwt');
-    return this.http.post<JWTTokenResponse>(
+    return this.http.post<LifelikeJWTTokenResponse>(
       this.baseUrl + '/refresh',
       { jwt },
     ).pipe(
@@ -98,16 +94,6 @@ export class AuthenticationService implements OnDestroy {
           return resp;
         }),
       );
-  }
-
-  public whoAmI(): number {
-    const authId = JSON.parse(localStorage.getItem('authId'));
-
-    if (
-      isNil(authId)
-    ) { return; }
-
-    return authId;
   }
 
   public getAccessToken() {

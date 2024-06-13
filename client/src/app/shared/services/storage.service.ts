@@ -3,22 +3,15 @@ import { HttpClient, HttpResponse, HttpEvent } from '@angular/common/http';
 
 import { Observable } from 'rxjs';
 
-import { AuthenticationService } from 'app/auth/services/authentication.service';
-
-import { AbstractService } from './abstract-service';
-
 @Injectable({providedIn: 'root'})
-export class StorageService extends AbstractService {
+export class StorageService {
     readonly baseUrl = '/api/storage';
 
-    constructor(auth: AuthenticationService, http: HttpClient) {
-        super(auth, http);
-    }
+    constructor(private http: HttpClient) { }
 
     getUserManual(): Observable<HttpResponse<Blob>> {
         return this.http.get(
             `${this.baseUrl}/manual`, {
-            ...this.getHttpOptions(true),
             responseType: 'blob',
             observe: 'response',
         });
@@ -31,7 +24,6 @@ export class StorageService extends AbstractService {
             `${this.baseUrl}/manual`,
             formData,
             {
-                ...this.getHttpOptions(true),
                 observe: 'events',
                 reportProgress: true
             });

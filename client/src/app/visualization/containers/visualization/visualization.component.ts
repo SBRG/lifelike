@@ -220,9 +220,9 @@ export class VisualizationComponent implements OnInit, OnDestroy {
   openLoadingClustersDialog() {
     this.loadingClustersDialogRef = this.progressDialog.display({
       title: `Node Expansion`,
-      progressObservable: new BehaviorSubject<Progress>(new Progress({
+      progressObservables: [new BehaviorSubject<Progress>(new Progress({
         status: 'Loading clusters...',
-      })),
+      }))],
       onCancel: () => {},
     });
 

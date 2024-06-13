@@ -1,31 +1,35 @@
-<div class="alert alert-info">
-  We're working on letting you change your email.
-</div>
-<form [formGroup]="form" >
-  <app-modal-header (cancel)="reset()">
-    Update User
-  </app-modal-header>
+<h2>Update User</h2>
+<form [formGroup]="form" (ngSubmit)="submit()">
+  <div class="form-row mb-2">
+    <div class="col">
+      <input class="form-control" formControlName="username" required [appFormInput]="form.get('url')">
+      <app-form-input-feedback [control]="form.get('username')"></app-form-input-feedback>
+    </div>
+  </div>
 
-  <app-modal-body>
-    <app-form-row for="username" label="Username" [control]="form.get('username')">
-      <input type="text" formControlName="username" id="username" [appFormInput]="form.get('username')" appAutoFocus>
-    </app-form-row>
+  <div class="form-row mb-2" ngbTooltip="You cannot edit your email">
+    <div class="col">
+      <input class="form-control" formControlName="email" required [appFormInput]="form.get('email')">
+      <app-form-input-feedback [control]="form.get('email')"></app-form-input-feedback>
+    </div>
+  </div>
 
-    <app-form-row for="email" label="Email" ngbTooltip="Not yet implemented." [control]="form.get('email')">
-      <input type="email" formControlName="email" id="email" [appFormInput]="form.get('email')">
-    </app-form-row>
+  <div class="form-row mb-2">
+    <div class="col">
+      <input class="form-control" formControlName="firstName" required [appFormInput]="form.get('firstName')">
+      <app-form-input-feedback [control]="form.get('firstName')"></app-form-input-feedback>
+    </div>
+  </div>
 
-    <app-form-row for="first-name" label="First Name" [control]="form.get('firstName')">
-      <input type="text" formControlName="firstName" id="first-name" [appFormInput]="form.get('firstName')">
-    </app-form-row>
+  <div class="form-row mb-2">
+    <div class="col">
+      <input class="form-control" formControlName="lastName" required [appFormInput]="form.get('lastName')">
+      <app-form-input-feedback [control]="form.get('lastName')"></app-form-input-feedback>
+    </div>
+  </div>
 
-    <app-form-row for="last-name" label="Last Name" [control]="form.get('lastName')">
-      <input type="text" formControlName="lastName" id="last-name" [appFormInput]="form.get('lastName')">
-    </app-form-row>
-  </app-modal-body>
-
-  <app-modal-footer>
-    <button type="button" class="btn btn-secondary mr-2" (click)="reset()">Cancel</button>
-    <button type="submit" class="btn btn-primary" [disabled]="!form.dirty" (click)="submit()" >Submit</button>
-  </app-modal-footer>
+  <div>
+    <button type="button" class="btn btn-secondary mr-2" routerLink="/dashboard">Cancel</button>
+    <button type="submit" class="btn btn-primary" [disabled]="!form.valid" type="submit">Submit</button>
+  </div>
 </form>

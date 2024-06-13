@@ -5,22 +5,16 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { BuildInfo } from 'app/interfaces/metadata.interface';
-import { AuthenticationService } from 'app/auth/services/authentication.service';
-
-import { AbstractService } from './abstract-service';
 
 @Injectable({providedIn: 'root'})
-export class MetaDataService extends AbstractService {
+export class MetaDataService {
     readonly baseUrl = '/api/meta';
 
-    constructor(auth: AuthenticationService, http: HttpClient) {
-        super(auth, http);
-    }
+    constructor(private http: HttpClient) { }
 
     getBuildInfo(): Observable<BuildInfo> {
         return this.http.get<{result: BuildInfo}>(
             `${this.baseUrl}/`,
-            {...this.getHttpOptions(true)}
         ).pipe(
             map((res) => res.result)
         );

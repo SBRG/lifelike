@@ -23,7 +23,7 @@ export class HttpErrorInterceptor implements HttpInterceptor {
   }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<any> {
-    return next.handle(this.addLogHeader(req)).pipe(
+    return next.handle(req).pipe(
       catchError((res: HttpErrorResponse) => {
         const statusCode = res.status;
         if (statusCode === 0) {
@@ -45,10 +45,5 @@ export class HttpErrorInterceptor implements HttpInterceptor {
         return throwError(res);
       }),
     );
-  }
-
-  addLogHeader(request: HttpRequest<any>) {
-    const transactionId = this.errorHandler.createTransactionId();
-    return request.clone({setHeaders: {'X-Transaction-ID': transactionId}});
   }
 }

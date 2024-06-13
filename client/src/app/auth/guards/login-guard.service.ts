@@ -12,7 +12,8 @@ import { map, take } from 'rxjs/operators';
 
 import { State } from '../store/state';
 import { AuthSelectors } from '../store';
-
+import { LifelikeOAuthService } from '../services/oauth.service';
+import { environment } from '../../../environments/environment';
 /**
  * Check if the user is already logged in when they access login page,
  * redirect to home if yes.
@@ -20,7 +21,11 @@ import { AuthSelectors } from '../store';
 
 @Injectable()
 export class LoginGuard implements CanActivate {
-  constructor(private store: Store<State>, private router: Router) {}
+  constructor(
+    private store: Store<State>,
+    private router: Router,
+    private oauthService: LifelikeOAuthService,
+  ) {}
 
   canActivate(
     {}: ActivatedRouteSnapshot,
@@ -32,6 +37,11 @@ export class LoginGuard implements CanActivate {
         if (loggedIn) {
           this.router.navigate(['/']);
           return false;
+        } else {
+          if (environment.oauthEnabled) {
+            this.oauthService.login();
+            return false; // Probably redundant, since the `login` call above redirects out of the app anyway...
+          }
         }
         return true;
       }),

@@ -79,7 +79,7 @@
                        (appTabSelectable)="results.select(result)"
                        [class.active]="results.isSelected(result)"
                        draggable="true" (dragstart)="itemDragStart($event, result.item)">
-                    <div class="text-truncate mb-1">
+                    <div class="text-truncate mb-1" [title]="getBreadCrumbsTitle(result.item.parent)">
                       <app-object-path [object]="result.item.parent" [newTab]="true"></app-object-path>
                     </div>
                     <div class="search-results-item-header text-truncate">

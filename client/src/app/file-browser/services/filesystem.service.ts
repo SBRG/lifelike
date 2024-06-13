@@ -8,7 +8,6 @@ import { BehaviorSubject, Observable, of, Subscription, throwError, from, defer 
 import { catchError, map, tap } from 'rxjs/operators';
 
 import { ErrorHandler } from 'app/shared/services/error-handler.service';
-import { ApiService } from 'app/shared/services/api.service';
 import { objectToMixedFormData } from 'app/shared/utils/forms';
 import { serializePaginatedParams } from 'app/shared/utils/params';
 import {
@@ -53,7 +52,6 @@ export class FilesystemService {
               protected readonly errorHandler: ErrorHandler,
               protected readonly route: ActivatedRoute,
               protected readonly http: HttpClient,
-              protected readonly apiService: ApiService,
               protected readonly recentFilesService: RecentFilesService) {
     this.getLMDBsDates().subscribe(lmdbsDates => {
       this.lmdbsDates.next(lmdbsDates);
@@ -64,7 +62,6 @@ export class FilesystemService {
     // TODO: Type this method
     return this.http.get<object>(
       `/api/files/lmdbs_dates`,
-      this.apiService.getHttpOptions(true),
     );
   }
 
@@ -72,7 +69,6 @@ export class FilesystemService {
     return this.http.post<ResultList<FilesystemObjectData>>(
       `/api/filesystem/search`,
       options,
-      this.apiService.getHttpOptions(true),
     ).pipe(
       map(data => {
         const list = new FilesystemObjectList();
@@ -88,7 +84,6 @@ export class FilesystemService {
     return this.http.post(
       `/api/filesystem/objects`,
       objectToMixedFormData(request), {
-        ...this.apiService.getHttpOptions(true),
         observe: 'events',
         reportProgress: true,
         responseType: 'json',
@@ -107,7 +102,6 @@ export class FilesystemService {
   get(hashId: string, updateRecent = true): Observable<FilesystemObject> {
     return this.http.get<SingleResult<FilesystemObjectData>>(
       `/api/filesystem/objects/${encodeURIComponent(hashId)}`,
-      this.apiService.getHttpOptions(true),
     ).pipe(
       map(data => new FilesystemObject().update(data.result)),
       tap(fileObj => updateRecent && this.recentFilesService.addToList(fileObj)),
@@ -117,7 +111,6 @@ export class FilesystemService {
   getContent(hashId: string): Observable<Blob> {
     return this.http.get(
       `/api/filesystem/objects/${encodeURIComponent(hashId)}/content`, {
-        ...this.apiService.getHttpOptions(true),
         responseType: 'blob',
       },
     );
@@ -134,7 +127,6 @@ export class FilesystemService {
   getMapContent(hashId: string): Observable<Blob> {
     return this.http.get(
       `/api/filesystem/objects/${encodeURIComponent(hashId)}/map-content`, {
-        ...this.apiService.getHttpOptions(true),
         responseType: 'blob',
       }
     );
@@ -144,7 +136,6 @@ export class FilesystemService {
   getAllEnrichmentTables() {
     return this.http.get<{result: string[]}>(
       `/api/filesystem/enrichment-tables`, {
-        ...this.apiService.getHttpOptions(true),
         responseType: 'json',
       }
     ).pipe(
@@ -156,7 +147,6 @@ export class FilesystemService {
     return this.http.post(
       `/api/filesystem/objects/${encodeURIComponent(hashId)}/export`,
       request, {
-        ...this.apiService.getHttpOptions(true),
         responseType: 'blob',
       },
     );
@@ -169,7 +159,7 @@ export class FilesystemService {
       `/api/filesystem/objects`, objectToMixedFormData({
         ...changes,
         hashIds,
-      }), this.apiService.getHttpOptions(true),
+      })
     ).pipe(
       map(data => {
         const ret: { [hashId: string]: FilesystemObject } = updateWithLatest || {};
@@ -191,9 +181,7 @@ export class FilesystemService {
     return this.http.request<ResultMapping<FilesystemObjectData>>(
       'DELETE',
       `/api/filesystem/objects`, {
-        ...this.apiService.getHttpOptions(true, {
-          contentType: 'application/json',
-        }),
+        headers: {'Content-Type': 'application/json'},
         body: {
           hashIds,
         },
@@ -220,7 +208,6 @@ export class FilesystemService {
   getBackupContent(hashId: string): Observable<Blob | null> {
     return this.http.get(
       `/api/filesystem/objects/${encodeURIComponent(hashId)}/backup/content`, {
-        ...this.apiService.getHttpOptions(true),
         responseType: 'blob',
       },
     ).pipe(catchError(e => {
@@ -243,7 +230,6 @@ export class FilesystemService {
     return this.http.put<unknown>(
       `/api/filesystem/objects/${encodeURIComponent(request.hashId)}/backup`,
       objectToMixedFormData(request),
-      this.apiService.getHttpOptions(true),
     ).pipe(
       map(() => ({})),
     );
@@ -252,7 +238,6 @@ export class FilesystemService {
   deleteBackup(hashId: string): Observable<{}> {
     return this.http.delete<unknown>(
       `/api/filesystem/objects/${encodeURIComponent(hashId)}/backup`, {
-        ...this.apiService.getHttpOptions(true),
       },
     ).pipe(
       map(() => ({})),
@@ -263,7 +248,6 @@ export class FilesystemService {
                     options: PaginatedRequestOptions = {}): Observable<ObjectVersionHistory> {
     return this.http.get<ObjectVersionHistoryResponse>(
       `/api/filesystem/objects/${encodeURIComponent(fileHashId)}/versions`, {
-        ...this.apiService.getHttpOptions(true),
         params: serializePaginatedParams(options, false),
       },
     ).pipe(
@@ -284,7 +268,6 @@ export class FilesystemService {
   getVersionContent(hashId: string): Observable<Blob> {
     return this.http.get(
       `/api/filesystem/versions/${encodeURIComponent(hashId)}/content`, {
-        ...this.apiService.getHttpOptions(true),
         responseType: 'blob',
       },
     );
@@ -299,7 +282,6 @@ export class FilesystemService {
     Observable<FileAnnotationHistory> {
     return this.http.get<FileAnnotationHistoryResponse>(
       `/api/filesystem/objects/${encodeURIComponent(hashId)}/annotation-history`, {
-        ...this.apiService.getHttpOptions(true),
         params: serializePaginatedParams(options, false),
       },
     ).pipe(
@@ -333,9 +315,7 @@ export class FilesystemService {
 
   getLocks(hashId: string): Observable<ObjectLock[]> {
     return this.http.get<ResultList<ObjectLockData>>(
-      `/api/filesystem/objects/${encodeURIComponent(hashId)}/locks`, {
-        ...this.apiService.getHttpOptions(true),
-      },
+      `/api/filesystem/objects/${encodeURIComponent(hashId)}/locks`
     ).pipe(
       map(data => {
         return data.results.map(itemData => new ObjectLock().update(itemData));
@@ -343,11 +323,11 @@ export class FilesystemService {
     );
   }
 
-  acquireLock(hashId: string, options: { own: true }): Observable<ObjectLock[]> {
+  // Would `createLock` be a more apt name? "Acquire" implies we're simply fetching a lock, whereas here we create + fetch.
+  acquireLock(hashId: string): Observable<ObjectLock[]> {
     return this.http.put<ResultList<ObjectLockData>>(
       `/api/filesystem/objects/${encodeURIComponent(hashId)}/locks?own=true`,
       {},
-      this.apiService.getHttpOptions(true),
     ).pipe(
       map(data => {
         return data.results.map(itemData => new ObjectLock().update(itemData));
@@ -365,11 +345,9 @@ export class FilesystemService {
     );
   }
 
-  deleteLock(hashId: string, options: { own: true }): Observable<{}> {
+  deleteLock(hashId: string): Observable<{}> {
     return this.http.delete<unknown>(
-      `/api/filesystem/objects/${encodeURIComponent(hashId)}/locks?own=true`, {
-        ...this.apiService.getHttpOptions(true),
-      },
+      `/api/filesystem/objects/${encodeURIComponent(hashId)}/locks?own=true`
     ).pipe(
       map(() => ({})),
     );
@@ -378,7 +356,6 @@ export class FilesystemService {
   getHierarchy(directoriesOnly: boolean = false): Observable<FileHierarchyResponse> {
     return this.http.get<FileHierarchyResponse>(
       `/api/filesystem/objects/hierarchy`, {
-        ...this.apiService.getHttpOptions(true),
         params: {
           directoriesOnly: String(directoriesOnly)
         }

@@ -125,12 +125,11 @@ export class AbstractObjectTypeProviderHelper {
     const dialogRef = openModal(this.modalService, ObjectEditDialogComponent);
     dialogRef.componentInstance.object = target;
     dialogRef.componentInstance.accept = ((value: ObjectEditDialogValue) => {
-      const progressObservable = new BehaviorSubject<Progress>(new Progress({
-        status: `Saving changes to ${getObjectLabel(target)}...`,
-      }));
       const progressDialogRef = this.progressDialog.display({
         title: 'Working...',
-        progressObservable,
+        progressObservables: [new BehaviorSubject<Progress>(new Progress({
+        status: `Saving changes to ${getObjectLabel(target)}...`,
+      }))],
       });
       return this.filesystemService.save([target.hashId], value.request, {
         [target.hashId]: target,

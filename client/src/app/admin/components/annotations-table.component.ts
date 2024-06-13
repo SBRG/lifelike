@@ -13,7 +13,7 @@ import { BackgroundTask } from 'app/shared/rxjs/background-task';
 import { CollectionModel } from 'app/shared/utils/collection-model';
 import { downloader } from 'app/shared/utils';
 import { ErrorHandler } from 'app/shared/services/error-handler.service';
-import { Progress, ProgressMode } from 'app/interfaces/common-dialog.interface';
+import { Progress } from 'app/interfaces/common-dialog.interface';
 import { ProgressDialog } from 'app/shared/services/progress-dialog.service';
 import {
   PaginatedRequestOptions,
@@ -22,6 +22,7 @@ import {
 } from 'app/shared/schemas/common';
 import { FilesystemObjectActions } from 'app/file-browser/services/filesystem-object-actions';
 import { FilesystemService } from 'app/file-browser/services/filesystem.service';
+import { getProgressStatus } from 'app/shared/components/dialog/progress-dialog.component';
 
 @Component({
     selector: 'app-annotations-table',
@@ -154,31 +155,19 @@ export class AnnotationTableComponent implements OnInit, OnDestroy {
     }
 
     exportGlobalExclusions() {
-        const progressObservable = new BehaviorSubject<Progress>(new Progress({
+        const progressObservables = [new BehaviorSubject<Progress>(new Progress({
             status: 'Preparing file for download...'
-        }));
+        }))];
         const progressDialogRef = this.progressDialog.display({
             title: `Exporting global exclusions`,
-            progressObservable,
+            progressObservables,
         });
 
         this.subscriptions.add(this.globalAnnotationService.exportGlobalExclusions().pipe(
             this.errorHandler.create({label: 'Export global exclusion'})
         ).subscribe(event => {
             if (event.type === HttpEventType.DownloadProgress) {
-                if (event.loaded >= event.total) {
-                    progressObservable.next(new Progress({
-                        mode: ProgressMode.Buffer,
-                        status: '...',
-                        value: event.loaded / event.total,
-                    }));
-                } else {
-                    progressObservable.next(new Progress({
-                        mode: ProgressMode.Determinate,
-                        status: '...',
-                        value: event.loaded / event.total,
-                    }));
-                }
+                progressObservables[0].next(getProgressStatus(event, '...', '...'));
             } else if (event.type === HttpEventType.Response) {
                 progressDialogRef.close();
                 const filename = event.headers.get('content-disposition').split('=')[1];
@@ -188,31 +177,19 @@ export class AnnotationTableComponent implements OnInit, OnDestroy {
     }
 
     exportGlobalInclusions() {
-        const progressObservable = new BehaviorSubject<Progress>(new Progress({
+        const progressObservables = [new BehaviorSubject<Progress>(new Progress({
             status: 'Preparing file for download...'
-        }));
+        }))];
         const progressDialogRef = this.progressDialog.display({
             title: `Exporting global inclusions`,
-            progressObservable,
+            progressObservables,
         });
 
         this.subscriptions.add(this.globalAnnotationService.exportGlobalInclusions().pipe(
             this.errorHandler.create({label: 'Export global inclusion'})
         ).subscribe(event => {
             if (event.type === HttpEventType.DownloadProgress) {
-                if (event.loaded >= event.total) {
-                    progressObservable.next(new Progress({
-                        mode: ProgressMode.Buffer,
-                        status: '...',
-                        value: event.loaded / event.total,
-                    }));
-                } else {
-                    progressObservable.next(new Progress({
-                        mode: ProgressMode.Determinate,
-                        status: '...',
-                        value: event.loaded / event.total,
-                    }));
-                }
+                progressObservables[0].next(getProgressStatus(event, '...', '...'));
             } else if (event.type === HttpEventType.Response) {
                 progressDialogRef.close();
                 const filename = event.headers.get('content-disposition').split('=')[1];

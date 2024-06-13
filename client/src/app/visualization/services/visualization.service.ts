@@ -16,21 +16,17 @@ import {
     GetAssociatedTypeResult,
     GetNodePairSnippetsResult,
 } from 'app/interfaces';
-import { AuthenticationService } from 'app/auth/services/authentication.service';
-import { AbstractService } from 'app/shared/services/abstract-service';
 
 @Injectable()
-export class VisualizationService extends AbstractService {
+export class VisualizationService {
     readonly baseUrl = '/api/visualizer';
 
-    constructor(auth: AuthenticationService , http: HttpClient) {
-        super(auth, http);
-    }
+    constructor(private http: HttpClient) { }
 
     getBatch(query: string) {
         return this.http.get<{result: Neo4jResults}>(
             `${this.baseUrl}/batch`,
-            {params: {data: query}, ...this.getHttpOptions(true)}
+            {params: {data: query}}
         ).pipe(map(resp => resp.result));
     }
 
@@ -43,7 +39,6 @@ export class VisualizationService extends AbstractService {
         return this.http.post<{result: Neo4jResults}>(
             `${this.baseUrl}/expand`,
             {nodeId, filterLabels},
-            {...this.getHttpOptions(true)}
         ).pipe(map(resp => resp.result));
     }
 
@@ -51,7 +46,6 @@ export class VisualizationService extends AbstractService {
         return this.http.post<{result: GetReferenceTableDataResult}>(
             `${this.baseUrl}/get-reference-table-data`,
             {nodeEdgePairs: request.nodeEdgePairs},
-            {...this.getHttpOptions(true)}
         ).pipe(map(resp => resp.result));
     }
 
@@ -62,7 +56,6 @@ export class VisualizationService extends AbstractService {
                 limit: request.limit,
                 edge: request.queryData,
             },
-            {...this.getHttpOptions(true)}
         ).pipe(
             map(resp => resp.result),
             catchError(error => of(error)),
@@ -76,7 +69,6 @@ export class VisualizationService extends AbstractService {
                 limit: request.limit,
                 edges: request.queryData,
             },
-            {...this.getHttpOptions(true)}
         ).pipe(
             map(resp => resp.result),
             catchError(error => of(error)),
@@ -89,7 +81,6 @@ export class VisualizationService extends AbstractService {
                 source_node: request.source_node,
                 associated_nodes: request.associated_nodes,
             },
-            {...this.getHttpOptions(true)}
         ).pipe(map(resp => resp.result.associatedData));
     }
 
@@ -101,7 +92,6 @@ export class VisualizationService extends AbstractService {
           node_1_id: node1Id,
           node_2_id: node2Id,
         },
-        {...this.getHttpOptions(true)}
       ).pipe(map(resp => resp.result));
     }
 }

@@ -42,6 +42,7 @@ import { ObjectReannotateResultsDialogComponent } from './components/dialog/obje
 import { FilesystemObjectDataProvider } from './providers/filesystem-object-data.provider';
 import { ObjectViewerComponent } from './components/object-viewer.component';
 import { BrowserRecentListComponent } from './components/browser/browser-recent-list.component';
+import { ObjectUploadDialogComponent } from './components/dialog/object-upload-dialog.component';
 
 @NgModule({
   declarations: [
@@ -73,6 +74,7 @@ import { BrowserRecentListComponent } from './components/browser/browser-recent-
     ObjectAnnotationHistoryComponent,
     ObjectReannotateResultsDialogComponent,
     ObjectViewerComponent,
+    ObjectUploadDialogComponent,
   ],
   imports: [
     SharedModule,

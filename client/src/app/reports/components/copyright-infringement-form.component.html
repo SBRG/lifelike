@@ -1,0 +1,108 @@
+<div class="container mt-4">
+  <h2 class="mb-4">Copyright Infringement Claim Request Form</h2>
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <div class="form-row mb-2">
+      <div class="col">
+        <input class="form-control" formControlName="url" placeholder="Url of allegedly infringing work or material" type="url" required [appFormInput]="form.get('url')">
+        <app-form-input-feedback [control]="form.get('url')"></app-form-input-feedback>
+      </div>
+    </div>
+    <div class="form-row mb-2">
+      <div class="col">
+        <small class="text-muted">{{ form.get('description').value.length }} / {{ DESCRIPTION_MAX_LEN }} characters used</small>
+        <textarea class="form-control"
+                  formControlName="description"
+                  placeholder="Description of the work claimed to be infringed"
+
+                  [maxlength]="DESCRIPTION_MAX_LEN"
+                  [appFormInput]="form.get('description')">
+        </textarea>
+        <app-form-input-feedback [control]="form.get('description')"></app-form-input-feedback>
+      </div>
+    </div>
+    <div class="form-row mb-2">
+      <div class="col">
+        <input class="form-control" formControlName="name" placeholder="Name" required [appFormInput]="form.get('name')">
+        <app-form-input-feedback [control]="form.get('name')"></app-form-input-feedback>
+      </div>
+      <div class="col">
+        <input class="form-control" formControlName="company" placeholder="Company" required [appFormInput]="form.get('company')">
+        <app-form-input-feedback [control]="form.get('company')"></app-form-input-feedback>
+      </div>
+    </div>
+    <div class="form-row mb-2">
+      <div class="col">
+        <input class="form-control" formControlName="address" placeholder="Address" required [appFormInput]="form.get('address')">
+        <app-form-input-feedback [control]="form.get('address')"></app-form-input-feedback>
+      </div>
+    </div>
+    <div class="form-row mb-2">
+      <div class="col">
+        <select class="form-select" formControlName="country" aria-label="Default select example" required [appFormInput]="form.get('city')">
+          <option selected value="">Country</option>
+          <option value="">--</option>
+          <option *ngFor="let country of COUNTRY_LIST" value="country">{{ country }}</option>
+        </select>
+        <app-form-input-feedback [control]="form.get('country')"></app-form-input-feedback>
+      </div>
+      <div class="col">
+        <input class="form-control" formControlName="city" placeholder="City" required [appFormInput]="form.get('city')">
+        <app-form-input-feedback [control]="form.get('city')"></app-form-input-feedback>
+      </div>
+      <div class="col">
+        <input class="form-control" formControlName="province" placeholder="State / Province" required [appFormInput]="form.get('province')">
+        <app-form-input-feedback [control]="form.get('province')"></app-form-input-feedback>
+      </div>
+      <div class="col">
+        <input class="form-control" formControlName="zip" placeholder="Zip" required [appFormInput]="form.get('zip')">
+        <app-form-input-feedback [control]="form.get('zip')"></app-form-input-feedback>
+      </div>
+    </div>
+    <div class="form-row mb-2">
+      <div class="col">
+        <input class="form-control" formControlName="phone" placeholder="Phone" type="tel" required [appFormInput]="form.get('phone')">
+        <app-form-input-feedback [control]="form.get('phone')"></app-form-input-feedback>
+      </div>
+      <div class="col">
+        <input class="form-control" formControlName="fax" placeholder="Fax">
+      </div>
+      <div class="col">
+        <input class="form-control" formControlName="email" placeholder="Email" required [appFormInput]="form.get('email')">
+        <app-form-input-feedback [control]="form.get('email')"></app-form-input-feedback>
+      </div>
+    </div>
+    <div class="form-row mb-2">
+      <div class="col">
+        <p>By checking the following boxes, I state that:</p>
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="attestationCheck1" formControlName="attestationCheck1" required [appFormInput]="form.get('attestationCheck1')">
+          <label class="custom-control-label" for="attestationCheck1">I have a good faith belief that the use of the material in the manner complained of is not authorized by the copyright owner, its agent, or the law;</label>
+          <app-form-input-feedback [control]="form.get('attestationCheck1')"></app-form-input-feedback>
+        </div>
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="attestationCheck2" formControlName="attestationCheck2" required [appFormInput]="form.get('attestationCheck2')">
+          <label class="custom-control-label" for="attestationCheck2">This notification is accurate; and</label>
+          <app-form-input-feedback [control]="form.get('attestationCheck2')"></app-form-input-feedback>
+        </div>
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="attestationCheck3" formControlName="attestationCheck3" required [appFormInput]="form.get('attestationCheck3')">
+          <label class="custom-control-label" for="attestationCheck3">UNDER PENALTY OF PERJURY, I am authorized to act on behalf of the owner of an exclusive right that is allegedly infringed.</label>
+          <app-form-input-feedback [control]="form.get('attestationCheck3')"></app-form-input-feedback>
+        </div>
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="attestationCheck4" formControlName="attestationCheck4" required [appFormInput]="form.get('attestationCheck4')">
+          <label class="custom-control-label" for="attestationCheck4">I acknowledge that under Section 512(f) of the DMCA any person who knowingly materially misrepresents that material or activity is infringing may be subject to liability for damages.</label>
+          <app-form-input-feedback [control]="form.get('attestationCheck4')"></app-form-input-feedback>
+        </div>
+      </div>
+    </div>
+    <div class="form-row mb-2">
+      <div class="col">
+        <label for="electronicSignatureInput">Typing your name below will act as your electronic signature:</label>
+        <input class="form-control" id="electronicSignatureInput" formControlName="signature" required [appFormInput]="form.get('signature')">
+        <app-form-input-feedback [control]="form.get('signature')"></app-form-input-feedback>
+      </div>
+    </div>
+    <button class="btn btn-primary" type="submit">Submit</button>
+  </form>
+</div>

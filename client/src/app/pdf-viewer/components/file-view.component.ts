@@ -275,9 +275,9 @@ export class FileViewComponent implements OnDestroy, ModuleAwareComponent {
     dialogRef.result.then((annotateAll: boolean) => {
       const progressDialogRef = this.progressDialog.display({
         title: `Adding Annotations`,
-        progressObservable: new BehaviorSubject<Progress>(new Progress({
+        progressObservables: [new BehaviorSubject<Progress>(new Progress({
           status: 'Adding annotations to the file...',
-        })),
+        }))],
       });
 
       this.addAnnotationSub = this.pdfAnnService.addCustomAnnotation(this.currentFileId, {

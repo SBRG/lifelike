@@ -7,7 +7,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { select, Store } from '@ngrx/store';
 
 import { AccountService } from 'app/users/services/account.service';
-import { AppUser, PrivateAppUser } from 'app/interfaces';
+import { AppUser, PrivateAppUser, UserUpdateData } from 'app/interfaces';
 import { ResultList } from 'app/shared/schemas/common';
 import { BackgroundTask } from 'app/shared/rxjs/background-task';
 import { ProgressDialog } from 'app/shared/services/progress-dialog.service';
@@ -19,7 +19,6 @@ import { State } from 'app/root-store';
 import { UserCreateDialogComponent } from './user-create-dialog.component';
 import { UserUpdateDialogComponent } from './user-update-dialog.component';
 import { MissingRolesDialogComponent } from './missing-roles-dialog.component';
-
 
 
 @Component({
@@ -108,9 +107,9 @@ export class UserBrowserComponent implements OnInit, OnDestroy {
     modalRef.result.then(newUser => {
       const progressDialogRef = this.progressDialog.display({
         title: `Creating User`,
-        progressObservable: new BehaviorSubject<Progress>(new Progress({
+        progressObservables: [new BehaviorSubject<Progress>(new Progress({
           status: 'Creating user...',
-        })),
+        }))],
       });
 
       this.accountService.createUser(newUser)
@@ -131,30 +130,29 @@ export class UserBrowserComponent implements OnInit, OnDestroy {
     });
   }
 
-
   displayUpdateDialog() {
     for (const selectedUser of this.shownUsers.slice().reverse()) {
       if (this.selection.isSelected(selectedUser)) {
         const modalRef = this.modalService.open(UserUpdateDialogComponent);
         modalRef.componentInstance.isSelf = this.currentUser.hashId === selectedUser.hashId;
         modalRef.componentInstance.setUser(selectedUser);
-        modalRef.result.then(updatedUser => {
+        modalRef.result.then((userUpdateData: UserUpdateData) => {
           const progressDialogRef = this.progressDialog.display({
             title: `Updating User`,
-            progressObservable: new BehaviorSubject<Progress>(new Progress({
+            progressObservables: [new BehaviorSubject<Progress>(new Progress({
               status: 'Updating user...',
-            })),
+            }))],
           });
-          this.accountService.updateUser(updatedUser)
+          this.accountService.updateUser(userUpdateData, selectedUser.hashId)
           .pipe(this.errorHandler.create({label: 'Update user'}))
           .subscribe(() => {
             progressDialogRef.close();
             if (this.currentUser.hashId === selectedUser.hashId) {
-                updatedUser = {...this.currentUser, ...updatedUser};
-                this.store.dispatch(AuthActions.userUpdated(
-                    {user: updatedUser},
-                  ));
-                this.currentUser = updatedUser;
+              this.store.dispatch(AuthActions.updateUserSuccess({userUpdateData}));
+              this.currentUser = {
+                ...this.currentUser,
+                ...userUpdateData
+              };
             }
             this.refresh();
             this.snackBar.open(
@@ -176,9 +174,9 @@ export class UserBrowserComponent implements OnInit, OnDestroy {
     if (confirm('Unlock user ' + user.username + '?')) {
       const progressDialogRef = this.progressDialog.display({
         title: `Unlocking User`,
-        progressObservable: new BehaviorSubject<Progress>(new Progress({
+        progressObservables: [new BehaviorSubject<Progress>(new Progress({
           status: 'Unlocking user...',
-        })),
+        }))],
       });
       this.accountService.unlockUser(user.hashId)
         .pipe(this.errorHandler.create({label: 'Unlock user'}))

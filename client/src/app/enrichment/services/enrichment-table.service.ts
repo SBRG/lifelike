@@ -4,16 +4,14 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { ApiService } from 'app/shared/services/api.service';
 import { TextAnnotationGenerationRequest } from 'app/file-browser/schema';
 
 import { EnrichmentParsedData } from '../models/enrichment-document';
 
 @Injectable()
 export class EnrichmentTableService {
-  constructor(protected readonly http: HttpClient,
-              protected readonly apiService: ApiService) {
-  }
+
+  constructor(private http: HttpClient) { }
 
   /**
    * Match gene names to NCBI nodes with same name and has given taxonomy ID.
@@ -24,7 +22,6 @@ export class EnrichmentTableService {
     return this.http.post<{ result: NCBIWrapper[] }>(
       '/api/enrichment-table/match-ncbi-nodes',
       {geneNames, organism},
-      this.apiService.getHttpOptions(true),
     ).pipe(
       map((resp: any) => resp.result),
     );
@@ -39,7 +36,6 @@ export class EnrichmentTableService {
     return this.http.post<{result: EnrichmentWrapper}>(
       `/api/knowledge-graph/get-ncbi-nodes/enrichment-domains`,
       {nodeIds, taxID, domains},
-      this.apiService.getHttpOptions(true),
     ).pipe(
       map(resp => resp.result),
     );
@@ -49,7 +45,6 @@ export class EnrichmentTableService {
     return this.http.post(
       `/api/filesystem/annotations/generate`,
       {hashIds, ...request},
-      this.apiService.getHttpOptions(true)
     ).pipe(
       map((resp: any) => resp.results)
     );
@@ -59,7 +54,6 @@ export class EnrichmentTableService {
     return this.http.post(
       `/api/filesystem/annotations/refresh`,
       {hashIds},
-      this.apiService.getHttpOptions(true)
     ).pipe(
       map((resp: any) => resp.results)
     );
@@ -68,7 +62,6 @@ export class EnrichmentTableService {
   getAnnotatedEnrichment(hashId: string): Observable<EnrichmentParsedData> {
     return this.http.get<{results: EnrichmentParsedData}>(
       `/api/filesystem/objects/${encodeURIComponent(hashId)}/enrichment/annotations`,
-      this.apiService.getHttpOptions(true),
     ).pipe(
       map(resp => resp.results),
     );

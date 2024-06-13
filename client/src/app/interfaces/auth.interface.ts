@@ -56,8 +56,16 @@ export interface JWTToken {
     token: string;
 }
 
-export interface JWTTokenResponse {
+export interface LifelikeJWTTokenResponse {
     accessToken: JWTToken;
     refreshToken: JWTToken;
     user: PrivateAppUser;
+}
+
+export interface OAuthLoginData {
+  subject: string;
+  firstName: string;
+  lastName: string;
+  username: string;
+  // TODO email: string;
 }

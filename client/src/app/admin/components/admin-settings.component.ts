@@ -9,11 +9,12 @@ import { concatMap, mergeMap, catchError, delay } from 'rxjs/operators';
 import { ProgressDialog } from 'app/shared/services/progress-dialog.service';
 import { ErrorHandler } from 'app/shared/services/error-handler.service';
 import { StorageService } from 'app/shared/services/storage.service';
-import { Progress, ProgressMode } from 'app/interfaces/common-dialog.interface';
+import { Progress } from 'app/interfaces/common-dialog.interface';
 // TODO: Deprecate after LL-2840
 import { FilesystemService } from 'app/file-browser/services/filesystem.service';
 import { EnrichmentTableService } from 'app/enrichment/services/enrichment-table.service';
 import { EnrichmentDocument } from 'app/enrichment/models/enrichment-document';
+import { getProgressStatus } from 'app/shared/components/dialog/progress-dialog.component';
 
 @Component({
     selector: 'app-admin-settings-view',
@@ -112,12 +113,12 @@ export class AdminSettingsComponent {
     }
 
     submit() {
-        const progressObservable = new BehaviorSubject<Progress>(new Progress({
+        const progressObservables = [new BehaviorSubject<Progress>(new Progress({
             status: 'Uploading user manual...',
-        }));
+        }))];
         const progressDialogRef = this.progressDialog.display({
             title: 'Saving manual as lifelike-user-manual.pdf...',
-            progressObservable,
+            progressObservables,
         });
         const data = {...this.form.value};
         const file: File = data.files[0];
@@ -127,21 +128,9 @@ export class AdminSettingsComponent {
           .subscribe(
             (event) => {
               if (event.type === HttpEventType.UploadProgress) {
-                if (event.loaded >= event.total) {
-                  progressObservable.next(
-                    new Progress({
-                      mode: ProgressMode.Buffer,
-                      status: 'Processing file...',
-                      value: event.loaded / event.total,
-                    }));
-                } else {
-                  progressObservable.next(
-                    new Progress({
-                      mode: ProgressMode.Determinate,
-                      status: 'Uploading file...',
-                      value: event.loaded / event.total,
-                    }));
-                }
+                progressObservables[0].next(
+                  getProgressStatus(event, 'Processing file...', 'Uploading file...')
+                );
               } else if (event.type === HttpEventType.Response) {
                 progressDialogRef.close();
                 this.snackBar.open(`User manual uploaded`, 'Close', {

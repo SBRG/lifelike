@@ -25,6 +25,7 @@ import { State } from 'app/root-store';
 import { AuthActions } from 'app/auth/store';
 import { SnackbarActions } from 'app/shared/store';
 
+import { environment } from '../../../environments/environment';
 
 
 /**
@@ -81,6 +82,11 @@ export class AuthenticationInterceptor implements HttpInterceptor {
 
 
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<any> {
+      if (environment.oauthEnabled) {
+        // Our angular-oauth2-oidc config should be intercepting any `/api` calls automatically, so when OAuth is enabled we can safely
+        // do nothing with the request.
+        return next.handle(req);
+      } else {
         req = this.addAuthHeader(req);
         return next.handle(req).pipe(
             catchError(error => {
@@ -91,6 +97,7 @@ export class AuthenticationInterceptor implements HttpInterceptor {
                 }
             })
         );
+      }
     }
 
     /**

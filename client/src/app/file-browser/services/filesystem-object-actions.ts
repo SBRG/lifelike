@@ -53,12 +53,12 @@ export class FilesystemObjectActions {
   }
 
   protected createProgressDialog(message: string, title = 'Working...') {
-    const progressObservable = new BehaviorSubject<Progress>(new Progress({
+    const progressObservables = [new BehaviorSubject<Progress>(new Progress({
       status: message,
-    }));
+    }))];
     return this.progressDialog.display({
       title,
-      progressObservable,
+      progressObservables,
     });
   }
 
@@ -130,7 +130,7 @@ export class FilesystemObjectActions {
       request: {
         contentHashId: target.hashId,
       },
-    });
+    }).then(result => result.pop());
   }
 
   /**

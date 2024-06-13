@@ -56,7 +56,6 @@ import { AnnotationConfigurationTableComponent } from './components/table/annota
 import { HighlightTextComponent } from './components/highlight-text.component';
 import { AddStatusPipe } from './pipes/add-status.pipe';
 import { TermHighlightComponent } from './components/term-highlight.component';
-import { ApiService } from './services/api.service';
 import { VisJsNetworkComponent } from './components/vis-js-network/vis-js-network.component';
 import { PlotlySankeyDiagramComponent } from './components/plotly-sankey-diagram/plotly-sankey-diagram.component';
 import { SearchControlComponent } from './components/search-control.component';
@@ -174,13 +173,11 @@ const components = [
     ModuleHeaderComponent,
   ],
   providers: [
-    ApiService,
     TruncatePipe,
     SharedNgrxEffects,
     SharedSearchService,
     SessionStorageService,
     InternalSearchService,
-    ApiService,
     AccountsService,
     DataTransferDataService,
     GenericDataProvider,

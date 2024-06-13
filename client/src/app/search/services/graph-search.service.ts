@@ -4,16 +4,12 @@ import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 
 import { FTSResult } from 'app/interfaces';
-import { AuthenticationService } from 'app/auth/services/authentication.service';
-import { AbstractService } from 'app/shared/services/abstract-service';
 
 @Injectable()
-export class GraphSearchService extends AbstractService {
+export class GraphSearchService {
   readonly searchApi = '/api/search';
 
-  constructor(auth: AuthenticationService, http: HttpClient) {
-    super(auth, http);
-  }
+  constructor(private http: HttpClient) { }
 
   visualizerSearch(
       query: string,
@@ -26,7 +22,6 @@ export class GraphSearchService extends AbstractService {
     return this.http.post<{ result: FTSResult }>(
       `${this.searchApi}/viz-search`,
       {query, organism, page, domains, entities, limit},
-      {...this.getHttpOptions(true)}
     ).pipe(map(resp => resp.result));
   }
 }

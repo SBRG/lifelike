@@ -11,19 +11,23 @@ import { map, take } from 'rxjs/operators';
 
 import { State } from '../store/state';
 import { AuthActions, AuthSelectors } from '../store';
+import { LifelikeOAuthService } from '../services/oauth.service';
+import { environment } from '../../../environments/environment';
 
 export type AuthGroups = 'SELF' | 'USER' | 'ADMIN';
 
 @Injectable()
-export class AuthGuard implements CanActivate {
+export class LifelikeAuthGuard implements CanActivate {
 
     activatedRoute: ActivatedRouteSnapshot;
     redirectUrl: string;
 
-    constructor(private store: Store<State>) {}
+    constructor(
+      private store: Store<State>,
+      private oauthService: LifelikeOAuthService,
+    ) {}
 
     canActivate(active: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
-
         this.activatedRoute = active;
         this.redirectUrl = state.url;
         const group: AuthGroups = active.data.group || 'USER';
@@ -48,8 +52,12 @@ export class AuthGuard implements CanActivate {
                     }
                     return true;
                 }
-                this.store.dispatch(AuthActions.loginRedirect({url: this.redirectUrl}));
-                return false;
+                if (environment.oauthEnabled) {
+                  this.oauthService.login(this.redirectUrl);
+                } else {
+                  this.store.dispatch(AuthActions.loginRedirect({url: this.redirectUrl}));
+                }
+                return false; // Note that this return is probably redundant when oauth is enabled, since we redirect out of the app anyway
             }),
             take(1),
         );

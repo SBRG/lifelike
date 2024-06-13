@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 import { FilesystemObject } from 'app/file-browser/models/filesystem-object';
 import { WorkspaceManager } from 'app/shared/workspace-manager';
+import { getPath } from 'app/shared/utils/files';
 
 @Component({
   selector: 'app-object-path',
@@ -15,6 +16,7 @@ export class ObjectPathComponent {
   path: FilesystemObject[] = [];
   @Input() newTab = false;
   @Output() refreshRequest = new EventEmitter<any>();
+  @Input() wrap;
 
   constructor(protected readonly workspaceManager: WorkspaceManager) {
   }
@@ -22,17 +24,7 @@ export class ObjectPathComponent {
   @Input()
   set object(object: FilesystemObject | undefined) {
     this._object = object;
-    this.path = this.getPath(object);
-  }
-
-  private getPath(object: FilesystemObject | undefined): FilesystemObject[] {
-    let current = object;
-    const path = [];
-    while (current != null) {
-      path.push(current);
-      current = current.parent;
-    }
-    return path.reverse();
+    this.path = getPath(object);
   }
 
   openObject(target: FilesystemObject) {

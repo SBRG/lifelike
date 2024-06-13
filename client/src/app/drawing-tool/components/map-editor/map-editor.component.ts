@@ -304,9 +304,7 @@ export class MapEditorComponent extends MapViewComponent<UniversalGraph | undefi
         });
       });
     } else {
-      this.filesystemService.acquireLock(this.locator, {
-        own: true,
-      }).pipe(
+      this.filesystemService.acquireLock(this.locator).pipe(
         finalize(() => this.lastLockCheckTime = window.performance.now()),
         catchError(error => {
           if (!(error instanceof LockError)) {

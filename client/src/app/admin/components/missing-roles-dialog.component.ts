@@ -5,7 +5,7 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { BehaviorSubject } from 'rxjs';
 
 import { CommonFormDialogComponent } from 'app/shared/components/dialog/common-form-dialog.component';
-import { AppUser, UserUpdateRequest } from 'app/interfaces';
+import { AppUser, UserUpdateData } from 'app/interfaces';
 import { MessageDialog } from 'app/shared/services/message-dialog.service';
 import { Progress } from 'app/interfaces/common-dialog.interface';
 import { ProgressDialog } from 'app/shared/services/progress-dialog.service';
@@ -43,14 +43,14 @@ export class MissingRolesDialogComponent extends CommonFormDialogComponent {
   }
 
   fixMissingUserRole(user: AppUser) {
-    const updateRequest: UserUpdateRequest = {hashId: user.hashId, roles: ['user']};
+    const updateData: UserUpdateData = {roles: ['user']};
     const progressDialogRef = this.progressDialog.display({
             title: `Updating User`,
-            progressObservable: new BehaviorSubject<Progress>(new Progress({
+            progressObservables: [new BehaviorSubject<Progress>(new Progress({
               status: 'Updating user...',
-            })),
+            }))],
           });
-    this.accountService.updateUser(updateRequest)
+    this.accountService.updateUser(updateData, user.hashId)
     .pipe(this.errorHandler.create({label: 'Update user role'}))
     .subscribe(() => {
       progressDialogRef.close();

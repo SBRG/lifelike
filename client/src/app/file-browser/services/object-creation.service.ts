@@ -3,8 +3,8 @@ import { Injectable } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-import { BehaviorSubject, Observable, iif, of, merge } from 'rxjs';
-import { filter, finalize, map, mergeMap, tap } from 'rxjs/operators';
+import { BehaviorSubject, iif, of, merge } from 'rxjs';
+import { filter, map, mergeMap, tap } from 'rxjs/operators';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { ProgressDialog } from 'app/shared/services/progress-dialog.service';
@@ -15,16 +15,15 @@ import { Progress, ProgressMode } from 'app/interfaces/common-dialog.interface';
 
 import { PDFAnnotationGenerationRequest, ObjectCreateRequest, AnnotationGenerationResultData } from '../schema';
 import { FilesystemObject } from '../models/filesystem-object';
-import {
-  ObjectEditDialogComponent,
-  ObjectEditDialogValue,
-} from '../components/dialog/object-edit-dialog.component';
 import { AnnotationsService } from './annotations.service';
 import { FilesystemService } from './filesystem.service';
 import { ObjectReannotateResultsDialogComponent } from '../components/dialog/object-reannotate-results-dialog.component';
+import { ObjectUploadDialogComponent } from '../components/dialog/object-upload-dialog.component';
 
 @Injectable()
 export class ObjectCreationService {
+
+  private subscription;
 
   constructor(protected readonly annotationsService: AnnotationsService,
               protected readonly snackBar: MatSnackBar,
@@ -36,38 +35,45 @@ export class ObjectCreationService {
               protected readonly filesystemService: FilesystemService) {
   }
 
+
   /**
-   * Handles the filesystem PUT request with a progress dialog.
-   * @param request the request data
-   * @param annotationOptions options for the annotation process
-   * @return the created object
+   * Handles the filesystem PUT request(s) with a progress dialog.
+   * @param requests the request(s) data
+   * @param annotationOptions options for the annotation process(es)
+   * @return the created object(s)
    */
-  executePutWithProgressDialog(request: ObjectCreateRequest,
-                               annotationOptions: PDFAnnotationGenerationRequest = {}):
-    Observable<FilesystemObject> {
-    const progressObservable = new BehaviorSubject<Progress>(new Progress({
-      status: 'Preparing...',
-    }));
+  executePutWithProgressDialog(requests: ObjectCreateRequest[],
+                               annotationOptions: PDFAnnotationGenerationRequest[]):
+    Promise<FilesystemObject[]> {
+    const progressObservables = [];
+    for (const req of requests) {
+      progressObservables.push(new BehaviorSubject<Progress>(new Progress({
+        status: `Preparing ${req.filename || 'file'}`,
+      })));
+    }
     const progressDialogRef = this.progressDialog.display({
-      title: `Creating '${request.filename}'`,
-      progressObservable,
+      title: `Creating '${requests.length > 1 ? 'Files' : requests[0].filename}'`,
+      progressObservables,
     });
     let results: [FilesystemObject[], ResultMapping<AnnotationGenerationResultData>[]] = null;
-
-    return this.filesystemService.create(request)
+    const promiseList: Promise<FilesystemObject>[] = [];
+    for (let i = 0; i < requests.length; i++) {
+      const request = requests[i];
+      const annotationOption = annotationOptions[i] || {};
+      promiseList.push(this.filesystemService.create(request)
       .pipe(
         tap(event => {
           // First we show progress for the upload itself
           if (event.type === HttpEventType.UploadProgress) {
             if (event.loaded === event.total && event.total) {
-              progressObservable.next(new Progress({
+              progressObservables[i].next(new Progress({
                 mode: ProgressMode.Indeterminate,
-                status: 'File transmitted; saving...',
+                status: `${request.filename || 'File'} transmitted; saving...`,
               }));
             } else {
-              progressObservable.next(new Progress({
+              progressObservables[i].next(new Progress({
                 mode: ProgressMode.Determinate,
-                status: 'Transmitting file...',
+                status: `Transmitting ${request.filename || 'file' }...`,
                 value: event.loaded / event.total,
               }));
             }
@@ -78,33 +84,46 @@ export class ObjectCreationService {
         mergeMap((object: FilesystemObject) => {
           // Then we show progress for the annotation generation (although
           // we can't actually show a progress percentage)
-          progressObservable.next(new Progress({
+          progressObservables[i].next(new Progress({
             mode: ProgressMode.Indeterminate,
-            status: 'Saved; Parsing and identifying annotations...',
+            status: `${request.filename || 'file'} saved; Parsing and identifying annotations...`,
           }));
           const annotationsService = this.annotationsService.generateAnnotations(
-            [object.hashId], annotationOptions,
-          ).pipe(map(result => {
-            const check = Object.entries(result.mapping).map(r => r[1].success);
+            [object.hashId], annotationOption || {},
+          ).pipe(map(res => {
+            const check = Object.entries(res.mapping).map(r => r[1].success);
             if (check.some(c => c === false)) {
-                results = [[object], [result]];
+                results = [[object], [res]];
                 const modalRef = this.modalService.open(ObjectReannotateResultsDialogComponent);
                 modalRef.componentInstance.objects = results[0];
                 modalRef.componentInstance.results = results[1];
             }
             return object;
           }));
+          progressObservables[i].next(new Progress({
+                mode: ProgressMode.Determinate,
+                status: `Done with ${request.filename || 'file' }...`,
+                value: 1,
+              }));
           return iif(
             () => object.isAnnotatable,
             merge(annotationsService),
             of(object)
           );
         }),
-        finalize(() => {
-          progressDialogRef.close();
-        }),
-        this.errorHandler.create({label: 'Create object'}),
-      );
+        this.errorHandler.create({label: 'Create object'})
+      ).toPromise());
+    }
+
+    const finalPromise = Promise.allSettled(promiseList);
+    this.subscription = finalPromise.then(_ => {
+      progressDialogRef.close();
+    }, ( error ) => {
+      progressDialogRef.close();
+      console.error(error);
+    });
+    // Filter and return only successful uploads - we have already thrown errors
+    return finalPromise.then(result => result.flatMap(res => res.status === 'fulfilled' ? [res.value] : []));
   }
 
   /**
@@ -113,8 +132,8 @@ export class ObjectCreationService {
    * @param options options for the dialog
    */
   openCreateDialog(target: FilesystemObject,
-                   options: CreateDialogOptions = {}): Promise<FilesystemObject> {
-    const dialogRef = this.modalService.open(ObjectEditDialogComponent);
+                   options: CreateDialogOptions = {}): Promise<FilesystemObject[]> {
+    const dialogRef = this.modalService.open(ObjectUploadDialogComponent);
     dialogRef.componentInstance.title = options.title || 'New File';
     dialogRef.componentInstance.object = target;
     const keys: Array<keyof CreateDialogOptions> = [
@@ -122,24 +141,19 @@ export class ObjectCreationService {
       'forceAnnotationOptions',
       'promptParent',
       'parentLabel',
+      'request'
     ];
     for (const key of keys) {
       if (key in options) {
         dialogRef.componentInstance[key] = options[key];
       }
     }
-    dialogRef.componentInstance.accept = ((value: ObjectEditDialogValue) => {
-      return this.executePutWithProgressDialog({
-        ...value.request,
-        ...(options.request || {}),
-        // NOTE: Due to the cast to ObjectCreateRequest, we do not guarantee,
-        // via the type checker, that we will be forming a 100% legitimate request,
-        // because it's possible to provide multiple sources of content due to this cast, which
-        // the server will reject because it does not make sense
-      } as ObjectCreateRequest, {
-        annotationConfigs: value.annotationConfigs,
-        organism: value.organism,
-      }).toPromise();
+    dialogRef.componentInstance.accept = ((requests: ObjectCreateRequest[]) => {
+      const annotationOptions: PDFAnnotationGenerationRequest[] = requests.map(request => ({
+        organism: request.fallbackOrganism,
+        annotationConfigs: request.annotationConfigs
+      }));
+      return this.executePutWithProgressDialog(requests, annotationOptions);
     });
     return dialogRef.result;
   }
