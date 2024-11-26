@@ -5,7 +5,7 @@ verify_ssl = true
 
 [dev-packages]
 ipython = "==7.30.1"
-pytest = "==6.2.5"
+pytest = "==7.2.2"
 pycodestyle = "==2.8.0"
 mypy = "==0.920"
 httpretty = "==1.1.4"
